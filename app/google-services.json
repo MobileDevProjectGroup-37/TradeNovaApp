@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "85118788110",
+    "project_id": "traderapp-c9332",
+    "storage_bucket": "traderapp-c9332.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85118788110:android:b6defd1450e31faa36925f",
+        "android_client_info": {
+          "package_name": "com.example.traderapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85118788110-p8t16h5sipa9t540bvnf128p8bdqm42t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.traderapp",
+            "certificate_hash": "1013a3396c076ea017a6ede6ada21a3d954f08b1"
+          }
+        },
+        {
+          "client_id": "85118788110-sng41dcpkhsusa4dlnledu212f2ocol0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsiOvGRZu-xGf8JSpddGMYn2cXNs8C_jg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85118788110-sng41dcpkhsusa4dlnledu212f2ocol0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
