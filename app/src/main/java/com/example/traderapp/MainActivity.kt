@@ -24,10 +24,10 @@ class MainActivity : ComponentActivity() {
 
         authViewModel.register(
             onSuccess = {
-                Log.d("FirebaseTest", "✅ Регистрация успешна!")
+                Log.d("FirebaseTest", "Registered successfully!")
                 testLogin()
             },
-            onFailure = { error -> Log.e("FirebaseTest", "❌ Ошибка регистрации: $error") }
+            onFailure = { error -> Log.e("FirebaseTest", "Register Error: $error") }
         )
     }
 
@@ -35,10 +35,10 @@ class MainActivity : ComponentActivity() {
 
         authViewModel.login(
             onSuccess = {
-                Log.d("FirebaseTest", "✅ Вход успешен!")
-                testFirestoreWrite() // После входа пишем данные в Firestore
+                Log.d("FirebaseTest", "Login OK!")
+                testFirestoreWrite()
             },
-            onFailure = { error -> Log.e("FirebaseTest", "❌ Ошибка входа: $error") }
+            onFailure = { error -> Log.e("FirebaseTest", "Login Error: $error") }
         )
     }
 
@@ -74,13 +74,13 @@ class MainActivity : ComponentActivity() {
                 testLogout() // После чтения выходим из аккаунта
             }
             .addOnFailureListener { e ->
-                Log.e("FirebaseTest", "❌ Ошибка чтения из Firestore: ${e.message}")
+                Log.e("FirebaseTest", "Read Error, Firestore: ${e.message}")
             }
     }
 
     private fun testLogout() {
 
         authViewModel.logout()
-        Log.d("FirebaseTest", "Выход выполнен, пользователь авторизован? ${authViewModel.isAuthenticated.value}")
+        Log.d("FirebaseTest", "Login OK, auth OK? ${authViewModel.isAuthenticated.value}")
     }
 }

@@ -10,16 +10,16 @@ class AuthViewModel : ViewModel() {
 
     private val auth = FirebaseAuth.getInstance()
 
-    // Состояние полей ввода
+
     var email = mutableStateOf("")
     var password = mutableStateOf("")
     var confirmPassword = mutableStateOf("")
     var isAuthenticated = mutableStateOf(false)
 
-    // Ошибки валидации
+
     var validationError = mutableStateOf<String?>(null)
 
-    // Проверяем, вошёл ли пользователь при запуске приложения
+
     init {
         checkUserAuthenticationStatus()
     }
@@ -28,7 +28,7 @@ class AuthViewModel : ViewModel() {
         isAuthenticated.value = auth.currentUser != null
     }
 
-    // Обновление полей ввода
+
     fun onEmailChange(newEmail: String) {
         email.value = newEmail
     }
@@ -41,29 +41,28 @@ class AuthViewModel : ViewModel() {
         confirmPassword.value = newConfirmPassword
     }
 
-    // Валидация email
+
     private fun isEmailValid(): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
         return Pattern.matches(emailPattern, email.value)
     }
 
-    // Валидация пароля (8+ символов, цифры, буквы, спецсимвол)
+
     private fun isPasswordValid(): Boolean {
         val passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*(),.?\":{}|<>]).{8,}$"
         return Pattern.matches(passwordPattern, password.value)
     }
 
-    // Проверка совпадения паролей
+
     private fun arePasswordsMatching(): Boolean {
         return password.value == confirmPassword.value
     }
 
-    // Общая проверка всех полей перед регистрацией
+
     fun validateInputs(): Boolean {
         return isEmailValid() && isPasswordValid() && arePasswordsMatching()
     }
 
-    // **Регистрация пользователя**
     fun register(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         if (validateInputs()) {
             auth.createUserWithEmailAndPassword(email.value, password.value)
@@ -88,7 +87,7 @@ class AuthViewModel : ViewModel() {
         }
     }
 
-    // **Авторизация пользователя**
+
     fun login(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         auth.signInWithEmailAndPassword(email.value, password.value)
             .addOnCompleteListener { task ->
@@ -103,7 +102,7 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    // **Выход из аккаунта**
+
     fun logout() {
         auth.signOut()
         isAuthenticated.value = false
