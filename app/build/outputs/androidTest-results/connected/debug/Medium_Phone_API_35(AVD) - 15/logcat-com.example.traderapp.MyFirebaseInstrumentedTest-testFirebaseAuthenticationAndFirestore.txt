@@ -1,0 +1,115 @@
+03-19 12:34:46.177  7412  7432 I TestRunner: started: testFirebaseAuthenticationAndFirestore(com.example.traderapp.MyFirebaseInstrumentedTest)
+03-19 12:34:46.205  7412  7432 I FirebaseAuth: Creating user with testuser@example.com with empty reCAPTCHA token
+03-19 12:34:46.206  7412  7432 I FirebaseAuth: Logging in as testuser@example.com with empty reCAPTCHA token
+03-19 12:34:46.210  7412  7438 W System  : Ignoring header X-Firebase-Locale because its value was null.
+03-19 12:34:46.210  7412  7437 W System  : Ignoring header X-Firebase-Locale because its value was null.
+03-19 12:34:46.213  7412  7438 W LocalRequestInterceptor: Error getting App Check token; using placeholder token instead. Error: com.google.firebase.FirebaseException: No AppCheckProvider installed.
+03-19 12:34:46.214  7412  7437 W LocalRequestInterceptor: Error getting App Check token; using placeholder token instead. Error: com.google.firebase.FirebaseException: No AppCheckProvider installed.
+03-19 12:34:46.217  7412  7437 D TrafficStats: tagSocket(101) with statsTag=0xffffffff, statsUid=-1
+03-19 12:34:46.217  7412  7438 D TrafficStats: tagSocket(102) with statsTag=0xffffffff, statsUid=-1
+03-19 12:34:46.228   605  1098 D ConnectivityService: requestNetwork for uid/pid:10221/7412 activeRequest: null callbackRequest: 253 [NetworkRequest [ REQUEST id=254, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false
+03-19 12:34:46.229   605   780 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=254, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]
+03-19 12:34:46.229   605   780 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=254, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]
+03-19 12:34:46.229   605   780 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=254, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]
+03-19 12:34:46.229   605   780 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=254, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]
+03-19 12:34:46.229   605   787 D ConnectivityService: NetReassign [254 : null → 101] [c 0] [a 0] [i 1]
+03-19 12:34:46.231  7412  7449 W DynamiteModule: Local module descriptor class for com.google.android.gms.providerinstaller.dynamite not found.
+03-19 12:34:46.236  1129  1608 W ProviderHelper: Unknown dynamite feature providerinstaller.dynamite
+03-19 12:34:46.237  7412  7449 I DynamiteModule: Considering local module com.google.android.gms.providerinstaller.dynamite:0 and remote module com.google.android.gms.providerinstaller.dynamite:0
+03-19 12:34:46.237  7412  7449 W ProviderInstaller: Failed to load providerinstaller module: No acceptable module com.google.android.gms.providerinstaller.dynamite found. Local version is 0 and remote version is 0.
+03-19 12:34:46.238  7412  7449 D ApplicationLoaders: Returning zygote-cached class loader: /system/framework/org.apache.http.legacy.jar
+03-19 12:34:46.240  7412  7449 D nativeloader: Configuring clns-10 for other apk /system/framework/com.android.media.remotedisplay.jar. target_sdk_version=35, uses_libraries=ALL, library_path=/data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/lib/x86_64:/data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.gms
+03-19 12:34:46.241  7412  7449 D nativeloader: Configuring clns-11 for other apk /system/framework/com.android.location.provider.jar. target_sdk_version=35, uses_libraries=ALL, library_path=/data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/lib/x86_64:/data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.gms
+03-19 12:34:46.241  7412  7449 D ApplicationLoaders: Returning zygote-cached class loader: /system_ext/framework/androidx.window.extensions.jar
+03-19 12:34:46.241  7412  7449 D ApplicationLoaders: Returning zygote-cached class loader: /system_ext/framework/androidx.window.sidecar.jar
+03-19 12:34:46.243  7412  7449 W ample.traderapp: Loading /data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/oat/x86_64/base.odex non-executable as it requires an image which we failed to load
+03-19 12:34:46.245  7412  7449 D nativeloader: Configuring clns-12 for other apk /data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/base.apk. target_sdk_version=35, uses_libraries=, library_path=/data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/lib/x86_64:/data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/com.google.android.gms
+03-19 12:34:46.248  7412  7449 W ProviderInstaller: Failed to report request stats: com.google.android.gms.common.security.ProviderInstallerImpl.reportRequestStats [class android.content.Context, long, long]
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: Failed to get service from broker.
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: java.lang.SecurityException: Unknown calling package name 'com.google.android.gms'.
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at android.os.Parcel.createExceptionOrNull(Parcel.java:3242)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at android.os.Parcel.createException(Parcel.java:3226)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at android.os.Parcel.readException(Parcel.java:3209)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at android.os.Parcel.readException(Parcel.java:3151)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at asdf.a(:com.google.android.gms@250632038@25.06.32 (260800-724425688):36)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at asbm.z(:com.google.android.gms@250632038@25.06.32 (260800-724425688):143)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at arje.run(:com.google.android.gms@250632038@25.06.32 (260800-724425688):54)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at android.os.Handler.handleCallback(Handler.java:959)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at android.os.Handler.dispatchMessage(Handler.java:100)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at bzbx.mz(:com.google.android.gms@250632038@25.06.32 (260800-724425688):1)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at bzbx.dispatchMessage(:com.google.android.gms@250632038@25.06.32 (260800-724425688):5)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at android.os.Looper.loopOnce(Looper.java:232)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at android.os.Looper.loop(Looper.java:317)
+03-19 12:34:46.266  7412  7452 E GoogleApiManager: 	at android.os.HandlerThread.run(HandlerThread.java:85)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: Failed to register com.google.android.gms.providerinstaller#com.google.android.gms
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: etks: 17: 17: API: Phenotype.API is not available on this device. Connection failed with: ConnectionResult{statusCode=DEVELOPER_ERROR, resolution=null, message=null}
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at etku.a(:com.google.android.gms@250632038@25.06.32 (260800-724425688):13)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at fngx.d(:com.google.android.gms@250632038@25.06.32 (260800-724425688):3)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at fngz.run(:com.google.android.gms@250632038@25.06.32 (260800-724425688):130)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at fnis.execute(:com.google.android.gms@250632038@25.06.32 (260800-724425688):1)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at fnha.h(:com.google.android.gms@250632038@25.06.32 (260800-724425688):1)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at fnha.l(:com.google.android.gms@250632038@25.06.32 (260800-724425688):101)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at fnha.p(:com.google.android.gms@250632038@25.06.32 (260800-724425688):19)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at elkj.hH(:com.google.android.gms@250632038@25.06.32 (260800-724425688):35)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at dzxt.run(:com.google.android.gms@250632038@25.06.32 (260800-724425688):14)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at fnis.execute(:com.google.android.gms@250632038@25.06.32 (260800-724425688):1)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at dzxu.b(:com.google.android.gms@250632038@25.06.32 (260800-724425688):18)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at dzyj.b(:com.google.android.gms@250632038@25.06.32 (260800-724425688):36)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at dzyl.d(:com.google.android.gms@250632038@25.06.32 (260800-724425688):25)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at argm.c(:com.google.android.gms@250632038@25.06.32 (260800-724425688):9)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at arjc.q(:com.google.android.gms@250632038@25.06.32 (260800-724425688):48)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at arjc.d(:com.google.android.gms@250632038@25.06.32 (260800-724425688):10)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at arjc.g(:com.google.android.gms@250632038@25.06.32 (260800-724425688):211)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at arjc.onConnectionFailed(:com.google.android.gms@250632038@25.06.32 (260800-724425688):2)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at arje.run(:com.google.android.gms@250632038@25.06.32 (260800-724425688):82)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at android.os.Handler.handleCallback(Handler.java:959)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at android.os.Handler.dispatchMessage(Handler.java:100)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at bzbx.mz(:com.google.android.gms@250632038@25.06.32 (260800-724425688):1)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at bzbx.dispatchMessage(:com.google.android.gms@250632038@25.06.32 (260800-724425688):5)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at android.os.Looper.loopOnce(Looper.java:232)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at android.os.Looper.loop(Looper.java:317)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at android.os.HandlerThread.run(HandlerThread.java:85)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: Caused by: arfe: 17: API: Phenotype.API is not available on this device. Connection failed with: ConnectionResult{statusCode=DEVELOPER_ERROR, resolution=null, message=null}
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at asay.a(:com.google.android.gms@250632038@25.06.32 (260800-724425688):15)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at argp.a(:com.google.android.gms@250632038@25.06.32 (260800-724425688):1)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	at argm.c(:com.google.android.gms@250632038@25.06.32 (260800-724425688):5)
+03-19 12:34:46.269  7412  7451 W CondFlagRegistrar: 	... 12 more
+03-19 12:34:46.297  7412  7449 D nativeloader: Load /data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/base.apk!/lib/x86_64/libconscrypt_gmscore_jni.so using ns clns-12 from class loader (caller=/data/app/~~d6NtrRDX2CiPG1q9NymqOA==/com.google.android.gms-XorclRk62QCwNBq4RuSSEw==/base.apk!classes3.dex): ok
+03-19 12:34:46.299  7412  7449 V NativeCrypto: Registering com/google/android/gms/org/conscrypt/NativeCrypto's 308 native methods...
+03-19 12:34:46.305  7412  7453 W ample.traderapp: Accessing hidden method Ldalvik/system/VMStack;->getStackClass2()Ljava/lang/Class; (unsupported, reflection, allowed)
+03-19 12:34:46.310  7412  7453 I etkh.a  : Unable to retrieve flag snapshot for com.google.android.gms.providerinstaller#com.google.android.gms, using defaults.
+03-19 12:34:46.313  7412  7449 W ample.traderapp: Accessing hidden method Ljava/security/spec/ECParameterSpec;->getCurveName()Ljava/lang/String; (unsupported, reflection, allowed)
+03-19 12:34:46.327  7412  7449 I ProviderInstaller: Installed default security provider GmsCore_OpenSSL
+03-19 12:34:46.343   605  1098 D ConnectivityService: requestNetwork for uid/pid:10221/7412 activeRequest: null callbackRequest: 255 [NetworkRequest [ REQUEST id=256, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]] callback flags: 0 order: 2147483647 isUidTracked: false
+03-19 12:34:46.344   605   780 D WifiNetworkFactory: got request NetworkRequest [ REQUEST id=256, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]
+03-19 12:34:46.344   605   787 D ConnectivityService: NetReassign [256 : null → 101] [c 0] [a 1] [i 0]
+03-19 12:34:46.344   605   780 D UntrustedWifiNetworkFactory: got request NetworkRequest [ REQUEST id=256, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]
+03-19 12:34:46.344   605   780 D OemPaidWifiNetworkFactory: got request NetworkRequest [ REQUEST id=256, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]
+03-19 12:34:46.344   605   780 D MultiInternetWifiNetworkFactory: got request NetworkRequest [ REQUEST id=256, [ Capabilities: INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED Uid: 10221 RequestorUid: 10221 RequestorPkg: com.example.traderapp UnderlyingNetworks: Null] ]
+03-19 12:34:46.355  7412  7460 D TrafficStats: tagSocket(123) with statsTag=0xffffffff, statsUid=-1
+03-19 12:34:46.358  7412  7460 W ample.traderapp: Accessing hidden field Ljava/net/Socket;->impl:Ljava/net/SocketImpl; (unsupported, reflection, allowed)
+03-19 12:34:46.372  7412  7460 W ample.traderapp: Accessing hidden method Ljava/security/spec/ECParameterSpec;->setCurveName(Ljava/lang/String;)V (unsupported, reflection, allowed)
+03-19 12:34:46.452  7412  7438 W System  : Ignoring header X-Firebase-Locale because its value was null.
+03-19 12:34:46.454  7412  7438 W LocalRequestInterceptor: Error getting App Check token; using placeholder token instead. Error: com.google.firebase.FirebaseException: No AppCheckProvider installed.
+03-19 12:34:46.455  7412  7438 D TrafficStats: tagSocket(126) with statsTag=0xffffffff, statsUid=-1
+03-19 12:34:46.498  7412  7432 D FirebaseTest: Data written to Firestore successfully!
+03-19 12:34:46.582  7412  7412 E RecaptchaCallWrapper: Initial task failed for action RecaptchaAction(action=signUpPassword)with exception - The email address is already in use by another account.
+03-19 12:34:46.582  7412  7412 E FirebaseTest: Register Error: The email address is already in use by another account.
+03-19 12:34:46.604  2045  2940 D WM-NetworkStateTracker: Network capabilities changed: [ Transports: WIFI Capabilities: NOT_METERED&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&VALIDATED&NOT_ROAMING&FOREGROUND&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=12000Kbps LinkDnBandwidth>=30000Kbps TransportInfo: <SSID: <unknown ssid>, BSSID: 02:00:00:00:00:00, MAC: 02:00:00:00:00:00, IP: /10.0.2.16, Security type: 0, Supplicant state: COMPLETED, Wi-Fi standard: legacy, RSSI: -50, Link speed: 1Mbps, Tx Link speed: 1Mbps, Max Supported Tx Link speed: 11Mbps, Rx Link speed: 2Mbps, Max Supported Rx Link speed: 11Mbps, Frequency: 2447MHz, Net ID: -1, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: -1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none><none>MLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>> SignalStrength: -50 UnderlyingNetworks: Null]
+03-19 12:34:46.604  1600  2580 I BugleRcsEngine: handleMessage processing message:[NOTIFY_UPTIME_IGNORE_STATE_CHANGED] with [non-null]:RcsEngineImpl reference [CONTEXT log_prefix="RcsEngineImpl[DUAL_REG]:[7d562aaa-3849]>Handler" thread_id=69 ]
+03-19 12:34:46.604  1600  2111 I BugleRcsEngine: Connected state: [1], networkType: [WIFI] [CONTEXT thread_id=60 ]
+03-19 12:34:46.605   605   787 W IPCThreadState: Sending oneway calls to frozen process.
+03-19 12:34:46.605   605   787 W IPCThreadState: Sending oneway calls to frozen process.
+03-19 12:34:46.605   605   787 W IPCThreadState: Sending oneway calls to frozen process.
+03-19 12:34:46.605   605   787 W IPCThreadState: Sending oneway calls to frozen process.
+03-19 12:34:46.605   605   787 W IPCThreadState: Sending oneway calls to frozen process.
+03-19 12:34:46.605   605   787 W IPCThreadState: Sending oneway calls to frozen process.
+03-19 12:34:46.605   605   787 W IPCThreadState: Sending oneway calls to frozen process.
+03-19 12:34:46.605  1129  1608 I NullBinder: NullBinder for android.net.action.RECOMMEND_NETWORKS triggering remote TransactionTooLargeException due to Service without Chimera impl
+03-19 12:34:46.605  1129  1608 W .gms.persistent: Large reply transaction of 1056768 bytes, interface descriptor , code 1
+03-19 12:34:46.606  1600  2580 I BugleRcsEngine: No RCS Configuration was found in Bugle for simID: redacted-pii:sim_id[chars:20,last3:897] [CONTEXT log_prefix="ProvisioningEngineDataRetriever" thread_id=69 ]
+03-19 12:34:46.607  2045  2974 I Bugle   : BroadcastReceiverAsyncWorkTracker: Acknowledging broadcast of ctzh@4834b06
+03-19 12:34:46.619  7412  7432 D FirebaseTest: Firestore Data: {createdAt=1742380486207, balance=10000, email=testuser@example.com}
+03-19 12:34:46.620  7412  7432 D FirebaseAuth: Notifying id token listeners about a sign-out event.
+03-19 12:34:46.620  7412  7432 D FirebaseAuth: Notifying auth state listeners about a sign-out event.
+03-19 12:34:46.620  7412  7432 I TestRunner: finished: testFirebaseAuthenticationAndFirestore(com.example.traderapp.MyFirebaseInstrumentedTest)

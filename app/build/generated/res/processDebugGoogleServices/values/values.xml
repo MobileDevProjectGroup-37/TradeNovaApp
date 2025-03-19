@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">85118788110-sng41dcpkhsusa4dlnledu212f2ocol0.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">85118788110</string>
+    <string name="google_api_key" translatable="false">AIzaSyCsiOvGRZu-xGf8JSpddGMYn2cXNs8C_jg</string>
+    <string name="google_app_id" translatable="false">1:85118788110:android:b6defd1450e31faa36925f</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyCsiOvGRZu-xGf8JSpddGMYn2cXNs8C_jg</string>
+    <string name="google_storage_bucket" translatable="false">traderapp-c9332.firebasestorage.app</string>
+    <string name="project_id" translatable="false">traderapp-c9332</string>
+</resources>
