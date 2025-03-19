@@ -12,12 +12,12 @@ class AuthViewModel : ViewModel() {
 
 
     var email = mutableStateOf("")
-    var password = mutableStateOf("")
-    var confirmPassword = mutableStateOf("")
+    private var password = mutableStateOf("")
+    private var confirmPassword = mutableStateOf("")
     var isAuthenticated = mutableStateOf(false)
 
 
-    var validationError = mutableStateOf<String?>(null)
+    private var validationError = mutableStateOf<String?>(null)
 
 
     init {
@@ -59,7 +59,7 @@ class AuthViewModel : ViewModel() {
     }
 
 
-    fun validateInputs(): Boolean {
+    private fun validateInputs(): Boolean {
         return isEmailValid() && isPasswordValid() && arePasswordsMatching()
     }
 
@@ -78,12 +78,12 @@ class AuthViewModel : ViewModel() {
                 }
         } else {
             validationError.value = when {
-                !isEmailValid() -> "Некорректный формат email"
-                !isPasswordValid() -> "Пароль должен содержать 8+ символов, цифры, буквы и спецсимволы"
-                !arePasswordsMatching() -> "Пароли не совпадают"
-                else -> "Неизвестная ошибка"
+                !isEmailValid() -> "Wrong format email"
+                !isPasswordValid() -> "Password should be 8+ symbols, numbers, letters и and special symbols"
+                !arePasswordsMatching() -> "Passwords do not match"
+                else -> "Unknown error"
             }
-            onFailure(validationError.value ?: "Ошибка валидации")
+            onFailure(validationError.value ?: "Validation Error")
         }
     }
 
@@ -95,7 +95,7 @@ class AuthViewModel : ViewModel() {
                     isAuthenticated.value = true
                     onSuccess()
                 } else {
-                    val errorMessage = task.exception?.localizedMessage ?: "Ошибка входа"
+                    val errorMessage = task.exception?.localizedMessage ?: "Login Error"
                     validationError.value = errorMessage
                     onFailure(errorMessage)
                 }
