@@ -1,7 +1,7 @@
 package com.example.traderapp.scaffold
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,10 +11,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.traderapp.ui.screens.LoginScreen
 import com.example.traderapp.ui.screens.RegisterScreen
+import com.example.traderapp.ui.screens.components.AppTopBar
 import com.example.traderapp.ui.screens.components.HomeScreen
 import com.example.traderapp.ui.screens.components.OnBoardingScreen
 import com.example.traderapp.viewmodel.AuthViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -25,18 +27,20 @@ fun AppNavigation() {
     // val isAuthenticated = authViewModel.isAuthenticated.value
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-//        topBar = {
-//            if (isAuthenticated) {
-//                TopAppBarComponent(
-//                    navController = navController,
-//                    authViewModel = authViewModel,
-//                    bottomBarViewModel = bottomBarViewModel,
-//                    currentRoute = currentRoute
-//                )
-//            }
-//        },
-        content = { paddingValues ->
+        topBar = {
+            val currentRoute = navController.currentDestination?.route
+            when (currentRoute) {
+                "login" -> AppTopBar(title = "Login", showBackButton = false)
+                "register" -> AppTopBar(
+                    title = "Register",
+                    showBackButton = true,
+                    onBackClick = { navController.popBackStack() }
+                )
+                "home" -> AppTopBar(title = "Home", showBackButton = false)
+                else -> {}
+            }
+        }
+    ){ paddingValues ->
             NavHost(
                 navController = navController,
                 startDestination = "onboarding",
@@ -60,11 +64,11 @@ fun AppNavigation() {
 //                composable("forgot_password") { ForgotPasswordScreen(navController)
 
             }
-        },
+        }
 //        bottomBar = {
 //            if (isAuthenticated) { BottomBar(navController) }
 //        }
-    )
+
 }
 
 

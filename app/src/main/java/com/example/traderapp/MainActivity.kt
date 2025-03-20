@@ -3,7 +3,6 @@ package com.example.traderapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.navigation.compose.rememberNavController
 import com.example.traderapp.scaffold.AppNavigation
 
 import com.example.traderapp.ui.theme.TraderAppTheme
@@ -18,3 +17,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+

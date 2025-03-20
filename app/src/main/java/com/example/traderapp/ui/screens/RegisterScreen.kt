@@ -21,11 +21,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.traderapp.R
+import com.example.traderapp.ui.screens.components.AppTopBar
 import com.example.traderapp.ui.screens.components.BackButtonWithLogo
 import com.example.traderapp.ui.screens.components.CustomButton
 import com.example.traderapp.ui.screens.components.CustomTextField
 import com.example.traderapp.ui.screens.components.DividerWithText
 import com.example.traderapp.ui.theme.TraderAppTheme
+import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.AuthViewModel
 
 @Composable
@@ -33,6 +35,19 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
     val context = LocalContext.current
     val validationError = authViewModel.validationError.value
 
+    TransparentStatusBar()
+    Scaffold(
+        topBar = { AppTopBar(title = "Login", showBackButton = false) },
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Text("Содержание страницы Логина")
+            }
+        }
+    )
 
     Box(
         modifier = Modifier
