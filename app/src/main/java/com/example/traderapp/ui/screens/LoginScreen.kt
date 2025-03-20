@@ -3,6 +3,7 @@ package com.example.traderapp.ui.screens
 import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -11,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.BackButtonRow
 import com.example.traderapp.ui.screens.components.CustomButton
+import com.example.traderapp.ui.screens.components.CustomTextField
 import com.example.traderapp.ui.theme.TraderAppTheme
 
 @Composable
@@ -63,40 +66,26 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             // 3) email field
-            OutlinedTextField(
+            CustomTextField(
                 value = email,
                 onValueChange = { email = it },
-                singleLine = true,
-                label = { Text("Email address") },
-                isError = email.isNotEmpty() && !isEmailValid,
-                leadingIcon = { // Icon
-                    Icon(
-                        imageVector = Icons.Filled.Email,
-                        contentDescription = "Email",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
+                label = "Email address",
+                isValid = isEmailValid,
+                leadingIcon = Icons.Filled.Email,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // 4) password field
-            OutlinedTextField(
+            CustomTextField(
                 value = password,
                 onValueChange = { password = it },
-                singleLine = true,
-                label = { Text("Password") },
-                isError = password.isNotEmpty() && !isPasswordValid,
-                leadingIcon = { // 🔹 Иконка замка
-                    Icon(
-                        imageVector = Icons.Filled.Lock,
-                        contentDescription = "Password",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                visualTransformation = PasswordVisualTransformation(), // Пароль всегда скрыт
-                modifier = Modifier.fillMaxWidth()
+                label = "Password",
+                isValid = isPasswordValid,
+                isPassword = true,
+                leadingIcon = Icons.Filled.Lock,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -190,7 +179,6 @@ fun LoginScreen(
 
 
             }
-
             Spacer(modifier = Modifier.height(24.dp))
 
             // 10) "Don't have an account? Register"

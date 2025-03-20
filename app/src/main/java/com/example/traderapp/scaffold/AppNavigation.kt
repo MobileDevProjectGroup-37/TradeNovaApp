@@ -13,18 +13,18 @@ fun AppNavigation(navController: NavHostController) {
         navController = navController,
         startDestination = "login"
     ) {
-        // 1) Стартовый экран — логин
+        //login
         composable(route = "login") {
             LoginScreen(
                 onBackClick = { navController.navigateUp() },
                 onSignInClick = { email, password ->
-                    // При необходимости: логика входа (Firebase/AuthViewModel)
+                    // TODO logic with firebase (Firebase/AuthViewModel)
                 },
                 onForgotPasswordClick = {
-                    // Если нужен экран "forgot", делаете navController.navigate("forgot")
+                    // if  "forgot" needed, do navController.navigate("forgot")
                 },
                 onGoogleClick = {
-                    // Логика Google Sign-In
+                    // Logic Google Sign-In
                 },
                 onRegisterClick = {
                     navController.navigate("register")
@@ -32,18 +32,18 @@ fun AppNavigation(navController: NavHostController) {
             )
         }
 
-        // 2) Экран регистрации
+        // register
         composable(route = "register") {
             RegisterScreen(
                 onBackClick = { navController.navigateUp() },
                 onSignUpWithEmail = { email, password ->
-                    // При необходимости: логика регистрации
+                    // TODO register via firebase
                 },
                 onGoogleClick = {
-                    // Логика Google Sign-Up
+                    // logic google sign in
                 },
                 onSignInClick = {
-                    // Переходим обратно на логин
+                    // back to login
                     navController.navigate("login")
                 }
             )

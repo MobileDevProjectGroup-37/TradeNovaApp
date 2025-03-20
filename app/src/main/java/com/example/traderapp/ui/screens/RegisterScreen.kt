@@ -2,6 +2,7 @@ package com.example.traderapp.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
@@ -11,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -19,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.BackButtonRow
 import com.example.traderapp.ui.screens.components.CustomButton
+import com.example.traderapp.ui.screens.components.CustomTextField
+import com.example.traderapp.ui.screens.components.DividerWithText
 import com.example.traderapp.ui.theme.TraderAppTheme
 
 @Composable
@@ -82,56 +86,31 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // 4) Dividing line "or continue with"
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                HorizontalDivider(modifier = Modifier.weight(1f))
-                Text(
-                    text = " or signup with email ",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                )
-                HorizontalDivider(modifier = Modifier.weight(1f))
-            }
+            DividerWithText(" or signup with email ")
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // 5) Email
-            OutlinedTextField(
+            CustomTextField(
                 value = email,
                 onValueChange = { email = it },
-                singleLine = true,
-                label = { Text("Email address") },
-                isError = email.isNotEmpty() && !isEmailValid,
-                leadingIcon = { // 🔹 Иконка почты
-                    Icon(
-                        imageVector = Icons.Filled.Email,
-                        contentDescription = "Email",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
+                label = "Email address",
+                isValid = isEmailValid,
+                leadingIcon = Icons.Filled.Email,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             // 6) Password
-            OutlinedTextField(
+            CustomTextField(
                 value = password,
                 onValueChange = { password = it },
-                singleLine = true,
-                label = { Text("Password") },
-                isError = password.isNotEmpty() && !isPasswordValid,
-                leadingIcon = { // 🔹 Иконка замка
-                    Icon(
-                        imageVector = Icons.Filled.Lock,
-                        contentDescription = "Password",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                visualTransformation = PasswordVisualTransformation(), // Пароль всегда скрыт
-                modifier = Modifier.fillMaxWidth()
+                label = "Password",
+                isValid = isPasswordValid,
+                isPassword = true,
+                leadingIcon = Icons.Filled.Lock,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
