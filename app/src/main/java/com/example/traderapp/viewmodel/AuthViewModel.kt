@@ -10,14 +10,12 @@ class AuthViewModel : ViewModel() {
 
     private val auth = FirebaseAuth.getInstance()
 
-
     var email = mutableStateOf("")
-    private var password = mutableStateOf("")
+    var password = mutableStateOf("")
     private var confirmPassword = mutableStateOf("")
     var isAuthenticated = mutableStateOf(false)
-
-
-    private var validationError = mutableStateOf<String?>(null)
+    var touchIdEnabled = mutableStateOf(false)
+    var validationError = mutableStateOf<String?>(null)
 
 
     init {
@@ -41,14 +39,16 @@ class AuthViewModel : ViewModel() {
         confirmPassword.value = newConfirmPassword
     }
 
+    fun onTouchIdChange(newValue: Boolean) {
+        touchIdEnabled.value = newValue
+    }
 
-    private fun isEmailValid(): Boolean {
+    fun isEmailValid(): Boolean {
         val emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
         return Pattern.matches(emailPattern, email.value)
     }
 
-
-    private fun isPasswordValid(): Boolean {
+    fun isPasswordValid(): Boolean {
         val passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*(),.?\":{}|<>]).{8,}$"
         return Pattern.matches(passwordPattern, password.value)
     }
@@ -57,7 +57,6 @@ class AuthViewModel : ViewModel() {
     private fun arePasswordsMatching(): Boolean {
         return password.value == confirmPassword.value
     }
-
 
     private fun validateInputs(): Boolean {
         return isEmailValid() && isPasswordValid() && arePasswordsMatching()
@@ -71,19 +70,26 @@ class AuthViewModel : ViewModel() {
                         isAuthenticated.value = true
                         onSuccess()
                     } else {
-                        val errorMessage = task.exception?.localizedMessage ?: "Ошибка регистрации"
-                        validationError.value = errorMessage
-                        onFailure(errorMessage)
+                        // Check if email already exists
+                        task.exception?.let { exception ->
+                            if (exception.message?.contains("The email address is already in use") == true) {
+                                validationError.value = "Email is already in use"
+                            }
+                        }
+                        task.exception?.message?.let { errorMessage ->
+                            validationError.value = errorMessage
+                            onFailure(errorMessage)
+                        }
                     }
                 }
         } else {
             validationError.value = when {
-                !isEmailValid() -> "Wrong format email"
-                !isPasswordValid() -> "Password should be 8+ symbols, numbers, letters и and special symbols"
+                !isEmailValid() -> "Invalid email format"
+                !isPasswordValid() -> "Password must be at least 8 characters long, contain a digit, a special character, and both uppercase and lowercase letters."
                 !arePasswordsMatching() -> "Passwords do not match"
                 else -> "Unknown error"
             }
-            onFailure(validationError.value ?: "Validation Error")
+            onFailure(validationError.value ?: "Unknown error")
         }
     }
 
@@ -101,7 +107,6 @@ class AuthViewModel : ViewModel() {
                 }
             }
     }
-
 
     fun logout() {
         auth.signOut()

@@ -10,31 +10,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 /** Row with back button (←) */
 @Composable
-fun BackButtonRow(onBackClick: () -> Unit) {
-    Row(
-        modifier = Modifier
+fun BackButtonWithLogo(navController: NavController, modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(top = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(top = 16.dp)
     ) {
-        IconButton(onClick = onBackClick) {
+        IconButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier.align(Alignment.CenterStart)
+        ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
                 tint = MaterialTheme.colorScheme.onSurface
             )
         }
-        Spacer(modifier = Modifier.width(8.dp))
+
         Text(
             text = "TradeNova",
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.primary
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.align(Alignment.Center)
         )
     }
 }
-
-
-

@@ -13,11 +13,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TraderAppTheme {
-                // Создаём NavController
-                val navController = rememberNavController()
-
-                // Запускаем навигацию
-                AppNavigation(navController)
+                AppNavigation()
             }
         }
     }

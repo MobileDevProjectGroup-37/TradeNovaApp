@@ -13,32 +13,29 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.traderapp.R
-import com.example.traderapp.ui.screens.components.BackButtonRow
+import com.example.traderapp.ui.screens.components.BackButtonWithLogo
 import com.example.traderapp.ui.screens.components.CustomButton
 import com.example.traderapp.ui.screens.components.CustomTextField
 import com.example.traderapp.ui.theme.TraderAppTheme
+import com.example.traderapp.viewmodel.AuthViewModel
 
 @Composable
-fun LoginScreen(
-    onBackClick: () -> Unit = {},
-    onSignInClick: (String, String) -> Unit = { _, _ -> },
-    onForgotPasswordClick: () -> Unit = {},
-    onGoogleClick: () -> Unit = {},
-    onRegisterClick: () -> Unit = {}
-) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var showPassword by remember { mutableStateOf(false) }
-    var touchIdEnabled by remember { mutableStateOf(false) }
+fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
 
-    val isEmailValid =
-        email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
-    val isPasswordValid = password.length >= 6
+
+    val email by authViewModel.email
+    val password by authViewModel.password
+    val touchIdEnabled by authViewModel.touchIdEnabled
+    val validationError = authViewModel.validationError.value
+
+    var errorMessage by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -48,9 +45,7 @@ fun LoginScreen(
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             // 1) Button "Back" + logo/name
-            BackButtonRow(
-                onBackClick = onBackClick
-            )
+            BackButtonWithLogo(navController)
             // TODO TRANSFER THOSE FIELDS TO COMPONENTS
             // 2) Header
             Text(
@@ -68,9 +63,9 @@ fun LoginScreen(
             // 3) email field
             CustomTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = { authViewModel.onEmailChange(it) },
                 label = "Email address",
-                isValid = isEmailValid,
+                isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches(),
                 leadingIcon = Icons.Filled.Email,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
@@ -80,9 +75,9 @@ fun LoginScreen(
             // 4) password field
             CustomTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { authViewModel.onPasswordChange(it) },
                 label = "Password",
-                isValid = isPasswordValid,
+                isValid = password.length >= 8,
                 isPassword = true,
                 leadingIcon = Icons.Filled.Lock,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
@@ -92,12 +87,22 @@ fun LoginScreen(
 
             // 5) Forgot password?
             TextButton(
-                onClick = onForgotPasswordClick,
+                onClick = { navController.navigate("forgot_password") },
                 modifier = Modifier.align(Alignment.Start)
             ) {
                 Text(text = "Forgot your password? Click here")
             }
-
+            // Display validation error message if any
+            validationError?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.error),
+                    modifier = Modifier
+                        .padding(top = 16.dp)
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+            }
             // 6) Touch ID toggle
             Row(
                 modifier = Modifier
@@ -113,7 +118,7 @@ fun LoginScreen(
                 )
                 Switch(
                     checked = touchIdEnabled,
-                    onCheckedChange = { touchIdEnabled = it },
+                    onCheckedChange = { authViewModel.onTouchIdChange(it) },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = MaterialTheme.colorScheme.primary
                     )
@@ -131,15 +136,20 @@ fun LoginScreen(
             ) {
                 CustomButton(
                     text = "Sign in",
-                    onClick = { onSignInClick(email, password) },
+                    onClick = {  authViewModel.login(
+                        onSuccess = {
+                            navController.navigate("home") //go to home page
+                        },
+                        onFailure = { error ->
+                            errorMessage = error  }
+                    )
+                    },
                     backgroundColor = MaterialTheme.colorScheme.primary,
                     textColor = Color.White,
                     buttonWidth = 280.dp,
                     buttonHeight = 55.dp
                 )
             }
-
-
             Spacer(modifier = Modifier.height(24.dp))
 
             // 8) Dividing line with "or continue with"
@@ -165,7 +175,7 @@ fun LoginScreen(
 
                 //  Google Button (Outlined)
                 CustomButton(
-                    onClick = onGoogleClick,
+                    onClick = { /* Implement Google login logic here */ },
                     backgroundColor = Color.White,
                     textColor = Color.Black,
                     icon = painterResource(id = R.drawable.google_logo),
@@ -175,10 +185,8 @@ fun LoginScreen(
                     buttonWidth = 232.dp,
                     buttonHeight = 48.dp
                 )
-
-
-
             }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             // 10) "Don't have an account? Register"
@@ -193,7 +201,7 @@ fun LoginScreen(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                TextButton(onClick = onRegisterClick) {
+                TextButton(onClick = { navController.navigate("register") }) {
                     Text(
                         text = "Register",
                         style = MaterialTheme.typography.bodyMedium,
@@ -209,6 +217,8 @@ fun LoginScreen(
 @Composable
 fun PreviewLoginScreen() {
     TraderAppTheme {
-        LoginScreen()
+        val navController = rememberNavController()
+        val authViewModel: AuthViewModel = viewModel()
+        LoginScreen(navController = navController, authViewModel = authViewModel)
     }
 }
