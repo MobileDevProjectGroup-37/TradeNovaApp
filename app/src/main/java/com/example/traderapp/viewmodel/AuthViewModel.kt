@@ -59,7 +59,7 @@ class AuthViewModel : ViewModel() {
     }
 
     private fun validateInputs(): Boolean {
-        return isEmailValid() && isPasswordValid() && arePasswordsMatching()
+        return isEmailValid() && isPasswordValid()
     }
 
     fun register(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
@@ -67,19 +67,30 @@ class AuthViewModel : ViewModel() {
             auth.createUserWithEmailAndPassword(email.value, password.value)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        isAuthenticated.value = true
-                        onSuccess()
-                    } else {
-                        // Check if email already exists
-                        task.exception?.let { exception ->
-                            if (exception.message?.contains("The email address is already in use") == true) {
-                                validationError.value = "Email is already in use"
+                        val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
+                        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                        val createdAt = System.currentTimeMillis()
+                        val user = hashMapOf(
+                            "email" to email.value,
+                            "balance" to 1000,  // Default Balance
+                            "trade_volume" to 0, // Start Trade Value
+                            "profit" to 0 // Start profit
+                        )
+
+                        db.collection("users").document(userId)
+                            .set(user)
+                            .addOnSuccessListener {
+                                isAuthenticated.value = true
+                                onSuccess()
                             }
-                        }
-                        task.exception?.message?.let { errorMessage ->
-                            validationError.value = errorMessage
-                            onFailure(errorMessage)
-                        }
+                            .addOnFailureListener { e ->
+                                validationError.value = "Database error: ${e.message}"
+                                onFailure(e.message ?: "Database error")
+                            }
+                    } else {
+                        val errorMessage = task.exception?.localizedMessage ?: "Registration failed"
+                        validationError.value = errorMessage
+                        onFailure(errorMessage)
                     }
                 }
         } else {
@@ -94,12 +105,29 @@ class AuthViewModel : ViewModel() {
     }
 
 
+
     fun login(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         auth.signInWithEmailAndPassword(email.value, password.value)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    isAuthenticated.value = true
-                    onSuccess()
+                    val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
+                    val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+
+                    db.collection("users").document(userId).get()
+                        .addOnSuccessListener { document ->
+                            if (document.exists()) {
+                                val balance = document.getLong("balance") ?: 0
+                                val tradeVolume = document.getLong("trade_volume") ?: 0
+                                val profit = document.getLong("profit") ?: 0
+                                isAuthenticated.value = true
+                                onSuccess()
+                            } else {
+                                onFailure("User data not found")
+                            }
+                        }
+                        .addOnFailureListener { e ->
+                            onFailure("Error fetching user data: ${e.message}")
+                        }
                 } else {
                     val errorMessage = task.exception?.localizedMessage ?: "Login Error"
                     validationError.value = errorMessage
@@ -107,6 +135,7 @@ class AuthViewModel : ViewModel() {
                 }
             }
     }
+
 
     fun logout() {
         auth.signOut()
