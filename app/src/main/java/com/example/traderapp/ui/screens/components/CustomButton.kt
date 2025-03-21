@@ -11,8 +11,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.Image
-import androidx.compose.ui.draw.shadow
+import androidx.compose.foundation.border
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
 
 /**
  * Common reusable button component.
@@ -34,48 +35,60 @@ fun CustomButton(
     onClick: () -> Unit,
     backgroundColor: Color,
     textColor: Color,
-    shadowElevation: Dp = 6.dp,
     icon: Painter? = null,
     fillImage: Boolean = false,
-    rounded: Dp = 30.dp,
+    rounded: Dp = 12.dp,
     paddingNeeded: Boolean = true,
-    buttonWidth: Dp = 250.dp, // Possible to choose the width
-    buttonHeight: Dp = 50.dp  // Possible to choose the height
+    buttonWidth: Dp = Dp.Unspecified,
+    buttonHeight: Dp = 60.dp,
+    modifier: Modifier = Modifier
 ) {
-    Button(
-        onClick = onClick,
-        shape = RoundedCornerShape(rounded),
-        modifier = Modifier
+
+    Box(
+        modifier = modifier
             .width(buttonWidth)
             .height(buttonHeight)
-            .shadow(shadowElevation, shape = RoundedCornerShape(rounded)),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = backgroundColor
-        ),
-        contentPadding = if (paddingNeeded) PaddingValues(16.dp) else PaddingValues(0.dp)
+            .border(2.dp, textColor, RoundedCornerShape(rounded))
+            .padding(0.dp)
     ) {
-        if (icon != null && fillImage) {
-            Image(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.FillBounds
-            )
-        } else {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                icon?.let {
-                    Icon(
-                        painter = it,
-                        contentDescription = null,
-                        modifier = Modifier.size(28.dp),
-                        tint = Color.Unspecified
+        Button(
+            onClick = onClick,
+            shape = RoundedCornerShape(rounded),
+            modifier = Modifier.fillMaxSize(),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = backgroundColor
+            ),
+            contentPadding = if (paddingNeeded) PaddingValues(16.dp) else PaddingValues(0.dp)
+        ) {
+            if (icon != null && fillImage) {
+                Image(
+                    painter = icon,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillBounds
+                )
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    icon?.let {
+                        Icon(
+                            painter = it,
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp),
+                            tint = Color.Unspecified
+                        )
+                    }
+                    Text(
+                        text = text,
+                        color = textColor,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 18.sp
+                        ),
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
-
                 }
-                Text(text, color = textColor)
             }
         }
     }

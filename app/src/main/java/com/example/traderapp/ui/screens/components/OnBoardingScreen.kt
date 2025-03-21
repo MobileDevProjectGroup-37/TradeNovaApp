@@ -32,7 +32,7 @@ fun OnBoardingScreen(navController: NavController) {
 
             Button(
                 onClick = {
-                    navController.navigate("login")
+                    navController.navigate("welcome")
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium

@@ -11,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,9 +19,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.traderapp.R
+import com.example.traderapp.ui.screens.components.AppTitle
 import com.example.traderapp.ui.screens.components.AppTopBar
+import com.example.traderapp.ui.screens.components.ClickableText
 import com.example.traderapp.ui.screens.components.CustomButton
 import com.example.traderapp.ui.screens.components.CustomTextField
+import com.example.traderapp.ui.screens.components.QuestionText
+import com.example.traderapp.ui.screens.components.SquareButton
 import com.example.traderapp.ui.theme.TraderAppTheme
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.AuthViewModel
@@ -60,17 +63,11 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                 Column(modifier = Modifier.fillMaxSize()) {
 
                     // 2) Header
-                    Text(
+                    AppTitle(
                         text = "Login to your\nAccount",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(top = 16.dp)
-                            .fillMaxWidth()
+                        modifier = Modifier.padding(16.dp),
+                        textAlign = TextAlign.Center
                     )
-
-                    Spacer(modifier = Modifier.height(32.dp))
 
                     // 3) Email field
                     CustomTextField(
@@ -79,6 +76,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                         label = "Email address",
                         isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches(),
                         leadingIcon = Icons.Filled.Email,
+                        customTrailingIcon = R.drawable.ic_check,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     )
 
@@ -95,17 +93,27 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
                     // 5) Forgot password?
-                    TextButton(
-                        onClick = { navController.navigate("forgot_password") },
-                        modifier = Modifier.align(Alignment.Start)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            ,
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Forgot your password? Click here")
+                        QuestionText(
+                            question = "Forgot your password?"
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        ClickableText(
+                            text = "Click here",
+                            onClick = {
+                                /* logic*/
+                                navController.navigate("forgot_password")
+                            }
+                        )
                     }
-
-                    // Display validation error message if any
+// Display validation error message if any
                     if (!validationError.isNullOrEmpty()) {
                         Text(
                             text = validationError,
@@ -116,8 +124,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                             textAlign = TextAlign.Center
                         )
                     }
-
-                    // 6) Touch ID toggle
+// Touch ID toggle
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -125,21 +132,21 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "Unlock with Touch ID?",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
+                        QuestionText(
+                            question = "Unlock with Touch ID?"
                         )
                         Switch(
                             checked = touchIdEnabled,
                             onCheckedChange = { authViewModel.onTouchIdChange(it) },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = MaterialTheme.colorScheme.primary
+                                checkedThumbColor = MaterialTheme.colorScheme.primary,
+                                uncheckedThumbColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                                checkedTrackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                                uncheckedTrackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                                uncheckedBorderColor = Color.Transparent
                             )
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     // 7) Sign in button
                     Box(
@@ -162,11 +169,9 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                             },
                             backgroundColor = MaterialTheme.colorScheme.primary,
                             textColor = Color.White,
-                            buttonWidth = 280.dp,
-                            buttonHeight = 55.dp
+
                         )
                     }
-
                     // Display login error message if login fails
                     if (errorMessage.isNotEmpty()) {
                         Text(
@@ -179,20 +184,20 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(100.dp))
 
                     // 8) Dividing line with "or continue with"
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Divider(modifier = Modifier.weight(1f))
+                        HorizontalDivider(modifier = Modifier.weight(1f))
                         Text(
-                            text = " or ",
+                            text = " or continue with ",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                         )
-                        Divider(modifier = Modifier.weight(1f))
+                        HorizontalDivider(modifier = Modifier.weight(1f))
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -201,50 +206,23 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        // Google Button (Outlined)
-                        CustomButton(
-                            onClick = { /* Implement Google login logic here */ },
-                            backgroundColor = Color.White,
-                            textColor = Color.Black,
-                            icon = painterResource(id = R.drawable.google_logo),
-                            fillImage = true,
-                            rounded = 8.dp,
-                            paddingNeeded = false,
-                            buttonWidth = 232.dp,
-                            buttonHeight = 48.dp
+                        SquareButton(
+                            onClick = {
+                                /* logic */
+                            },
+                            iconResId = R.drawable.google_logo1,
+                            buttonSize = 48.dp
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(44.dp))
 
                     // 10) "Don't have an account? Register"
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Don't have an account?",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        TextButton(onClick = { navController.navigate("register") }) {
-                            Text(
-                                text = "Register",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
+
                 }
             }
         }
     )
 }
-
-
-
 
 @Preview(showSystemUi = true)
 @Composable

@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.traderapp.ui.screens.LoginScreen
 import com.example.traderapp.ui.screens.RegisterScreen
+import com.example.traderapp.ui.screens.WelcomeScreen
 import com.example.traderapp.ui.screens.components.AppTopBar
 import com.example.traderapp.ui.screens.components.HomeScreen
 import com.example.traderapp.ui.screens.components.OnBoardingScreen
@@ -58,6 +59,7 @@ fun AppNavigation() {
                 composable("onboarding") {
                     OnBoardingScreen(navController = navController)
                 }
+                composable("welcome") { WelcomeScreen(navController) }
                 composable("login") { LoginScreen(navController, authViewModel) }
                 composable("register") { RegisterScreen(navController, authViewModel) }
 
