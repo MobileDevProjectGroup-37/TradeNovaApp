@@ -18,6 +18,7 @@ import com.example.traderapp.ui.screens.components.bars.AppTopBar
 import com.example.traderapp.ui.screens.OnBoardingScreen
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
+import com.example.traderapp.viewmodel.OnBoardingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +64,8 @@ fun AppNavigation() {
 //
 
                 composable("onboarding") {
-                    OnBoardingScreen(navController = navController)
+                    val onBoardingViewModel: OnBoardingViewModel = viewModel()
+                    OnBoardingScreen(navController, onBoardingViewModel)
                 }
 
                 composable("welcome") { WelcomeScreen(navController) }
