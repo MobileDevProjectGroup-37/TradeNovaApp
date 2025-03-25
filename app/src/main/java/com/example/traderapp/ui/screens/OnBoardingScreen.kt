@@ -23,6 +23,7 @@ import com.example.traderapp.ui.screens.components.onboarding.OnBoardingPager
 import com.example.traderapp.viewmodel.OnBoardingViewModel
 import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.ui.res.stringResource
+import com.example.traderapp.ui.theme.TransparentStatusBar
 
 @Composable
 fun OnBoardingScreen(navController: NavController, viewModel: OnBoardingViewModel) {
@@ -34,7 +35,7 @@ fun OnBoardingScreen(navController: NavController, viewModel: OnBoardingViewMode
             currentPage = page
         }
     }
-
+    TransparentStatusBar()
     Scaffold(
         topBar = {
             AppTopBar(
