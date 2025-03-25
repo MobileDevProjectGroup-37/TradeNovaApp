@@ -14,7 +14,10 @@
     import androidx.navigation.NavController
     import androidx.navigation.compose.rememberNavController
     import com.example.traderapp.R
-    import com.example.traderapp.ui.screens.components.*
+    import com.example.traderapp.ui.screens.components.bars.AppTopBar
+    import com.example.traderapp.ui.screens.components.buttons.CustomButton
+    import com.example.traderapp.ui.screens.components.buttons.GoogleSignInButton
+    import com.example.traderapp.ui.screens.components.texts.AppTitle
     import com.example.traderapp.ui.theme.TransparentStatusBar
 
     @Composable

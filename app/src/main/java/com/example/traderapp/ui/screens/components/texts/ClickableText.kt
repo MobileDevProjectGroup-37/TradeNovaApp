@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components
+package com.example.traderapp.ui.screens.components.texts
 
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.Text

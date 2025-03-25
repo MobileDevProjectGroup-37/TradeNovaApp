@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.traderapp.ui.screens.components.CryptoItem
-import com.example.traderapp.ui.screens.components.BottomNavigationBar
+import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 
 import com.example.traderapp.viewmodel.CryptoViewModel
 
