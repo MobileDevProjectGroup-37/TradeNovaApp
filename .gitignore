@@ -1,1 +1,4 @@
 *.log
+.gradle/
+.idea/
+local.properties
