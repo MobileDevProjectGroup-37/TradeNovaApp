@@ -1,6 +1,5 @@
 package com.example.traderapp.ui.screens.components.onboarding
 
-
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.runtime.Composable

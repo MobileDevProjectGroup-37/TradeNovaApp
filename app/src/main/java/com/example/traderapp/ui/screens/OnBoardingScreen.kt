@@ -6,15 +6,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.ui.screens.components.onboarding.OnBoardingDots
 import com.example.traderapp.ui.screens.components.onboarding.OnBoardingPager
 import com.example.traderapp.viewmodel.OnBoardingViewModel
@@ -25,7 +26,7 @@ import kotlinx.coroutines.flow.collectLatest
 fun OnBoardingScreen(navController: NavController, viewModel: OnBoardingViewModel) {
 
     val pagerState = rememberPagerState(pageCount = { viewModel.onBoardingData.size })
-    var currentPage by remember { mutableStateOf(0) } // 1st page
+    var currentPage by remember { mutableIntStateOf(0) } // 1st page
 
     LaunchedEffect(pagerState) { // function in JC which helps with async
         // when the pager state changes, it creates a flow to renew the page
@@ -44,37 +45,29 @@ fun OnBoardingScreen(navController: NavController, viewModel: OnBoardingViewMode
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween,
 
-
         ) {
 
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f) // make it beautiful
+                    .weight(1f)
             ) {
                 OnBoardingPager(pagerState, viewModel.onBoardingData)
             }
             OnBoardingDots(currentPage = currentPage, pageCount = viewModel.onBoardingData.size)
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-
-            Spacer(modifier = Modifier.height(44.dp))
-
-            Button(
-                onClick = {
-                    navController.navigate("welcome")
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Text(
-                    text = "Continue",
-                    style = MaterialTheme.typography.bodyLarge
-                )
-            }
+            CustomButton(
+                text = "Continue",
+                onClick = { navController.navigate("welcome") },
+                backgroundColor = MaterialTheme.colorScheme.primary,
+                textColor = MaterialTheme.colorScheme.onPrimary,
+                rounded = 16.dp,
+                buttonWidth = Dp.Unspecified,
+                buttonHeight = 60.dp,
+                paddingNeeded = true
+            )
         }
     }
-    }
+}
 
 

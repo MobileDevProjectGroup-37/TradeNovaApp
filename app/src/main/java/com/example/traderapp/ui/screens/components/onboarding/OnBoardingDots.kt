@@ -1,8 +1,6 @@
 package com.example.traderapp.ui.screens.components.onboarding
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -24,7 +22,6 @@ fun OnBoardingDots(currentPage: Int, pageCount: Int) {
     ) {
         repeat(pageCount) { iteration ->
             val color = if (currentPage == iteration) MaterialTheme.colorScheme.primary else Color(0xFFA6A6A6)
-            val size = if (currentPage == iteration) 16.dp else 30.dp
 
             Box(
                 modifier = Modifier
