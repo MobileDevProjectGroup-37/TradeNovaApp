@@ -97,7 +97,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            ,
+                        ,
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -170,7 +170,7 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                             backgroundColor = MaterialTheme.colorScheme.primary,
                             textColor = Color.White,
 
-                        )
+                            )
                     }
                     // Display login error message if login fails
                     if (errorMessage.isNotEmpty()) {

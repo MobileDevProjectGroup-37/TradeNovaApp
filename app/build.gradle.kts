@@ -68,4 +68,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation (libs.androidx.navigation.compose.v253)
     implementation ("com.google.accompanist:accompanist-systemuicontroller:0.31.0-alpha")
+    //---------------------------------for http and websocket----------------------------
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 }
