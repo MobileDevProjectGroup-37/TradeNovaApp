@@ -21,11 +21,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.traderapp.R
-import com.example.traderapp.ui.screens.components.AppTopBar
-import com.example.traderapp.ui.screens.components.BackButtonWithLogo
-import com.example.traderapp.ui.screens.components.CustomButton
-import com.example.traderapp.ui.screens.components.CustomTextField
-import com.example.traderapp.ui.screens.components.DividerWithText
+import com.example.traderapp.ui.screens.components.bars.AppTopBar
+import com.example.traderapp.ui.screens.components.buttons.BackButtonWithLogo
+import com.example.traderapp.ui.screens.components.buttons.CustomButton
+import com.example.traderapp.ui.screens.components.texts.CustomTextField
+import com.example.traderapp.ui.screens.components.texts.DividerWithText
 import com.example.traderapp.ui.theme.TraderAppTheme
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.AuthViewModel

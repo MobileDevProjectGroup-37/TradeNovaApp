@@ -14,8 +14,8 @@ import com.example.traderapp.ui.screens.LoginScreen
 import com.example.traderapp.ui.screens.MarketScreen
 import com.example.traderapp.ui.screens.RegisterScreen
 import com.example.traderapp.ui.screens.WelcomeScreen
-import com.example.traderapp.ui.screens.components.AppTopBar
-import com.example.traderapp.ui.screens.components.OnBoardingScreen
+import com.example.traderapp.ui.screens.components.bars.AppTopBar
+import com.example.traderapp.ui.screens.OnBoardingScreen
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
 
