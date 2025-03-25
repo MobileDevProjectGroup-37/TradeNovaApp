@@ -20,24 +20,21 @@ import com.example.traderapp.ui.screens.components.bars.AppTopBar
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.ui.screens.components.onboarding.OnBoardingDots
 import com.example.traderapp.ui.screens.components.onboarding.OnBoardingPager
-import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.OnBoardingViewModel
 import kotlinx.coroutines.flow.collectLatest
-
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun OnBoardingScreen(navController: NavController, viewModel: OnBoardingViewModel) {
-
     val pagerState = rememberPagerState(pageCount = { viewModel.onBoardingData.size })
-    var currentPage by remember { mutableIntStateOf(0) } // 1st page
+    var currentPage by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(pagerState) { // function in JC which helps with async
-        // when the pager state changes, it creates a flow to renew the page
+    LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.collectLatest { page ->
             currentPage = page
         }
     }
-    TransparentStatusBar()
+
     Scaffold(
         topBar = {
             AppTopBar(
@@ -65,12 +62,17 @@ fun OnBoardingScreen(navController: NavController, viewModel: OnBoardingViewMode
                             .fillMaxWidth()
                             .weight(1f)
                     ) {
-                        OnBoardingPager(pagerState, viewModel.onBoardingData)
+                        OnBoardingPager(
+                            pagerState = pagerState,
+                            onBoardingData = viewModel.onBoardingData
+                        )
                     }
                     OnBoardingDots(currentPage = currentPage, pageCount = viewModel.onBoardingData.size)
+
                     Spacer(modifier = Modifier.height(8.dp))
+
                     CustomButton(
-                        text = "Continue",
+                        text = stringResource(id = R.string.continue_text),
                         onClick = { navController.navigate("welcome") },
                         backgroundColor = MaterialTheme.colorScheme.primary,
                         textColor = MaterialTheme.colorScheme.onPrimary,

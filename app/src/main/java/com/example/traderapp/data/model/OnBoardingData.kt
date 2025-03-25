@@ -1,8 +1,10 @@
 package com.example.traderapp.data.model
+import androidx.compose.ui.unit.Dp
 
-// this is the model (what is inside each slide)
+// this  model shows what is inside each slide)
 data class OnBoardingData(
     val title: String,
     val description: String,
-    val imageRes: Int
+    val backgroundRes: Int,
+    val iconPositions: List<Pair<Dp, Dp>> // positions of icons
 )
