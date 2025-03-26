@@ -21,7 +21,6 @@ import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.OnBoardingViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()

@@ -2,34 +2,22 @@ package com.example.traderapp.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import java.util.regex.Pattern
+import androidx.lifecycle.viewModelScope
+import com.example.traderapp.data.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel : ViewModel() {
-
-    private val auth = FirebaseAuth.getInstance()
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel() {
 
     var email = mutableStateOf("")
     var password = mutableStateOf("")
-    private var confirmPassword = mutableStateOf("")
-    var isAuthenticated = mutableStateOf(false)
-    var touchIdEnabled = mutableStateOf(false)
+    var isAuthenticated = mutableStateOf(authRepository.isAuthenticated())
     var validationError = mutableStateOf<String?>(null)
-
-    fun resetFields() {
-        email.value = ""
-        password.value = ""
-        validationError.value = null
-    }
-
-    init {
-        checkUserAuthenticationStatus()
-    }
-
-    private fun checkUserAuthenticationStatus() {
-        isAuthenticated.value = auth.currentUser != null
-    }
-
+    var touchIdEnabled = mutableStateOf(false)
 
     fun onEmailChange(newEmail: String) {
         email.value = newEmail
@@ -39,107 +27,46 @@ class AuthViewModel : ViewModel() {
         password.value = newPassword
     }
 
-    fun onConfirmPasswordChange(newConfirmPassword: String) {
-        confirmPassword.value = newConfirmPassword
-    }
-
     fun onTouchIdChange(newValue: Boolean) {
         touchIdEnabled.value = newValue
     }
 
-    fun isEmailValid(): Boolean {
-        val emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
-        return Pattern.matches(emailPattern, email.value)
-    }
-
     fun isPasswordValid(): Boolean {
-        val passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*(),.?\":{}|<>]).{8,}$"
-        return Pattern.matches(passwordPattern, password.value)
-    }
-
-    private fun arePasswordsMatching(): Boolean {
-        return password.value == confirmPassword.value
-    }
-
-    private fun validateInputs(): Boolean {
-        return isEmailValid() && isPasswordValid()
+        return password.value.length >= 8
     }
 
     fun register(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-        if (validateInputs()) {
-            auth.createUserWithEmailAndPassword(email.value, password.value)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
-                        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
-                        val createdAt = System.currentTimeMillis()
-                        val user = hashMapOf(
-                            "email" to email.value,
-                            "balance" to 1000,  // Default Balance
-                            "trade_volume" to 0, // Start Trade Value
-                            "profit" to 0 // Start profit
-                        )
-
-                        db.collection("users").document(userId)
-                            .set(user)
-                            .addOnSuccessListener {
-                                isAuthenticated.value = true
-                                onSuccess()
-                            }
-                            .addOnFailureListener { e ->
-                                validationError.value = "Database error: ${e.message}"
-                                onFailure(e.message ?: "Database error")
-                            }
-                    } else {
-                        val errorMessage = task.exception?.localizedMessage ?: "Registration failed"
-                        validationError.value = errorMessage
-                        onFailure(errorMessage)
-                    }
-                }
-        } else {
-            validationError.value = when {
-                !isEmailValid() -> "Invalid email format"
-                !isPasswordValid() -> "Password must be at least 8 characters long, contain a digit, a special character, and both uppercase and lowercase letters."
-                !arePasswordsMatching() -> "Passwords do not match"
-                else -> "Unknown error"
+        viewModelScope.launch {
+            val success = authRepository.register(email.value, password.value)
+            if (success) {
+                isAuthenticated.value = true
+                onSuccess()
+            } else {
+                validationError.value = "Ошибка регистрации"
+                onFailure("Ошибка регистрации")
             }
-            onFailure(validationError.value ?: "Unknown error")
         }
     }
 
-
     fun login(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
-        auth.signInWithEmailAndPassword(email.value, password.value)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
-                    val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
-
-                    db.collection("users").document(userId).get()
-                        .addOnSuccessListener { document ->
-                            if (document.exists()) {
-                                val balance = document.getLong("balance") ?: 0
-                                val tradeVolume = document.getLong("trade_volume") ?: 0
-                                val profit = document.getLong("profit") ?: 0
-                                isAuthenticated.value = true
-                                onSuccess()
-                            } else {
-                                onFailure("User data not found")
-                            }
-                        }
-                        .addOnFailureListener { e ->
-                            onFailure("Error fetching user data: ${e.message}")
-                        }
-                } else {
-                    val errorMessage = task.exception?.localizedMessage ?: "Login Error"
-                    validationError.value = errorMessage
-                    onFailure(errorMessage)
-                }
+        viewModelScope.launch {
+            val success = authRepository.login(email.value, password.value)
+            if (success) {
+                isAuthenticated.value = true
+                onSuccess()
+            } else {
+                validationError.value = "Ошибка входа"
+                onFailure("Ошибка входа")
             }
+        }
     }
-
+    fun resetFields() {
+        email.value = ""
+        password.value = ""
+        validationError.value = null
+    }
     fun logout() {
-        auth.signOut()
+        authRepository.logout()
         isAuthenticated.value = false
     }
 }
