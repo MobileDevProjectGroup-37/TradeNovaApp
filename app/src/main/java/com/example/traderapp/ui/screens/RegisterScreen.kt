@@ -23,16 +23,28 @@ import com.example.traderapp.ui.screens.components.texts.CustomTextField
 import com.example.traderapp.ui.screens.components.texts.DividerWithText
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.AuthViewModel
+
 @Composable
 fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
     val context = LocalContext.current
+    val email = authViewModel.email.value
+    val password = authViewModel.password.value
     val validationError = authViewModel.validationError.value
-    val email by authViewModel.email
-    val password by authViewModel.password
+    val isPasswordValid = authViewModel.isPasswordValid()
 
     TransparentStatusBar()
     Scaffold(
-        topBar = { AppTopBar(title = "Login", showBackButton = false) },
+        topBar = {
+            AppTopBar(
+                showBackButton = true,
+                onBackClick = {
+                    navController.popBackStack()
+                    authViewModel.resetFields() // Reset the fields here
+                },
+                logoResId = R.drawable.logo_topbar,
+                logoSize = 200.dp
+            )
+        },
         content = { paddingValues ->
             Column(
                 modifier = Modifier
@@ -95,37 +107,31 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
             CustomTextField(
                 value = email,
                 onValueChange = { authViewModel.onEmailChange(it) },
-                label = "Email",
+                label = "Email address",
                 isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches(),
                 leadingIcon = { size ->
                     Icon(
-                        painter = painterResource(
-                            id = R.drawable.mail_icon
-                        ),
+                        painter = painterResource(id = R.drawable.mail_icon),
                         contentDescription = "Email Icon",
                         modifier = Modifier.size(size),
                         tint = Color.Unspecified
                     )
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                customTrailingIcon = R.drawable.ic_check
             )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             // 6) Password
             CustomTextField(
                 value = password,
-                onValueChange = {
-                    authViewModel.onPasswordChange(it)
-                    // isTouchedPassword.value = true // Нет необходимости в этой строке
-                },
+                onValueChange = { authViewModel.onPasswordChange(it) },
                 label = "Password",
-                isValid = password.length >= 8,
+                isValid = isPasswordValid,
                 isPassword = true,
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(
-                            id = R.drawable.lock_light
-                        ),
+                        painter = painterResource(id = R.drawable.lock_light),
                         contentDescription = "Password Icon",
                         modifier = Modifier.size(32.dp),
                         tint = Color.Unspecified

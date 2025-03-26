@@ -40,9 +40,9 @@ fun CustomTextField(
 
     OutlinedTextField(
         value = value,
-        onValueChange = {
-            isTouched.value = true // while changing the text, flag isTouched turns true
-            onValueChange(it)      // pass new value to onValueChange
+        onValueChange = { newValue ->
+            isTouched.value = true
+            onValueChange(newValue)
         },
         modifier = modifier.fillMaxWidth(),
         label = { Text(label) },

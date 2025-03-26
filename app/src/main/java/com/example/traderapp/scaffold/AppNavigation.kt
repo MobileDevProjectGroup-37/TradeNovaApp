@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.traderapp.ui.screens.AccountCreationScreen
 import com.example.traderapp.ui.screens.HomeScreen
 import com.example.traderapp.ui.screens.LoginScreen
 import com.example.traderapp.ui.screens.MarketScreen
@@ -70,6 +71,7 @@ fun AppNavigation() {
 
                 composable("welcome") { WelcomeScreen(navController) }
                 composable("login") { LoginScreen(navController, authViewModel) }
+                composable("account_creation") { AccountCreationScreen(navController) }
                 composable("register") { RegisterScreen(navController, authViewModel) }
 
 //                composable("forgot_password") { ForgotPasswordScreen(navController)

@@ -31,13 +31,13 @@ import com.example.traderapp.viewmodel.AuthViewModel
 @Composable
 fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
 
-    val email by authViewModel.email
-    val password by authViewModel.password
     val touchIdEnabled by authViewModel.touchIdEnabled
 
-
     var errorMessage by remember { mutableStateOf("") }
-    val isPasswordValid by remember { mutableStateOf(true) }
+    val email by authViewModel.email
+    val password by authViewModel.password
+    val isPasswordValid = authViewModel.isPasswordValid()
+
 
     TransparentStatusBar()
 
@@ -92,7 +92,10 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                     // 4) Password field
                     CustomTextField(
                         value = password,
-                        onValueChange = { authViewModel.onPasswordChange(it) },
+                        onValueChange = {
+                            authViewModel.onPasswordChange(it)
+
+                        },
                         label = "Password",
                         isValid = isPasswordValid,
                         isPassword = true,
@@ -108,6 +111,9 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
 
                     // 5) Forgot password?
                     Row(

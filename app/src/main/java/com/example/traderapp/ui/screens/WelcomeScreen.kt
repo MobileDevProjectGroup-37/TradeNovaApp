@@ -65,7 +65,7 @@
 
                         CustomButton(
                             text = "Sign up with email",
-                            onClick = { navController.navigate("register") },
+                            onClick = { navController.navigate("account_creation") },
                             backgroundColor = MaterialTheme.colorScheme.primary,
                             textColor = Color.White,
                         )
