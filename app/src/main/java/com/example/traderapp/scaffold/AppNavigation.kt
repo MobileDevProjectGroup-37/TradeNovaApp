@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.traderapp.ui.screens.AccountCreationScreen
 import com.example.traderapp.ui.screens.HomeScreen
 import com.example.traderapp.ui.screens.LoginScreen
 import com.example.traderapp.ui.screens.MarketScreen
@@ -18,6 +19,7 @@ import com.example.traderapp.ui.screens.components.bars.AppTopBar
 import com.example.traderapp.ui.screens.OnBoardingScreen
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
+import com.example.traderapp.viewmodel.OnBoardingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,11 +65,13 @@ fun AppNavigation() {
 //
 
                 composable("onboarding") {
-                    OnBoardingScreen(navController = navController)
+                    val onBoardingViewModel: OnBoardingViewModel = viewModel()
+                    OnBoardingScreen(navController, onBoardingViewModel)
                 }
 
                 composable("welcome") { WelcomeScreen(navController) }
                 composable("login") { LoginScreen(navController, authViewModel) }
+                composable("account_creation") { AccountCreationScreen(navController) }
                 composable("register") { RegisterScreen(navController, authViewModel) }
 
 //                composable("forgot_password") { ForgotPasswordScreen(navController)

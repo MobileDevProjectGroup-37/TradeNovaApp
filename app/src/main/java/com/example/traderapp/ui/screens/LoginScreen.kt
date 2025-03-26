@@ -4,13 +4,11 @@ import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,16 +28,16 @@ import com.example.traderapp.ui.theme.TraderAppTheme
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.AuthViewModel
 
-
 @Composable
 fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
 
-    val email by authViewModel.email
-    val password by authViewModel.password
     val touchIdEnabled by authViewModel.touchIdEnabled
-    val validationError = authViewModel.validationError.value
 
     var errorMessage by remember { mutableStateOf("") }
+    val email by authViewModel.email
+    val password by authViewModel.password
+    val isPasswordValid = authViewModel.isPasswordValid()
+
 
     TransparentStatusBar()
 
@@ -75,7 +73,16 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                         onValueChange = { authViewModel.onEmailChange(it) },
                         label = "Email address",
                         isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches(),
-                        leadingIcon = Icons.Filled.Email,
+                        leadingIcon = { size ->
+                            Icon(
+                                painter = painterResource(
+                                    id = R.drawable.mail_icon
+                                ),
+                                contentDescription = "Email Icon",
+                                modifier = Modifier.size(size),
+                                tint = Color.Unspecified
+                            )
+                        },
                         customTrailingIcon = R.drawable.ic_check,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     )
@@ -85,13 +92,28 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                     // 4) Password field
                     CustomTextField(
                         value = password,
-                        onValueChange = { authViewModel.onPasswordChange(it) },
+                        onValueChange = {
+                            authViewModel.onPasswordChange(it)
+
+                        },
                         label = "Password",
-                        isValid = password.length >= 8,
+                        isValid = isPasswordValid,
                         isPassword = true,
-                        leadingIcon = Icons.Filled.Lock,
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(
+                                    id = R.drawable.lock_light
+                                ),
+                                contentDescription = "Password Icon",
+                                modifier = Modifier.size(32.dp),
+                                tint = Color.Unspecified
+                            )
+                        },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
 
                     // 5) Forgot password?
                     Row(
@@ -113,18 +135,8 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                             }
                         )
                     }
-// Display validation error message if any
-                    if (!validationError.isNullOrEmpty()) {
-                        Text(
-                            text = validationError,
-                            style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.error),
-                            modifier = Modifier
-                                .padding(top = 16.dp)
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-// Touch ID toggle
+
+                    // Touch ID toggle
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -168,10 +180,10 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                                 )
                             },
                             backgroundColor = MaterialTheme.colorScheme.primary,
-                            textColor = Color.White,
-
-                            )
+                            textColor = Color.White
+                        )
                     }
+
                     // Display login error message if login fails
                     if (errorMessage.isNotEmpty()) {
                         Text(
@@ -216,7 +228,6 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel){
                     }
                     Spacer(modifier = Modifier.height(44.dp))
 
-                    // 10) "Don't have an account? Register"
 
                 }
             }

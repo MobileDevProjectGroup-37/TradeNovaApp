@@ -67,7 +67,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(platform(libs.firebase.bom))
     implementation (libs.androidx.navigation.compose.v253)
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.31.0-alpha")
+    implementation (libs.accompanist.systemuicontroller)
+
     //---------------------------------for http and websocket----------------------------
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

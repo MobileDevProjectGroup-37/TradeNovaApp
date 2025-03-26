@@ -1,6 +1,5 @@
 package com.example.traderapp.viewmodel
 
-
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +16,11 @@ class AuthViewModel : ViewModel() {
     var touchIdEnabled = mutableStateOf(false)
     var validationError = mutableStateOf<String?>(null)
 
+    fun resetFields() {
+        email.value = ""
+        password.value = ""
+        validationError.value = null
+    }
 
     init {
         checkUserAuthenticationStatus()
@@ -52,7 +56,6 @@ class AuthViewModel : ViewModel() {
         val passwordPattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%^&*(),.?\":{}|<>]).{8,}$"
         return Pattern.matches(passwordPattern, password.value)
     }
-
 
     private fun arePasswordsMatching(): Boolean {
         return password.value == confirmPassword.value
@@ -105,7 +108,6 @@ class AuthViewModel : ViewModel() {
     }
 
 
-
     fun login(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
         auth.signInWithEmailAndPassword(email.value, password.value)
             .addOnCompleteListener { task ->
@@ -135,7 +137,6 @@ class AuthViewModel : ViewModel() {
                 }
             }
     }
-
 
     fun logout() {
         auth.signOut()
