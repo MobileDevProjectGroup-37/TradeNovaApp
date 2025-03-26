@@ -7,15 +7,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.Dp
 import com.example.traderapp.R
 import com.example.traderapp.ui.theme.LightOffline
-import com.example.traderapp.ui.theme.LightUp
 
 @Composable
 fun CustomTextField(
@@ -25,19 +27,24 @@ fun CustomTextField(
     label: String = "",
     isValid: Boolean = true,
     isPassword: Boolean = false,
-    leadingIcon: ImageVector? = null,
+    leadingIcon: (@Composable (Dp) -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     singleLine: Boolean = true,
-    customTrailingIcon: Int = R.drawable.ic_check
+    customTrailingIcon: Int = R.drawable.ic_check,
+    iconSize: Dp = 34.dp
 ) {
+    val isTouched = remember { mutableStateOf(false) }
 
+    // VIS
     val visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
 
     OutlinedTextField(
         value = value,
-        onValueChange = onValueChange,
-        modifier = modifier
-            .fillMaxWidth(),
+        onValueChange = {
+            isTouched.value = true // while changing the text, flag isTouched turns true
+            onValueChange(it)      // pass new value to onValueChange
+        },
+        modifier = modifier.fillMaxWidth(),
         label = { Text(label) },
         isError = value.isNotEmpty() && !isValid,
         singleLine = singleLine,
@@ -45,24 +52,34 @@ fun CustomTextField(
             unfocusedBorderColor = LightOffline,
         ),
         shape = RoundedCornerShape(12.dp),
-
-        leadingIcon = leadingIcon?.let {
-            { Icon(imageVector = it, contentDescription = label, tint = MaterialTheme.colorScheme.primary) }
+        leadingIcon = {
+            leadingIcon?.invoke(iconSize)
         },
         trailingIcon = {
-            if (value.isNotEmpty() && isValid) {
+            if (isTouched.value && !isValid) {
+
+                Icon(
+                    painter = painterResource(id = R.drawable.close_ring_light),
+                    contentDescription = "invalid input",
+                    modifier = Modifier
+                        .size(iconSize)
+                        .padding(4.dp),
+                    tint = Color.Unspecified
+                )
+            } else if (value.isNotEmpty() && isValid) {
+
                 Icon(
                     painter = painterResource(id = customTrailingIcon),
                     contentDescription = "valid input",
                     modifier = Modifier
-                        .size(34.dp)
+                        .size(iconSize)
                         .padding(4.dp),
-                    tint = LightUp
+                    tint = Color.Unspecified
                 )
             }
         },
         visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions,
-
+        keyboardOptions = keyboardOptions
     )
 }
+

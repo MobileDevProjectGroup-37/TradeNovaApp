@@ -1,12 +1,10 @@
 package com.example.traderapp.ui.screens
 
+import android.util.Patterns
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -15,25 +13,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
 import com.example.traderapp.ui.screens.components.buttons.BackButtonWithLogo
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.ui.screens.components.texts.CustomTextField
 import com.example.traderapp.ui.screens.components.texts.DividerWithText
-import com.example.traderapp.ui.theme.TraderAppTheme
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.AuthViewModel
-
 @Composable
 fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
     val context = LocalContext.current
     val validationError = authViewModel.validationError.value
+    val email by authViewModel.email
+    val password by authViewModel.password
 
     TransparentStatusBar()
     Scaffold(
@@ -44,7 +39,7 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                Text("Содержание страницы Логина")
+                Text("The content")
             }
         }
     )
@@ -57,7 +52,7 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
 
-           BackButtonWithLogo(navController)
+            BackButtonWithLogo(navController)
             // 2) header
             Text(
                 text = "Hello! Start your\ncrypto investment today",
@@ -98,23 +93,44 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
 
             // 5) Email
             CustomTextField(
-                value = authViewModel.email.value,
-                onValueChange = authViewModel::onEmailChange,
-                isValid = authViewModel.isEmailValid(),
-                leadingIcon = Icons.Filled.Email,
+                value = email,
+                onValueChange = { authViewModel.onEmailChange(it) },
+                label = "Email",
+                isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches(),
+                leadingIcon = { size ->
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.mail_icon
+                        ),
+                        contentDescription = "Email Icon",
+                        modifier = Modifier.size(size),
+                        tint = Color.Unspecified
+                    )
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
             )
-
             Spacer(modifier = Modifier.height(16.dp))
 
             // 6) Password
             CustomTextField(
-                value = authViewModel.password.value,
-                onValueChange = authViewModel::onPasswordChange,
+                value = password,
+                onValueChange = {
+                    authViewModel.onPasswordChange(it)
+                    // isTouchedPassword.value = true // Нет необходимости в этой строке
+                },
                 label = "Password",
-                isValid = authViewModel.isPasswordValid(),
+                isValid = password.length >= 8,
                 isPassword = true,
-                leadingIcon = Icons.Filled.Lock,
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.lock_light
+                        ),
+                        contentDescription = "Password Icon",
+                        modifier = Modifier.size(32.dp),
+                        tint = Color.Unspecified
+                    )
+                },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
             )
 
@@ -129,10 +145,13 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
             ) {
                 CustomButton(
                     text = "Sign up with email",
-                    onClick = { authViewModel.register(
+                    onClick = {
+                        authViewModel.register(
                             onSuccess = { navController.navigate("home") },
-                            onFailure = { errorMessage -> Toast.makeText(context, errorMessage,
-                                Toast.LENGTH_SHORT).show() })
+                            onFailure = { errorMessage ->
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                            }
+                        )
                     },
                     backgroundColor = MaterialTheme.colorScheme.primary,
                     textColor = Color.White,
@@ -178,12 +197,3 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel) {
     }
 }
 
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewRegisterScreen() {
-    val navController = rememberNavController()
-    val authViewModel: AuthViewModel = viewModel()
-    TraderAppTheme {
-        RegisterScreen(navController = navController, authViewModel = authViewModel)
-    }
-}
