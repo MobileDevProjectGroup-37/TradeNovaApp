@@ -5,6 +5,7 @@ import android.content.Context
 import dagger.Module
 import com.example.traderapp.data.AuthRepository
 import com.example.traderapp.data.FirebaseAuthRepository
+import com.example.traderapp.data.network.UserSession
 import com.example.traderapp.utils.AuthPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -35,5 +36,11 @@ object AppModule {
     @Provides
     fun provideAuthPreferences(@ApplicationContext context: Context): AuthPreferences {
         return AuthPreferences(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserSession(): UserSession {
+        return UserSession()
     }
 }
