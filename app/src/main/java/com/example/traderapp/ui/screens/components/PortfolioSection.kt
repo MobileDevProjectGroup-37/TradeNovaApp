@@ -1,22 +1,22 @@
 package com.example.traderapp.ui.screens.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.traderapp.data.model.CryptoDto
+import com.example.traderapp.ui.screens.components.texts.ClickableText
 
 @Composable
 fun PortfolioSection(portfolioItems: List<CryptoDto>, priceUpdates: Map<String, Double>) {
-    val maxItemsToShow = 5 // Максимальное количество элементов, которое отображаем сразу
-    var currentIndex by remember { mutableStateOf(0) } // Индекс текущих элементов
+    val maxItemsToShow = 5
+    var currentIndex by remember { mutableIntStateOf(0) }
 
-    // Функция для получения видимых элементов с учетом currentIndex
     val visibleItems = portfolioItems.drop(currentIndex).take(maxItemsToShow)
 
-    // Функции для перехода вперед и назад
+
     fun goToNext() {
         if (currentIndex + maxItemsToShow < portfolioItems.size) {
             currentIndex += maxItemsToShow
@@ -32,37 +32,33 @@ fun PortfolioSection(portfolioItems: List<CryptoDto>, priceUpdates: Map<String, 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)  // Отступы для общей композиции
+            .padding(16.dp)
     ) {
-        // Заголовок с кнопкой More на одном уровне
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp),  // Отступ снизу для красоты
-            horizontalArrangement = Arrangement.SpaceBetween, // Размещаем элементы по краям
-            verticalAlignment = Alignment.CenterVertically // Выровнять элементы по вертикали
+                .padding(bottom = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // Заголовок
+
             Text(
                 text = "Portfolio",
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary // Цвет текста заголовка
             )
-            // Кнопка More
-            TextButton(
-                onClick = { /* Навигация или действие при нажатии */ },
-                modifier = Modifier
-                    // Задний фон кнопки
-                    .padding(horizontal = 12.dp, vertical = 6.dp) // Отступы внутри кнопки
-            ) {
-                Text("More")
-            }
+
+            ClickableText(
+                text = "More",
+                onClick = { /* сlick */ },
+                textColor = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
         }
 
-        // Отображаем только видимые элементы
         Column(modifier = Modifier.fillMaxWidth()) {
             visibleItems.forEach { crypto ->
-                val currentPrice = priceUpdates[crypto.id] ?: crypto.priceUsd?.toDoubleOrNull() ?: 0.0
+                val currentPrice = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
                 PortfolioItem(
                     crypto = crypto,
                     currentPrice = currentPrice
@@ -70,12 +66,11 @@ fun PortfolioSection(portfolioItems: List<CryptoDto>, priceUpdates: Map<String, 
             }
         }
 
-        // Кнопки навигации (Previous/Next) показываем только когда нужно
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Кнопка для возврата на предыдущие элементы
+
             if (currentIndex > 0) {
                 TextButton(
                     onClick = { goToPrevious() },
@@ -85,7 +80,6 @@ fun PortfolioSection(portfolioItems: List<CryptoDto>, priceUpdates: Map<String, 
                 }
             }
 
-            // Кнопка для перехода к следующей странице
             if (currentIndex + maxItemsToShow < portfolioItems.size) {
                 TextButton(
                     onClick = { goToNext() },

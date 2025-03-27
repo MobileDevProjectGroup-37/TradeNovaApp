@@ -1,17 +1,20 @@
 package com.example.traderapp.ui.screens.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.traderapp.ui.screens.components.texts.SubTitle
 
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun PortfolioBalanceSection(balance: Double, percentageChange: Double) {
     Column(
@@ -20,28 +23,28 @@ fun PortfolioBalanceSection(balance: Double, percentageChange: Double) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Подзаголовок
         SubTitle(
             text = "Portfolio Balance",
             modifier = Modifier.padding(bottom = 8.dp),
             textAlign = TextAlign.Center
         )
-
-        // Баланс
         Text(
             text = "$$balance",
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontWeight = FontWeight.Bold,
+                fontSize = 32.sp
+            ),
             textAlign = TextAlign.Center
         )
         Text(
-            text = "${percentageChange}%",
-            color = if (percentageChange >= 0) Color.Green else Color.Red,
+            "${String.format("+%.2f", percentageChange)}%",
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Placeholder для графика
+        // Placeholder for diagram
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -52,6 +55,5 @@ fun PortfolioBalanceSection(balance: Double, percentageChange: Double) {
             Text("Graph Placeholder")
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
     }
 }

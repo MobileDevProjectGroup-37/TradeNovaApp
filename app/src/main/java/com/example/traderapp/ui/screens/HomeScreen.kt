@@ -57,18 +57,12 @@ fun HomeScreen(navController: NavController, viewModel: CryptoViewModel = viewMo
                 PortfolioBalanceSection(balance = balance, percentageChange = percentageChange)
             }
 
-            // Раздел Market Movers и Portfolio в вертикальной колонке
             item {
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+
                 ) {
-                    // Market Movers
                     MarketMoversSection(marketMovers = marketMovers, priceUpdates = priceUpdates)
-
-                    // Отступ между секциями
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Portfolio
                     PortfolioSection(portfolioItems = portfolioItems, priceUpdates = priceUpdates)
                 }
             }
