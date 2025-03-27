@@ -74,7 +74,8 @@ fun PortfolioSection(portfolioItems: List<CryptoDto>, priceUpdates: Map<String, 
             if (currentIndex > 0) {
                 TextButton(
                     onClick = { goToPrevious() },
-                    modifier = Modifier.fillMaxWidth(0.45f)
+                    modifier = Modifier.fillMaxWidth(0.45f),
+
                 ) {
                     Text("Previous")
                 }
