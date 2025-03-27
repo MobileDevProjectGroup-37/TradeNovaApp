@@ -4,18 +4,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.traderapp.data.AuthRepository
+import com.example.traderapp.utils.AuthPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val authPreferences: AuthPreferences
 ) : ViewModel() {
 
     var email = mutableStateOf("")
     var password = mutableStateOf("")
-    var isAuthenticated = mutableStateOf(authRepository.isAuthenticated())
+    var isAuthenticated = mutableStateOf(authPreferences.getIsAuthenticated())
     var validationError = mutableStateOf<String?>(null)
     var touchIdEnabled = mutableStateOf(false)
 
@@ -52,6 +54,7 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             val success = authRepository.login(email.value, password.value)
             if (success) {
+                authPreferences.saveIsAuthenticated(true) // 👈
                 isAuthenticated.value = true
                 onSuccess()
             } else {
@@ -60,13 +63,16 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
+
+    fun logout() {
+        authRepository.logout()
+        authPreferences.clear() // 👈
+        isAuthenticated.value = false
+    }
     fun resetFields() {
         email.value = ""
         password.value = ""
         validationError.value = null
     }
-    fun logout() {
-        authRepository.logout()
-        isAuthenticated.value = false
-    }
+
 }

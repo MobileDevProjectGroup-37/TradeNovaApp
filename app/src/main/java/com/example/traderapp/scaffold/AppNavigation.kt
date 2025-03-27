@@ -28,7 +28,7 @@ fun AppNavigation() {
     // val bottomBarViewModel: BottomBarViewModel = viewModel() // for future
 
     // val currentRoute = bottomBarViewModel.currentRoute
-    // val isAuthenticated = authViewModel.isAuthenticated.value
+    val isAuthenticated = authViewModel.isAuthenticated.value
 
     Scaffold(
         topBar = {
@@ -47,8 +47,7 @@ fun AppNavigation() {
     ){ paddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = "onboarding",
-                //startDestination = if (isAuthenticated) "home" else "onBoarding",
+                startDestination = if (isAuthenticated) "home" else "onBoarding",
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable(route = "home")  { HomeScreen( navController) }
