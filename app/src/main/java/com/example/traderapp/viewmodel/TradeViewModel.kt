@@ -3,6 +3,7 @@ package com.example.traderapp.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.traderapp.data.UserData
+import com.example.traderapp.data.model.TradeType
 import com.example.traderapp.data.network.UserSession
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,7 +23,8 @@ class TradeViewModel @Inject constructor(
     private val _tradeError = MutableStateFlow<String?>(null)
     val tradeError: StateFlow<String?> = _tradeError
 
-    fun buyAsset(
+    fun executeTrade(
+        type: TradeType,
         assetId: String,
         assetName: String,
         currentPrice: Double,
@@ -37,37 +39,50 @@ class TradeViewModel @Inject constructor(
                 return@launch
             }
 
-            val totalCost = currentPrice * quantity
+            val totalValue = currentPrice * quantity
 
-            if (user.balance >= totalCost) {
-                val updatedUser = user.copy(
-                    balance = user.balance - totalCost,
-                    tradeVolume = user.tradeVolume + totalCost.toInt()
-                )
+            val updatedUser = when (type) {
+                TradeType.BUY -> {
+                    if (user.balance < totalValue) {
+                        _tradeError.value = "Not enough balance to complete purchase"
+                        return@launch
+                    }
+                    user.copy(
+                        balance = user.balance - totalValue,
+                        tradeVolume = user.tradeVolume + totalValue.toInt()
+                    )
+                }
 
-                // update data in user session
-                userSession.updateUser(updatedUser)
-
-                // save to history
-                val tradeRecord = mapOf(
-                    "type" to "buy",
-                    "assetId" to assetId,
-                    "assetName" to assetName,
-                    "price" to currentPrice,
-                    "quantity" to quantity,
-                    "totalCost" to totalCost,
-                    "timestamp" to System.currentTimeMillis()
-                )
-
-                db.collection("users").document(uid).collection("trades").add(tradeRecord)
-
-                // Update DB data in main collection
-                db.collection("users").document(uid).set(updatedUser)
-
-                _tradeError.value = null // Cleanup error
-            } else {
-                _tradeError.value = "Not enough balance to complete purchase"
+                TradeType.SELL -> {
+                    // TODO: check that there is sufficient amount of an asset
+                    user.copy(
+                        balance = user.balance + totalValue,
+                        tradeVolume = user.tradeVolume + totalValue.toInt()
+                    )
+                }
             }
+
+            //
+            userSession.updateUser(updatedUser)
+
+            // save to history
+            val tradeRecord = mapOf(
+                "type" to type.name.lowercase(),
+                "assetId" to assetId,
+                "assetName" to assetName,
+                "price" to currentPrice,
+                "quantity" to quantity,
+                "totalValue" to totalValue,
+                "timestamp" to System.currentTimeMillis()
+            )
+
+            db.collection("users").document(uid).collection("trades").add(tradeRecord)
+
+            // Update data in users collection
+            db.collection("users").document(uid).set(updatedUser)
+
+            _tradeError.value = null
         }
     }
+
 }
