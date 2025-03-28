@@ -34,7 +34,7 @@ fun BottomNavigationBar(navController: NavController) {
                         painter = icon,
                         contentDescription = screen,
                         modifier = Modifier.size(28.dp),
-                        tint = if (currentRoute == screen) Color.Green else Color.Unspecified // Цвет иконки
+                        tint = if (currentRoute == screen) MaterialTheme.colorScheme.primary else Color.Unspecified // Цвет иконки
                     )
                 },
                 label = { Text(screen.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }) },

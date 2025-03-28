@@ -3,51 +3,33 @@ package com.example.traderapp.ui.screens.components
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.ui.screens.components.texts.ClickableText
 
 @Composable
-fun PortfolioSection(portfolioItems: List<CryptoDto>, priceUpdates: Map<String, Double>) {
-    val maxItemsToShow = 5
-    var currentIndex by remember { mutableIntStateOf(0) }
+fun PortfolioSection(
+    portfolioItems: List<CryptoDto>,
+    priceUpdates: List<Double>
+) {
+    var currentIndex by remember { mutableStateOf(0) }
 
-    val visibleItems = portfolioItems.drop(currentIndex).take(maxItemsToShow)
+    val itemsToShow = portfolioItems.drop(currentIndex).take(5)
 
-
-    fun goToNext() {
-        if (currentIndex + maxItemsToShow < portfolioItems.size) {
-            currentIndex += maxItemsToShow
-        }
-    }
-
-    fun goToPrevious() {
-        if (currentIndex - maxItemsToShow >= 0) {
-            currentIndex -= maxItemsToShow
-        }
-    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
+    Column(modifier = Modifier.padding(16.dp)) {
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Text(
                 text = "Portfolio",
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleMedium
             )
-
             ClickableText(
                 text = "More",
                 onClick = { /* сlick */ },
@@ -55,39 +37,38 @@ fun PortfolioSection(portfolioItems: List<CryptoDto>, priceUpdates: Map<String, 
                 fontWeight = FontWeight.Bold
             )
         }
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Column(modifier = Modifier.fillMaxWidth()) {
-            visibleItems.forEach { crypto ->
-                val currentPrice = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
-                PortfolioItem(
-                    crypto = crypto,
-                    currentPrice = currentPrice
-                )
-            }
+        itemsToShow.forEachIndexed { index, crypto ->
+            PortfolioItem(crypto = crypto, currentPrice = priceUpdates.getOrNull(index + currentIndex) ?: 0.0)
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
-            if (currentIndex > 0) {
-                TextButton(
-                    onClick = { goToPrevious() },
-                    modifier = Modifier.fillMaxWidth(0.45f),
-
-                ) {
-                    Text("Previous")
-                }
+            Button(
+                onClick = {
+                    if (currentIndex > 0) {
+                        currentIndex -= 5
+                    }
+                },
+                enabled = currentIndex > 0
+            ) {
+                Text("Back")
             }
 
-            if (currentIndex + maxItemsToShow < portfolioItems.size) {
-                TextButton(
-                    onClick = { goToNext() },
-                    modifier = Modifier.fillMaxWidth(0.45f)
-                ) {
-                    Text("Next")
-                }
+            Button(
+                onClick = {
+                    if (currentIndex + 5 < portfolioItems.size) {
+                        currentIndex += 5
+                    }
+                },
+                enabled = currentIndex + 5 < portfolioItems.size
+            ) {
+                Text("Next")
             }
         }
     }

@@ -19,7 +19,6 @@ fun MarketMoversSection(marketMovers: List<CryptoDto>, priceUpdates: Map<String,
             .fillMaxWidth()
             .padding(14.dp)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -33,7 +32,6 @@ fun MarketMoversSection(marketMovers: List<CryptoDto>, priceUpdates: Map<String,
                 style = MaterialTheme.typography.titleMedium,
 
             )
-
             ClickableText(
                 text = "More",
                 onClick = { /* сlick */ },
@@ -41,7 +39,6 @@ fun MarketMoversSection(marketMovers: List<CryptoDto>, priceUpdates: Map<String,
                 fontWeight = FontWeight.Bold
             )
         }
-
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()

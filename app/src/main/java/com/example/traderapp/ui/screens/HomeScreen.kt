@@ -63,7 +63,8 @@ fun HomeScreen(navController: NavController, viewModel: CryptoViewModel = viewMo
 
                 ) {
                     MarketMoversSection(marketMovers = marketMovers, priceUpdates = priceUpdates)
-                    PortfolioSection(portfolioItems = portfolioItems, priceUpdates = priceUpdates)
+                    PortfolioSection(portfolioItems = portfolioItems, priceUpdates = priceUpdates.values.toList())
+
                 }
             }
 
