@@ -9,19 +9,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.traderapp.ui.screens.components.CryptoItem
+import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
+import com.example.traderapp.ui.screens.components.bars.NavigationIconType
+import com.example.traderapp.ui.screens.components.bars.RightIconType
+import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.CryptoViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MarketScreen(navController: NavController, viewModel: CryptoViewModel) {
     val cryptoList by viewModel.cryptoList.collectAsState()
     val priceUpdates by viewModel.priceUpdates.collectAsState()
 
+    TransparentStatusBar()
+
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Market") }
+            AppTopBarHome(
+                navigationIconType = NavigationIconType.BACK,
+                rightIconType = RightIconType.UNION,
+                onBackClick = { navController.popBackStack() },
+                onRightClick = { /* action */ },
+                title = "Market"
             )
         },
         bottomBar = {
@@ -32,16 +41,21 @@ fun MarketScreen(navController: NavController, viewModel: CryptoViewModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(12.dp)
         ) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
+                item {
+                    MarketHeader()
+                }
+
                 items(cryptoList) { crypto ->
                     CryptoItem(
                         crypto = crypto,
-                        currentPrice = priceUpdates[crypto.id] ?: crypto.priceUsd.toDouble() //
+                        currentPrice = priceUpdates[crypto.id] ?: crypto.priceUsd.toDouble()
                     )
                 }
             }
         }
     }
 }
+

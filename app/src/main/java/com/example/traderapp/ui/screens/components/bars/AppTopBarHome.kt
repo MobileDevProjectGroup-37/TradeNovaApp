@@ -105,6 +105,16 @@ fun AppTopBarHome(
                         )
                     }
                 }
+                RightIconType.UNION -> {
+                    IconButton(onClick = onRightClick ?: {}) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.union_icon),
+                            contentDescription = "Notifications",
+                            modifier = Modifier.size(26.dp)
+                        )
+                    }
+                }
+
             }
         },
         modifier = Modifier.height(64.dp)
@@ -123,5 +133,6 @@ enum class RightIconType {
     NONE,
     SETTINGS,
    TRADE,
-    NOTIFICATIONS
+    NOTIFICATIONS,
+    UNION
 }
