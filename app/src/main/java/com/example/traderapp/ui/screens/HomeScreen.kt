@@ -38,7 +38,7 @@ fun HomeScreen(navController: NavController, viewModel: CryptoViewModel = viewMo
                 navigationIconType = NavigationIconType.PROFILE,
                 rightIconType = RightIconType.SETTINGS,
                 onBackClick = { /* action */ },
-                onRightClick = { /* action */ },
+                onRightClick = {  navController.navigate("settings") },
                 logoResId = R.drawable.logo_topbar,
                 logoSize = 200.dp
             )

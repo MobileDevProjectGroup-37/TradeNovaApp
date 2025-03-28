@@ -17,6 +17,7 @@ import com.example.traderapp.ui.screens.RegisterScreen
 import com.example.traderapp.ui.screens.WelcomeScreen
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
 import com.example.traderapp.ui.screens.OnBoardingScreen
+import com.example.traderapp.ui.screens.SettingsScreen
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.OnBoardingViewModel
@@ -66,11 +67,11 @@ fun AppNavigation() {
                     val onBoardingViewModel: OnBoardingViewModel = viewModel()
                     OnBoardingScreen(navController, onBoardingViewModel)
                 }
-
                 composable("welcome") { WelcomeScreen(navController) }
                 composable("login") { LoginScreen(navController, authViewModel) }
                 composable("account_creation") { AccountCreationScreen(navController) }
                 composable("register") { RegisterScreen(navController, authViewModel) }
+                composable("settings") { SettingsScreen(navController) }
 
 //                composable("forgot_password") { ForgotPasswordScreen(navController)
 

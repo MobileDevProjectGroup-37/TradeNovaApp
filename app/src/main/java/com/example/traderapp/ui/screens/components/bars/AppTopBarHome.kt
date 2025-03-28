@@ -109,11 +109,21 @@ fun AppTopBarHome(
                     IconButton(onClick = onRightClick ?: {}) {
                         Icon(
                             painter = painterResource(id = R.drawable.union_icon),
-                            contentDescription = "Notifications",
+                            contentDescription = "Union",
                             modifier = Modifier.size(26.dp)
                         )
                     }
                 }
+                RightIconType.SEARCH -> {
+                    IconButton(onClick = onRightClick ?: {}) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.search_icon),
+                            contentDescription = "Search",
+                            modifier = Modifier.size(26.dp)
+                        )
+                    }
+                }
+
 
             }
         },
@@ -134,5 +144,6 @@ enum class RightIconType {
     SETTINGS,
    TRADE,
     NOTIFICATIONS,
-    UNION
+    UNION,
+    SEARCH
 }
