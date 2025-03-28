@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -21,11 +24,22 @@ import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.screens.components.bars.RightIconType
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.ui.theme.TransparentStatusBar
+import com.example.traderapp.utils.Constants // Импортируем Constants
 import com.example.traderapp.viewmodel.AuthViewModel
 
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
     TransparentStatusBar()
+
+    // Отслеживаем isLoggedIn
+    val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
+
+    // Добавляем LaunchedEffect для навигации
+    LaunchedEffect(key1 = isLoggedIn) {
+        if (!isLoggedIn) {
+            navController.navigate(Constants.LOGIN_SCREEN_ROUTE) // Используем константу
+        }
+    }
 
     val userProfile = UserProfile(
         profileImageRes = R.drawable.profile_icon,
@@ -180,6 +194,7 @@ fun SettingsScreen(navController: NavController) {
                 CustomButton(
                     text = "Logout",
                     onClick = {
+                        authViewModel.logout() // Вызываем authViewModel.logout()
                     },
                     backgroundColor = Color.White,
                     textColor = MaterialTheme.colorScheme.primary

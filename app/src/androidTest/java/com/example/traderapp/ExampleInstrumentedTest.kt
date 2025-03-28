@@ -1,7 +1,14 @@
 package com.example.traderapp
 
+import android.content.Context
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
+import com.example.traderapp.data.AuthRepository
+import com.example.traderapp.data.FirebaseAuthRepository
+import com.example.traderapp.data.network.UserSession
+import com.example.traderapp.data.network.WebSocketClient
+import com.example.traderapp.utils.AuthPreferences
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.runBlocking
@@ -10,6 +17,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.Assert.*
+import com.google.firebase.auth.FirebaseAuth
 
 @RunWith(AndroidJUnit4::class)
 class MyFirebaseInstrumentedTest {
@@ -19,7 +27,19 @@ class MyFirebaseInstrumentedTest {
 
     @Before
     fun setUp() {
-        authViewModel = AuthViewModel()
+        // Получаем контекст приложения для AuthPreferences
+        val appContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
+
+        // Создаем экземпляры зависимостей
+        val authPreferences = AuthPreferences(appContext)
+        val userSession = UserSession()
+        val webSocketClient = WebSocketClient()
+        val auth = FirebaseAuth.getInstance()
+        val db = FirebaseFirestore.getInstance()
+        val authRepository = FirebaseAuthRepository(auth, db) // Создаем AuthRepository
+
+        // Создаем AuthViewModel, передавая ему все зависимости
+        authViewModel = AuthViewModel(authRepository, authPreferences, userSession, webSocketClient)
         firestore = FirebaseFirestore.getInstance()
     }
 
@@ -48,7 +68,7 @@ class MyFirebaseInstrumentedTest {
 
         // Logout
         authViewModel.logout()
-        assertFalse("Logout failed", authViewModel.isAuthenticated.value)
+        assertFalse("Logout failed", authViewModel.isLoggedIn.value)
     }
 
     private suspend fun registerUser(): Boolean {
