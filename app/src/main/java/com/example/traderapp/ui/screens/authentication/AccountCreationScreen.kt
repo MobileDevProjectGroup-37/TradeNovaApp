@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens
+package com.example.traderapp.ui.screens.authentication
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

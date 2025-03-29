@@ -11,12 +11,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.traderapp.ui.screens.AccountCreationScreen
+import com.example.traderapp.ui.screens.authentication.AccountCreationScreen
 import com.example.traderapp.ui.screens.HomeScreen
-import com.example.traderapp.ui.screens.LoginScreen
+import com.example.traderapp.ui.screens.authentication.LoginScreen
 import com.example.traderapp.ui.screens.MarketScreen
-import com.example.traderapp.ui.screens.RegisterScreen
-import com.example.traderapp.ui.screens.WelcomeScreen
+import com.example.traderapp.ui.screens.authentication.RegisterScreen
+import com.example.traderapp.ui.screens.authentication.WelcomeScreen
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
 import com.example.traderapp.ui.screens.OnBoardingScreen
 import com.example.traderapp.ui.screens.SettingsScreen
