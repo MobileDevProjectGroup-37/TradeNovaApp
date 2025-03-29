@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">TraderApp</string>
     <string name="continue_text">Continue</string>
+    <string name="get_started_in_3_easy_steps">Get started in 3 easy steps</string>
+    <string name="continuereg">Continue</string>
+    <string name="create_your_account">Create your account</string>
+    <string name="confirm_your_email">Confirm your email</string>
+    <string name="create_a_password">Create a password</string>
 </resources>
