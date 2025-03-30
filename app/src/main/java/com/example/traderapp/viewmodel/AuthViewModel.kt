@@ -56,8 +56,8 @@ class AuthViewModel @Inject constructor(
                 _isLoggedIn.value = true
                 onSuccess()
             } else {
-                validationError.value = "Ошибка регистрации"
-                onFailure("Ошибка регистрации")
+                validationError.value = "Error during registration"
+                onFailure("Error during registration")
             }
         }
     }
@@ -70,14 +70,18 @@ class AuthViewModel @Inject constructor(
                 _isLoggedIn.value = true
                 onSuccess()
             } else {
-                validationError.value = "Ошибка входа"
-                onFailure("Ошибка входа")
+                validationError.value = "Error during login"
+                onFailure("Error during login")
             }
         }
     }
     fun onConfirmPasswordChange(newConfirmPassword: String) {
         confirmPassword.value = newConfirmPassword
     }
+    fun isConfirmPasswordValid(): Boolean {
+        return password.value == confirmPassword.value
+    }
+
 
     fun logout() {
         authRepository.logout()

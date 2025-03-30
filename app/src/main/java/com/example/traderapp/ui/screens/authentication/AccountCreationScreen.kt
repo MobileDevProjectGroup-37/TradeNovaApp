@@ -56,7 +56,7 @@ fun AccountCreationScreen(navController: NavController) {
 
                 Image(
                     painter = painterResource(id = R.drawable.account_creation),
-                    contentDescription = "Progress Bar Image",
+                    contentDescription = stringResource(R.string.account_creation),
                     modifier = Modifier
                         .size(280.dp)
                         .padding(16.dp)
@@ -75,12 +75,12 @@ fun AccountCreationScreen(navController: NavController) {
 
                 CustomButton(
                     text = stringResource(R.string.continuereg),
-                    onClick = { navController.navigate("login") },
+                    onClick = { navController.navigate("add_mail") },
                     backgroundColor = MaterialTheme.colorScheme.primary,
                     textColor = Color.White,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .padding(16.dp)
+                        .padding(24.dp)
                 )
             }
         }

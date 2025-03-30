@@ -15,11 +15,17 @@ import com.example.traderapp.ui.screens.authentication.AccountCreationScreen
 import com.example.traderapp.ui.screens.HomeScreen
 import com.example.traderapp.ui.screens.authentication.LoginScreen
 import com.example.traderapp.ui.screens.MarketScreen
+import com.example.traderapp.ui.screens.OnBoardingScreen
 import com.example.traderapp.ui.screens.authentication.RegisterScreen
 import com.example.traderapp.ui.screens.authentication.WelcomeScreen
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
-import com.example.traderapp.ui.screens.OnBoardingScreen
+
 import com.example.traderapp.ui.screens.SettingsScreen
+import com.example.traderapp.ui.screens.authentication.AddMail
+import com.example.traderapp.ui.screens.authentication.ConfirmMail
+import com.example.traderapp.ui.screens.authentication.CreatePassword
+import com.example.traderapp.ui.screens.authentication.EnterCode
+import com.example.traderapp.ui.screens.authentication.SuccessfulRegistration
 import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
@@ -73,6 +79,11 @@ fun AppNavigation() {
             composable("welcome") { WelcomeScreen(navController) }
             composable(Constants.LOGIN_SCREEN_ROUTE) { LoginScreen(navController, authViewModel) }
             composable("account_creation") { AccountCreationScreen(navController) }
+            composable("add_mail") { AddMail(navController) }
+            composable("confirm_mail") { ConfirmMail(navController) }
+            composable("enter_code") { EnterCode(navController) }
+            composable("create_password") { CreatePassword(navController) }
+            composable("successful_registration") { SuccessfulRegistration(navController) }
             composable("register") { RegisterScreen(navController, authViewModel) }
             composable(Constants.SETTINGS_SCREEN_ROUTE) { SettingsScreen(navController, authViewModel) }
 

@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -47,11 +48,11 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp)
+                    .padding(24.dp)
                     .background(MaterialTheme.colorScheme.background)
             ) {
                 AppTitle(
-                    text = "Login to your\nAccount",
+                    text = stringResource(R.string.login_to_your_account),
                     modifier = Modifier.padding(16.dp),
                     textAlign = TextAlign.Center
                 )
@@ -100,7 +101,7 @@ fun LoginScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    QuestionText(question = "Unlock with Touch ID?")
+                    QuestionText(question = stringResource(R.string.unlock_with_touch_id))
                     Switch(
                         checked = touchIdEnabled,
                         onCheckedChange = { authViewModel.onTouchIdChange(it) },
@@ -117,11 +118,11 @@ fun LoginScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
+                        .padding(top = 160.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     CustomButton(
-                        text = "Sign in",
+                        text = stringResource(R.string.sign_in),
                         onClick = {
                             authViewModel.login(
                                 onSuccess = {

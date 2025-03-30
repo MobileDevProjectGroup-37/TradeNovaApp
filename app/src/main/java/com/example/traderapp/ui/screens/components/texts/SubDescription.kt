@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components.onboarding
+package com.example.traderapp.ui.screens.components.texts
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.text.font.FontWeight

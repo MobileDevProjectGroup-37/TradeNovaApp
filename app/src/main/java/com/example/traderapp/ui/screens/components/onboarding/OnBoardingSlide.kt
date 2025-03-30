@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.traderapp.data.model.OnBoardingData
 import com.example.traderapp.R
+import com.example.traderapp.ui.screens.components.texts.OnBoardingDescription
 
 @Composable
 fun OnBoardingSlide(data: OnBoardingData) {

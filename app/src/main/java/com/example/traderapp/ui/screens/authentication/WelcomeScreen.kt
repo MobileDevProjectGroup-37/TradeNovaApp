@@ -7,6 +7,7 @@
     import androidx.compose.ui.Alignment
     import androidx.compose.ui.Modifier
     import androidx.compose.ui.graphics.Color
+    import androidx.compose.ui.res.stringResource
     import androidx.compose.ui.text.font.FontWeight
     import androidx.compose.ui.text.style.TextAlign
     import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +40,7 @@
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
-                        .padding(16.dp)
+                        .padding(24.dp)
                         .background(MaterialTheme.colorScheme.background),
                     contentAlignment = Alignment.TopCenter
                 ) {
@@ -48,7 +49,7 @@
                         verticalArrangement = Arrangement.Center
                     ) {
                         AppTitle(
-                            text = "Hello! Start your crypto investment today",
+                            text = stringResource(R.string.welcome),
                             modifier = Modifier
                                 .padding(top = 8.dp)
                                 .align(Alignment.CenterHorizontally),
@@ -64,13 +65,13 @@
                         Spacer(modifier = Modifier.height(30.dp))
 
                         CustomButton(
-                            text = "Sign up with email",
+                            text = stringResource(R.string.sign_up_with_email),
                             onClick = { navController.navigate("account_creation") },
                             backgroundColor = MaterialTheme.colorScheme.primary,
                             textColor = Color.White,
                         )
 
-                        Spacer(modifier = Modifier.height(240.dp))
+                        Spacer(modifier = Modifier.height(160.dp))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -78,7 +79,7 @@
                         ) {
                             HorizontalDivider(modifier = Modifier.weight(1f))
                             Text(
-                                text = " Already have an account? ",
+                                text = stringResource(R.string.already_have_an_account2),
                                 style = MaterialTheme.typography.bodyMedium.copy(
                                     fontWeight = FontWeight.Bold
                                 ),
@@ -90,7 +91,7 @@
                         Spacer(modifier = Modifier.height(16.dp))
 
                         CustomButton(
-                            text = "Sign In",
+                            text = stringResource(R.string.sign_in),
                             onClick = { navController.navigate("login") },
                             backgroundColor = MaterialTheme.colorScheme.primary,
                             textColor = Color.White,
