@@ -15,7 +15,6 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
@@ -26,15 +25,15 @@ import com.example.traderapp.viewmodel.AuthViewModel
 @Composable
 fun ConfirmMail(
     navController: NavController,
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel // ✅ Получаем из AppNavigation
 ) {
     Scaffold(
         topBar = {
             AppTopBar(
                 showBackButton = true,
                 onBackClick = {
+                    // Снова — не обнуляем email
                     navController.popBackStack()
-                    authViewModel.resetFields()
                 },
                 logoResId = R.drawable.sl_bar2,
                 logoSize = 200.dp
@@ -71,19 +70,32 @@ fun ConfirmMail(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )
+
                 CustomButton(
                     text = stringResource(R.string.confirm),
                     modifier = Modifier
                         .padding(top = 20.dp),
-                    onClick = { navController.navigate("enter_code") },
+                    onClick = {
+                        // Посмотрим что за email
+                        println("DEBUG: email.value = ${authViewModel.email.value}")
+
+                        authViewModel.sendOtp(
+                            onSuccess = {
+                                navController.navigate("enter_code")
+                            },
+                            onFailure = { error ->
+                                println("Ошибка при отправке кода: $error")
+                            }
+                        )
+                    },
                     backgroundColor = MaterialTheme.colorScheme.primary,
-                    textColor = Color.White,
-                    )
+                    textColor = Color.White
+                )
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp),
-
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {

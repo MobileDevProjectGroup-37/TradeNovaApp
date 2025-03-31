@@ -13,7 +13,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
@@ -26,7 +25,7 @@ import com.example.traderapp.viewmodel.AuthViewModel
 @Composable
 fun AddMail(
     navController: NavController,
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel // ✅ Убираем hiltViewModel(), получаем из AppNavigation
 ) {
     val email by authViewModel.email
 
@@ -35,8 +34,8 @@ fun AddMail(
             AppTopBar(
                 showBackButton = true,
                 onBackClick = {
+                    // ✅ Убираем resetFields() здесь, чтобы не обнулять email
                     navController.popBackStack()
-                    authViewModel.resetFields()
                 },
                 logoResId = R.drawable.sl_bar1,
                 logoSize = 200.dp
@@ -62,9 +61,12 @@ fun AddMail(
                     description = stringResource(R.string.enter_email_description)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+
                 CustomTextField(
                     value = email,
-                    onValueChange = { authViewModel.onEmailChange(it) },
+                    onValueChange = {
+                        authViewModel.onEmailChange(it)
+                    },
                     label = "Email address",
                     isValid = Patterns.EMAIL_ADDRESS.matcher(email).matches(),
                     leadingIcon = { size ->
@@ -99,16 +101,20 @@ fun AddMail(
                         )
                     }
                 }
+
                 Spacer(modifier = Modifier.height(100.dp))
+
                 CustomButton(
                     text = stringResource(R.string.continuereg),
-                    onClick = { navController.navigate("confirm_mail") },
+                    onClick = {
+                        // Просто навигируем дальше
+                        navController.navigate("confirm_mail")
+                    },
                     backgroundColor = MaterialTheme.colorScheme.primary,
                     textColor = Color.White,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
+
                 Spacer(modifier = Modifier.height(38.dp))
                 OnBoardingDescription(
                     description = stringResource(R.string.terms_and_cons)

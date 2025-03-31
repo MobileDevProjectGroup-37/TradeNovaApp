@@ -59,6 +59,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-functions-ktx")
 
     // 🔑 **Google Sign-In**
     implementation(libs.googleid)
@@ -69,6 +70,7 @@ dependencies {
 
     // 📌 **Hilt + DI**
     implementation("com.google.dagger:hilt-android:2.50")
+    //implementation(libs.firebase.functions)
     kapt(libs.hilt.compiler) // 📌 Обязательно!
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 

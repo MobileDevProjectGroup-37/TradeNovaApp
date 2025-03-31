@@ -7,11 +7,15 @@ import com.example.traderapp.data.AuthRepository
 import com.example.traderapp.data.network.UserSession
 import com.example.traderapp.data.network.WebSocketClient
 import com.example.traderapp.utils.AuthPreferences
+import com.google.firebase.Firebase
+import com.google.firebase.functions.functions
+import com.google.firebase.functions.ktx.functions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -95,5 +99,27 @@ class AuthViewModel @Inject constructor(
         email.value = ""
         password.value = ""
         validationError.value = null
+    }
+    fun sendOtp(
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                val result = Firebase.functions
+                    .getHttpsCallable("sendOtp")
+                    .call(mapOf("email" to email.value))
+                    .await()
+
+                val success = (result.data as Map<*, *>)["success"] as? Boolean ?: false
+                if (success) {
+                    onSuccess()
+                } else {
+                    onFailure("Ошибка отправки кода")
+                }
+            } catch (e: Exception) {
+                onFailure(e.message ?: "Неизвестная ошибка")
+            }
+        }
     }
 }
