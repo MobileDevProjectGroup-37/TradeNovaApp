@@ -6,3 +6,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services) apply false
     id("com.google.dagger.hilt.android") version "2.44" apply false
 }
+tasks.wrapper {
+    gradleVersion = "8.1.1"
+    distributionType = Wrapper.DistributionType.ALL
+}

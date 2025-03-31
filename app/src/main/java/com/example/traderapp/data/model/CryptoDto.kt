@@ -6,6 +6,6 @@ data class CryptoDto(
     val symbol: String,
     val name: String,
     val priceUsd: String,
-    val volume24h: Double,
-    val changePercent24h: Double? = null
+    val volumeUsd24Hr: Double,
+    val changePercent24Hr: Double? = null
 )

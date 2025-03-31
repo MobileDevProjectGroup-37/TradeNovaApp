@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.screens.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.traderapp.data.model.CryptoDto
 
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun MarketMoverItem(crypto: CryptoDto, currentPrice: Double, priceChange: Double) {
     Box(
@@ -65,7 +67,7 @@ fun MarketMoverItem(crypto: CryptoDto, currentPrice: Double, priceChange: Double
                     Text("Chart")
                 }
 
-                Text(text = "24H Vol: ${String.format("%.2f", crypto.volume24h)}")
+                Text(text = "24H Vol: ${String.format("%.2f", crypto.volumeUsd24Hr)}")
             }
         }
     }

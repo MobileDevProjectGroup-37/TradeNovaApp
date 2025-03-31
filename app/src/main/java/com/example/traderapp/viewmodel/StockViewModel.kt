@@ -17,7 +17,7 @@ class CryptoViewModel : ViewModel() {
 
     private val webSocketClient = WebSocketClient()
     val priceUpdates = webSocketClient.priceUpdates
-
+    //TODO HARDCODED, CONNECT TO DB DELETE todo after change
     // 🔹 Portfolio Balance (Можно заменить на реальные данные)
     private val _balance = MutableStateFlow(2760.23)
     val balance: StateFlow<Double> = _balance.asStateFlow()
@@ -43,11 +43,11 @@ class CryptoViewModel : ViewModel() {
                 _cryptoList.value = cryptoData
 
                 val updatedList = cryptoData.map {
-                    it.copy(changePercent24h = Random.nextDouble(-5.0, 5.0)) // Симуляция роста/падения
+                    it.copy(changePercent24Hr = Random.nextDouble(-5.0, 5.0)) // Симуляция роста/падения
                 }
 
                 // Сортируем по изменению цены за 24ч и берем ТОП-5
-                _marketMovers.value = updatedList.sortedByDescending { it.changePercent24h }.take(5)
+                _marketMovers.value = updatedList.sortedByDescending { it.changePercent24Hr }.take(5)
 
                 // Подключаем WebSocket для обновления цен
                 val symbols = cryptoData.map { it.id.lowercase() }

@@ -49,7 +49,7 @@ fun MarketMoversSection(marketMovers: List<CryptoDto>, priceUpdates: Map<String,
                 MarketMoverItem(
                     crypto = crypto,
                     currentPrice = currentPrice,
-                    priceChange = crypto.changePercent24h ?: 0.0
+                    priceChange = crypto.changePercent24Hr ?: 0.0
                 )
             }
         }
