@@ -17,8 +17,10 @@ import androidx.compose.ui.unit.sp
 import com.example.traderapp.ui.theme.LightOffline
 
 @Composable
-fun CodeInputField() {
-    var code by remember { mutableStateOf(List(6) { "" }) }
+fun CodeInputField(
+    onCodeChange: (String) -> Unit  // колбэк для отправки кода наверх
+) {
+    var codeList by remember { mutableStateOf(List(6) { "" }) }
 
     Row(
         modifier = Modifier
@@ -26,12 +28,21 @@ fun CodeInputField() {
             .padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        code.forEachIndexed { index, digit ->
+        codeList.forEachIndexed { index, digit ->
             BasicTextField(
                 value = digit,
                 onValueChange = { newValue ->
                     if (newValue.length <= 1 && newValue.all { it.isDigit() }) {
-                        code = code.toMutableList().apply { this[index] = newValue }
+                        // Обновляем локальный state
+                        val updatedList = codeList.toMutableList().apply {
+                            this[index] = newValue
+                        }
+                        codeList = updatedList
+
+                        // Формируем общую строку
+                        val joinedCode = updatedList.joinToString("")
+                        // Передаём эту строку вверх
+                        onCodeChange(joinedCode)
                     }
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -50,5 +61,4 @@ fun CodeInputField() {
             )
         }
     }
-
 }

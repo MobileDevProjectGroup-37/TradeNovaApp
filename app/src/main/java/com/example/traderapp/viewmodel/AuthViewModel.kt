@@ -26,7 +26,7 @@ class AuthViewModel @Inject constructor(
     private val webSocketClient: WebSocketClient
 
     ) : ViewModel() {
-
+    var otpCode = mutableStateOf("")
     var email = mutableStateOf("")
     var password = mutableStateOf("")
     var validationError = mutableStateOf<String?>(null)
@@ -115,11 +115,43 @@ class AuthViewModel @Inject constructor(
                 if (success) {
                     onSuccess()
                 } else {
-                    onFailure("Ошибка отправки кода")
+                    onFailure("Error Sending Code")
                 }
             } catch (e: Exception) {
-                onFailure(e.message ?: "Неизвестная ошибка")
+                onFailure(e.message ?: "Unknown Error")
             }
         }
     }
+
+    fun verifyOtp(
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            try {
+                println(">>> Attempting verifyOtp with email = ${email.value}, code = ${otpCode.value}")
+
+                val result = Firebase.functions
+                    .getHttpsCallable("verifyOtp")
+                    .call(mapOf(
+                        "email" to email.value,
+                        "code" to otpCode.value
+                    ))
+                    .await()
+
+                val success = (result.data as Map<*, *>)["success"] as? Boolean ?: false
+                if (success) {
+                    println(">>> verifyOtp: success = true")
+                    onSuccess()
+                } else {
+                    println(">>> verifyOtp: success = false")
+                    onFailure("Wrong code")
+                }
+            } catch (e: Exception) {
+                println(">>> verifyOtp: exception = ${e.message}")
+                onFailure(e.message ?: "Error when checking code")
+            }
+        }
+    }
+
 }

@@ -26,12 +26,10 @@ import com.example.traderapp.viewmodel.OnBoardingViewModel
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-
-    // ✅ Создаём один AuthViewModel на всё приложение
-    //   и используем hiltViewModel() один раз
+    //Create one hiltViewModel for the whole app
     val authViewModel: AuthViewModel = hiltViewModel()
 
-    // Следим за состоянием авторизации
+
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
     Scaffold(
@@ -90,10 +88,10 @@ fun AppNavigation() {
             }
 
             composable("enter_code") {
-                EnterCode(navController)
+                EnterCode(navController, authViewModel)
             }
             composable("create_password") {
-                CreatePassword(navController)
+                CreatePassword(navController, authViewModel)
             }
             composable("successful_registration") {
                 SuccessfulRegistration(navController)

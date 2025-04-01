@@ -43,7 +43,7 @@ import com.example.traderapp.viewmodel.AuthViewModel
 @Composable
 fun CreatePassword(
     navController: NavController,
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel
 ) {
 
     val password by authViewModel.password
