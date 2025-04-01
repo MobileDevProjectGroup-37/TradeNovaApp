@@ -96,4 +96,24 @@ class AuthViewModel @Inject constructor(
         password.value = ""
         validationError.value = null
     }
+
+    fun resetPassword(onSuccess: () -> Unit, onFailure: (String) -> Unit) {
+        val emailValue = email.value
+
+        if (emailValue.isEmpty()) {
+            onFailure("Please enter your email address.")
+            return
+        }
+
+        viewModelScope.launch {
+            val success = authRepository.resetPassword(emailValue)
+            if (success) {
+                onSuccess()
+            } else {
+                onFailure("Failed to send password reset email.")
+            }
+        }
+    }
+
 }
+

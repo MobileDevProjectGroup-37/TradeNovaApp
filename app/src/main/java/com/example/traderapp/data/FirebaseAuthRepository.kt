@@ -40,6 +40,16 @@ class FirebaseAuthRepository @Inject constructor(
         }
     }
 
+    override suspend fun resetPassword(email: String): Boolean {
+        return try {
+            auth.sendPasswordResetEmail(email).await()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+
     override fun logout() {
         auth.signOut()
     }

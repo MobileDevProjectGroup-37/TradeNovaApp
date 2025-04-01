@@ -35,4 +35,7 @@
     <string name="welcome">Hello! Start your crypto investment today</string>
     <string name="sign_up_with_email">Sign up with email</string>
     <string name="already_have_an_account2">" Already have an account? "</string>
+    <string name="password_reset">"Reset Password"</string>
+    <string name="password_reset_instruction">"Please enter your registered email address to reset your password"</string>
+    <string name="or">"or"</string>
 </resources>

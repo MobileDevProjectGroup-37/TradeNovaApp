@@ -7,6 +7,7 @@ interface AuthRepository {
     suspend fun login(email: String, password: String): Boolean
     fun logout()
     fun getIsAuthenticatedFlow(): StateFlow<Boolean>
+    suspend fun resetPassword(email: String): Boolean
 }
 
 

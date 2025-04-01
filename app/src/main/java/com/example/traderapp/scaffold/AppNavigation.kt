@@ -24,6 +24,7 @@ import com.example.traderapp.ui.screens.SettingsScreen
 import com.example.traderapp.ui.screens.authentication.AddMail
 import com.example.traderapp.ui.screens.authentication.ConfirmMail
 import com.example.traderapp.ui.screens.authentication.CreatePassword
+import com.example.traderapp.ui.screens.authentication.ResetPasswordScreen
 import com.example.traderapp.ui.screens.authentication.EnterCode
 import com.example.traderapp.ui.screens.authentication.SuccessfulRegistration
 import com.example.traderapp.utils.Constants
@@ -86,6 +87,7 @@ fun AppNavigation() {
             composable("successful_registration") { SuccessfulRegistration(navController) }
             composable("register") { RegisterScreen(navController, authViewModel) }
             composable(Constants.SETTINGS_SCREEN_ROUTE) { SettingsScreen(navController, authViewModel) }
+            composable("reset_password") { ResetPasswordScreen(navController, authViewModel) }
 
 //                composable("forgot_password") { ForgotPasswordScreen(navController)
 
