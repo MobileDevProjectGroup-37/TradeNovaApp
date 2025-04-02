@@ -62,7 +62,7 @@ fun AppNavigation() {
 
             // Маршрут для экрана Trade
             composable(Constants.TRADE_SCREEN_ROUTE) {
-                TradeScreen()  // Экран для торговли
+                TradeScreen(navController)  // Экран для торговли
             }
 
             composable(Constants.ONBOARDING_SCREEN_ROUTE) {

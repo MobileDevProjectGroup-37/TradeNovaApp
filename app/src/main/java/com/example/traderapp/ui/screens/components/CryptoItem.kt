@@ -1,14 +1,12 @@
 package com.example.traderapp.ui.screens.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.traderapp.data.model.CryptoDto
@@ -37,7 +35,7 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
         ) {
             // Название криптовалютной пары (например, BTC/USDT)
             Column(
-                modifier = Modifier.weight(2.4f),
+                modifier = Modifier.weight(2.0f),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(text = "${crypto.name}/USDT", fontWeight = FontWeight.Bold)
@@ -60,7 +58,7 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
             Column(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(8.dp),
+                    .padding(4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val rawChange = crypto.changePercent24Hr ?: 0.0

@@ -1,7 +1,6 @@
 package com.example.traderapp.ui.screens.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -41,19 +40,7 @@ fun PortfolioBalanceSection(balance: Double, percentageChange: Double) {
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-
         Spacer(modifier = Modifier.height(16.dp))
-
-        // Placeholder for diagram
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Graph Placeholder")
-        }
 
     }
 }

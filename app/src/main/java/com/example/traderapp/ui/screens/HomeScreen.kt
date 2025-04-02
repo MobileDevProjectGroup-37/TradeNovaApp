@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.traderapp.R
+import com.example.traderapp.ui.screens.components.Diagram
 import com.example.traderapp.ui.screens.components.MarketMoversSection
 import com.example.traderapp.ui.screens.components.PortfolioBalanceSection
 import com.example.traderapp.ui.screens.components.PortfolioSection
@@ -56,18 +57,18 @@ fun HomeScreen(navController: NavController, viewModel: CryptoViewModel = viewMo
             item {
                 PortfolioBalanceSection(balance = balance, percentageChange = percentageChange)
             }
-
+            item {
+               Diagram()
+            }
             item {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-
                 ) {
                     MarketMoversSection(marketMovers = marketMovers, priceUpdates = priceUpdates)
                     PortfolioSection(portfolioItems = portfolioItems, priceUpdates = priceUpdates.values.toList())
 
                 }
             }
-
             item {
                 Spacer(modifier = Modifier.height(80.dp))
             }
