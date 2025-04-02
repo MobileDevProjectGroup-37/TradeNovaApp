@@ -7,7 +7,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -16,8 +15,8 @@ import com.example.traderapp.ui.screens.MarketScreen
 import com.example.traderapp.ui.screens.OnBoardingScreen
 import com.example.traderapp.ui.screens.SettingsScreen
 import com.example.traderapp.ui.screens.authentication.*
-import com.example.traderapp.ui.screens.authentication.RegisterScreen
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
+import com.example.traderapp.ui.screens.trade.TradeScreen
 import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
@@ -26,10 +25,7 @@ import com.example.traderapp.viewmodel.OnBoardingViewModel
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    //Create one hiltViewModel for the whole app
     val authViewModel: AuthViewModel = hiltViewModel()
-
-
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
     Scaffold(
@@ -37,7 +33,7 @@ fun AppNavigation() {
             val currentRoute = navController.currentDestination?.route
             when (currentRoute) {
                 Constants.LOGIN_SCREEN_ROUTE -> AppTopBar(title = "Login", showBackButton = false)
-                "register" -> AppTopBar(
+                Constants.REGISTER_SCREEN_ROUTE -> AppTopBar(
                     title = "Register",
                     showBackButton = true,
                     onBackClick = { navController.popBackStack() }
@@ -59,44 +55,45 @@ fun AppNavigation() {
             composable(Constants.HOME_SCREEN_ROUTE) {
                 HomeScreen(navController)
             }
-            composable("market") {
+            composable(Constants.MARKET_SCREEN_ROUTE) {
                 val cryptoViewModel: CryptoViewModel = hiltViewModel()
                 MarketScreen(navController, cryptoViewModel)
+            }
+
+            // Маршрут для экрана Trade
+            composable(Constants.TRADE_SCREEN_ROUTE) {
+                TradeScreen()  // Экран для торговли
             }
 
             composable(Constants.ONBOARDING_SCREEN_ROUTE) {
                 val onBoardingViewModel: OnBoardingViewModel = hiltViewModel()
                 OnBoardingScreen(navController, onBoardingViewModel)
             }
-            composable("welcome") {
+            composable(Constants.WELCOME_SCREEN_ROUTE) {
                 WelcomeScreen(navController)
             }
             composable(Constants.LOGIN_SCREEN_ROUTE) {
-                // ✅ Передаём уже созданный authViewModel
                 LoginScreen(navController, authViewModel)
             }
-            composable("account_creation") {
+            composable(Constants.ACCOUNT_CREATION_SCREEN_ROUTE) {
                 AccountCreationScreen(navController)
             }
-
-            // ✅ Передаём наш общий authViewModel
-            composable("add_mail") {
+            composable(Constants.ADD_MAIL_SCREEN_ROUTE) {
                 AddMail(navController, authViewModel)
             }
-            composable("confirm_mail") {
+            composable(Constants.CONFIRM_MAIL_SCREEN_ROUTE) {
                 ConfirmMail(navController, authViewModel)
             }
-
-            composable("enter_code") {
+            composable(Constants.ENTER_CODE_SCREEN_ROUTE) {
                 EnterCode(navController, authViewModel)
             }
-            composable("create_password") {
+            composable(Constants.CREATE_PASSWORD_SCREEN_ROUTE) {
                 CreatePassword(navController, authViewModel)
             }
-            composable("successful_registration") {
+            composable(Constants.SUCCESSFUL_REGISTRATION_SCREEN_ROUTE) {
                 SuccessfulRegistration(navController)
             }
-            composable("register") {
+            composable(Constants.REGISTER_SCREEN_ROUTE) {
                 RegisterScreen(navController, authViewModel)
             }
             composable(Constants.SETTINGS_SCREEN_ROUTE) {
