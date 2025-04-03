@@ -1,7 +1,6 @@
 package com.example.traderapp.ui.screens.trade
 
 import androidx.compose.runtime.Composable
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -9,20 +8,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.PortfolioBalanceSection
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.screens.components.bars.RightIconType
-import com.example.traderapp.ui.screens.components.texts.AppTitle
-import com.example.traderapp.ui.screens.components.texts.SubTitle
 import com.example.traderapp.ui.theme.TransparentStatusBar
-
 
 @Composable
 fun TradeScreen(navController: NavController) {
@@ -88,49 +82,13 @@ fun TradeScreen(navController: NavController) {
                     }
                 }
             }
-
             Spacer(modifier = Modifier.height(20.dp))
 
             // Show different content based on selected option
             when (selectedOption) {
-                "Buy" -> {
-                    // Display Buy-related information
-                    SubTitle("You pay")
-                    AppTitle(
-                        text = "$$amount",
-                        modifier = Modifier.padding(top = 8.dp),
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("You receive: $cryptocurrencyAmount BTC")
-
-                    // Button to simulate the buying action
-                    Button(onClick = { /* Buy action */ }) {
-                        Text(text = "Buy")
-                    }
-                }
-                "Sell" -> {
-                    // Display Sell-related information
-                    Text("You pay: $$amount")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("You receive: $cryptocurrencyAmount BTC")
-
-                    // Button to simulate the selling action
-                    Button(onClick = { /* Sell action */ }) {
-                        Text(text = "Sell")
-                    }
-                }
-                "Exchange" -> {
-                    // Display Exchange-related information
-                    Text("You Convert: $$amount")
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("To: $cryptocurrencyAmount BTC")
-
-                    // Button to simulate the exchange action
-                    Button(onClick = { /* Exchange action */ }) {
-                        Text(text = "Convert")
-                    }
-                }
+                "Buy" -> BuyTab(amount, cryptocurrencyAmount)
+                "Sell" -> SellTab(amount, cryptocurrencyAmount)
+                "Exchange" -> ExchangeTab(amount, cryptocurrencyAmount)
             }
 
             Spacer(modifier = Modifier.height(20.dp))
