@@ -14,9 +14,11 @@ import com.example.traderapp.ui.screens.HomeScreen
 import com.example.traderapp.ui.screens.MarketScreen
 import com.example.traderapp.ui.screens.OnBoardingScreen
 import com.example.traderapp.ui.screens.SettingsScreen
+
 import com.example.traderapp.ui.screens.authentication.*
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
 import com.example.traderapp.ui.screens.trade.TradeScreen
+
 import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
@@ -69,6 +71,7 @@ fun AppNavigation() {
                 val onBoardingViewModel: OnBoardingViewModel = hiltViewModel()
                 OnBoardingScreen(navController, onBoardingViewModel)
             }
+
             composable(Constants.WELCOME_SCREEN_ROUTE) {
                 WelcomeScreen(navController)
             }
@@ -99,6 +102,11 @@ fun AppNavigation() {
             composable(Constants.SETTINGS_SCREEN_ROUTE) {
                 SettingsScreen(navController, authViewModel)
             }
+            composable("reset_password") { 
+              ResetPasswordScreen(navController, authViewModel) 
+            }
+
+
         }
     }
 }
