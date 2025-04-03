@@ -9,14 +9,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.PortfolioBalanceSection
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.screens.components.bars.RightIconType
+import com.example.traderapp.ui.screens.components.texts.AppTitle
+import com.example.traderapp.ui.screens.components.texts.SubTitle
 import com.example.traderapp.ui.theme.TransparentStatusBar
 
 
@@ -91,7 +95,12 @@ fun TradeScreen(navController: NavController) {
             when (selectedOption) {
                 "Buy" -> {
                     // Display Buy-related information
-                    Text("You pay: $$amount")
+                    SubTitle("You pay")
+                    AppTitle(
+                        text = "$$amount",
+                        modifier = Modifier.padding(top = 8.dp),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.primary)
                     Spacer(modifier = Modifier.height(8.dp))
                     Text("You receive: $cryptocurrencyAmount BTC")
 
