@@ -16,7 +16,11 @@ import com.example.traderapp.ui.screens.components.texts.SubTitle
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun PortfolioBalanceSection(balance: Double, percentageChange: Double) {
+fun PortfolioBalanceSection(
+    balance: Double?,
+    percentageChange: Double,
+    isLoading: Boolean
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -28,23 +32,27 @@ fun PortfolioBalanceSection(balance: Double, percentageChange: Double) {
             modifier = Modifier.padding(bottom = 8.dp),
             textAlign = TextAlign.Center
         )
-        Text(
-            text = "$$balance",
-            style = MaterialTheme.typography.headlineLarge.copy(
+
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else {
+            Text(
+                text = "$${String.format("%.2f", balance)}",
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 32.sp
+                ),
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "${String.format("+%.2f", percentageChange)}%",
                 fontWeight = FontWeight.Bold,
-                fontSize = 32.sp
-            ),
-            textAlign = TextAlign.Center
-        )
-        Text(
-            "${String.format("+%.2f", percentageChange)}%",
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-        )
+                textAlign = TextAlign.Center
+            )
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Placeholder for diagram
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -54,6 +62,5 @@ fun PortfolioBalanceSection(balance: Double, percentageChange: Double) {
         ) {
             Text("Graph Placeholder")
         }
-
     }
 }

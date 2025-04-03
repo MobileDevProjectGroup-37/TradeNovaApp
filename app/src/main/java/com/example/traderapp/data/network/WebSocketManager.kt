@@ -8,9 +8,9 @@ import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
-import javax.inject.Inject // Вот этот импорт нужно добавить
+import javax.inject.Inject
 
-class WebSocketClient @Inject constructor() { // Вот здесь нужно добавить @Inject constructor()
+class WebSocketClient @Inject constructor() {
     private val client = OkHttpClient()
     private var webSocket: WebSocket? = null
 

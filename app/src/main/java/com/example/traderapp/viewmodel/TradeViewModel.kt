@@ -47,6 +47,7 @@ class TradeViewModel @Inject constructor(
                         _tradeError.value = "Not enough balance to complete purchase"
                         return@launch
                     }
+
                     user.copy(
                         balance = user.balance - totalValue,
                         tradeVolume = user.tradeVolume + totalValue.toInt()

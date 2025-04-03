@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.traderapp.data.network.UserSessionViewModel
 import com.example.traderapp.ui.screens.HomeScreen
 import com.example.traderapp.ui.screens.MarketScreen
 import com.example.traderapp.ui.screens.OnBoardingScreen
@@ -28,8 +29,10 @@ fun AppNavigation() {
     val navController = rememberNavController()
     //Create one hiltViewModel for the whole app
     val authViewModel: AuthViewModel = hiltViewModel()
+    val cryptoViewModel: CryptoViewModel = hiltViewModel()
 
-
+    val userSessionViewModel: UserSessionViewModel = hiltViewModel()
+    val userSession = userSessionViewModel.userSession
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
     Scaffold(
@@ -57,10 +60,9 @@ fun AppNavigation() {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Constants.HOME_SCREEN_ROUTE) {
-                HomeScreen(navController)
+                HomeScreen(navController, cryptoViewModel, userSession)
             }
             composable("market") {
-                val cryptoViewModel: CryptoViewModel = hiltViewModel()
                 MarketScreen(navController, cryptoViewModel)
             }
 
@@ -79,7 +81,6 @@ fun AppNavigation() {
                 AccountCreationScreen(navController)
             }
 
-            // ✅ Передаём наш общий authViewModel
             composable("add_mail") {
                 AddMail(navController, authViewModel)
             }
