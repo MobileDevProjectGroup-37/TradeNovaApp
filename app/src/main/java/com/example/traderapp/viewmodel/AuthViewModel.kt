@@ -115,6 +115,9 @@ class AuthViewModel @Inject constructor(
                 onSuccess()
             } else {
                 onFailure("Failed to send password reset email.")
+            }
+        }
+    }
 
     fun sendOtp(
         onSuccess: () -> Unit,
@@ -170,6 +173,9 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
+            }
 
-}
+
+
+
 
