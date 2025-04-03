@@ -37,7 +37,7 @@ import com.example.traderapp.viewmodel.AuthViewModel
 @Composable
 fun EnterCode(
     navController: NavController,
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel
 ) {
 
     Scaffold(
@@ -80,7 +80,11 @@ fun EnterCode(
                         .size(100.dp)
                         .padding(16.dp)
                 )
-                CodeInputField()
+                CodeInputField(
+                    onCodeChange = { newCode ->
+                        authViewModel.otpCode.value = newCode
+                    }
+                )
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(
@@ -106,13 +110,24 @@ fun EnterCode(
                 }
                 CustomButton(
                     text = stringResource(R.string.entered),
-                    onClick = {navController.navigate("create_password")  },
+                    onClick = {
+                        println(">>> Attempting verifyOtp with code = ${authViewModel.otpCode.value}")
+                        authViewModel.verifyOtp(
+                            onSuccess = {
+                                println(">>> verifyOtp success")
+                                navController.navigate("create_password")
+                            },
+                            onFailure = { errorMsg ->
+
+                                println("Error checking code: $errorMsg")
+                            }
+                        )
+                    },
                     backgroundColor = MaterialTheme.colorScheme.primary,
                     textColor = Color.White,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
+
             }
 
         }

@@ -43,7 +43,7 @@ import com.example.traderapp.viewmodel.AuthViewModel
 @Composable
 fun CreatePassword(
     navController: NavController,
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel
 ) {
 
     val password by authViewModel.password
@@ -168,7 +168,14 @@ fun CreatePassword(
                 Spacer(modifier = Modifier.height(38.dp))
                 CustomButton(
                     text = stringResource(R.string.continuereg),
-                    onClick = {navController.navigate("successful_registration") },
+                    onClick = {
+                        if (isPasswordValid && isConfirmPasswordValid) {
+                            authViewModel.register(
+                                onSuccess = { navController.navigate("successful_registration") },
+                                onFailure = { errorMsg -> println("Registration error: $errorMsg") }
+                            )
+                        }
+                    },
                     backgroundColor = MaterialTheme.colorScheme.primary,
                     textColor = Color.White,
                     modifier = Modifier
