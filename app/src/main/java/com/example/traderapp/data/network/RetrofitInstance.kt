@@ -6,18 +6,20 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
+
     private val client = OkHttpClient.Builder()
         .addInterceptor(HttpLoggingInterceptor().apply {
+
             level = HttpLoggingInterceptor.Level.BODY
-        }).build()
+        })
+        .build()
 
     val api: CryptoApi by lazy {
         Retrofit.Builder()
-            .baseUrl("https://api.coincap.io/v2/")
+            .baseUrl("https://api.binance.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
             .create(CryptoApi::class.java)
     }
 }
-
