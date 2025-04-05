@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.screens.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.ui.screens.components.texts.ClickableText
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun PortfolioSection(
     portfolioItems: List<CryptoDto>,
@@ -39,8 +41,15 @@ fun PortfolioSection(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        itemsToShow.forEachIndexed { index, crypto ->
-            PortfolioItem(crypto = crypto, currentPrice = priceUpdates.getOrNull(index + currentIndex) ?: 0.0)
+        itemsToShow.forEach { crypto ->
+            val price = crypto.priceUsd.toDoubleOrNull()?.let {
+                "$" + String.format("%.6f", it)
+            } ?: "--"
+
+            PortfolioItem(
+                crypto = crypto.name,
+                currentPrice = price
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))

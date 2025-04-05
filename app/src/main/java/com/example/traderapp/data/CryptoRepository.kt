@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
-
+import kotlin.math.round
 
 class CryptoRepository @Inject constructor(
     private val api: CryptoApi,
@@ -24,46 +24,46 @@ class CryptoRepository @Inject constructor(
         if (cache != null) {
             Log.d("CryptoRepository", "Loaded from cache")
             return cache
-        } else {
-            try {
+        }
 
-                val exchangeInfo = api.getExchangeInfo()
+        return try {
+            val exchangeInfo = api.getExchangeInfo()
+            val allPrices = api.getAllPrices()
+            val ticker24hList = api.getAllTicker24hr()
 
+            val priceMap = allPrices.associateBy { it.symbol }
+            val tickerMap = ticker24hList.associateBy { it.symbol }
 
-                val allPrices = api.getAllPrices()
+            val usdtSymbols = exchangeInfo.symbols
+                .filter { it.quoteAsset == "USDT" && it.status == "TRADING" }
 
+            val data = usdtSymbols.map { symbolInfo ->
+                val symbol = symbolInfo.symbol
+                val price = priceMap[symbol]?.price ?: ""
+                val ticker = tickerMap[symbol]
 
-                val priceMap = allPrices.associateBy(
-                    keySelector = { it.symbol },
-                    valueTransform = { it.price }
+                val percentChange = ticker?.priceChangePercent?.toDoubleOrNull()?.let { round(it * 100) / 100 } ?: 0.0
+                val volume = ticker?.quoteVolume?.toDoubleOrNull()?.let { round(it * 100) / 100 } ?: 0.0
+
+                CryptoDto(
+                    id = symbol,
+                    symbol = symbol,
+                    name = "${symbolInfo.baseAsset}/USDT",
+                    priceUsd = price,
+                    changePercent24Hr = percentChange,
+                    volumeUsd24Hr = volume
                 )
-
-                val data = exchangeInfo.symbols.map { symbolInfo ->
-                    val symbolKey = symbolInfo.symbol
-                    val priceStr = priceMap[symbolKey] ?: ""
-
-                    CryptoDto(
-                        id = symbolKey,
-                        symbol = symbolKey,
-                        name = "${symbolInfo.baseAsset}/${symbolInfo.quoteAsset}",
-                        priceUsd = priceStr,
-                        changePercent24Hr = 0.001,
-                        volumeUsd24Hr = 0.0234,
-                    )
-                }
-
-
-                saveToCache(data)
-                Log.d("CryptoRepository", "Loaded from network and saved to cache")
-
-                return data
-            } catch (e: Exception) {
-                Log.e("CryptoRepository", "Failed to load from network: ${e.message}")
-                return emptyList()
             }
+
+            saveToCache(data)
+            Log.d("CryptoRepository", "Loaded from network and saved to cache")
+            data
+
+        } catch (e: Exception) {
+            Log.e("CryptoRepository", "Failed to load from network: ${e.message}")
+            emptyList()
         }
     }
-
 
     private fun readFromCache(): List<CryptoDto>? {
         return try {
@@ -77,7 +77,6 @@ class CryptoRepository @Inject constructor(
             null
         }
     }
-
 
     private fun saveToCache(data: List<CryptoDto>) {
         try {

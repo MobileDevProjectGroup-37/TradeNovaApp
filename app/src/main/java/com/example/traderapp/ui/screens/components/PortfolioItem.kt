@@ -10,10 +10,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.traderapp.data.model.CryptoDto
 
 @Composable
-fun PortfolioItem(crypto: CryptoDto, currentPrice: Double) {
+fun PortfolioItem(crypto: String, currentPrice: String) {
     Box(
         modifier = Modifier
             .padding(8.dp)
@@ -38,7 +37,7 @@ fun PortfolioItem(crypto: CryptoDto, currentPrice: Double) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = crypto.name, fontWeight = FontWeight.Bold)
+                Text(text = crypto, fontWeight = FontWeight.Bold)
                 Text(text = "$$currentPrice", color = MaterialTheme.colorScheme.secondary)
             }
         }
