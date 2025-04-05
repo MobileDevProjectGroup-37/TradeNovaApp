@@ -65,9 +65,8 @@ fun AppNavigation() {
                 MarketScreen(navController, cryptoViewModel)
             }
 
-            // Маршрут для экрана Trade
             composable(Constants.TRADE_SCREEN_ROUTE) {
-                TradeScreen()  // Экран для торговли
+                TradeScreen() 
             }
 
             composable(Constants.ONBOARDING_SCREEN_ROUTE) {

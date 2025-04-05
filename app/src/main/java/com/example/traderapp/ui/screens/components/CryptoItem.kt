@@ -65,7 +65,7 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
             ) {
                 val rawChange = crypto.changePercent24Hr ?: 0.0
                 val formattedChange = String.format("%.2f", rawChange)
-                val sign = if (rawChange >= 0) "+" else "-"
+                val sign = if (rawChange >= 0) "+" else ""
                 val color = if (rawChange >= 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
 
                 Text(
