@@ -94,7 +94,7 @@ fun HomeScreen(
                     )
                     PortfolioSection(
                         portfolioItems = portfolioItems,
-                        priceUpdates = priceUpdates.values.toList()
+                        priceUpdates = priceUpdates
                     )
                 }
             }

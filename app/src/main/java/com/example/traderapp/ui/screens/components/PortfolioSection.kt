@@ -15,14 +15,12 @@ import com.example.traderapp.ui.screens.components.texts.ClickableText
 @Composable
 fun PortfolioSection(
     portfolioItems: List<CryptoDto>,
-    priceUpdates: List<Double>
+    priceUpdates: Map<String, Double>
 ) {
     var currentIndex by remember { mutableStateOf(0) }
-
     val itemsToShow = portfolioItems.drop(currentIndex).take(5)
 
     Column(modifier = Modifier.padding(16.dp)) {
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -34,21 +32,21 @@ fun PortfolioSection(
             )
             ClickableText(
                 text = "More",
-                onClick = { /* сlick */ },
+                onClick = { /* click */ },
                 textColor = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
         }
+
         Spacer(modifier = Modifier.height(16.dp))
 
         itemsToShow.forEach { crypto ->
-            val price = crypto.priceUsd.toDoubleOrNull()?.let {
-                "$" + String.format("%.6f", it)
-            } ?: "--"
+            val currentPrice = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
+            val formattedPrice = "$" + String.format("%.6f", currentPrice)
 
             PortfolioItem(
                 crypto = crypto.name,
-                currentPrice = price
+                currentPrice = formattedPrice
             )
         }
 
@@ -60,9 +58,7 @@ fun PortfolioSection(
         ) {
             Button(
                 onClick = {
-                    if (currentIndex > 0) {
-                        currentIndex -= 5
-                    }
+                    if (currentIndex > 0) currentIndex -= 5
                 },
                 enabled = currentIndex > 0
             ) {
@@ -71,9 +67,7 @@ fun PortfolioSection(
 
             Button(
                 onClick = {
-                    if (currentIndex + 5 < portfolioItems.size) {
-                        currentIndex += 5
-                    }
+                    if (currentIndex + 5 < portfolioItems.size) currentIndex += 5
                 },
                 enabled = currentIndex + 5 < portfolioItems.size
             ) {
