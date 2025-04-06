@@ -65,7 +65,8 @@ class CryptoRepository @Inject constructor(
                     name = "${symbolInfo.baseAsset}/USDT",
                     priceUsd = price,
                     changePercent24Hr = percentChange,
-                    volumeUsd24Hr = volume
+                    volumeUsd24Hr = volume,
+                    balance = 0.0
                 )
             }
 

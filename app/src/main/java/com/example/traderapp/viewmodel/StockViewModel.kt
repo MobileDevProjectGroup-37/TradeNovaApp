@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
-import com.example.traderapp.BuildConfig
+
+
 @HiltViewModel
 class CryptoViewModel @Inject constructor(
     private val repository: CryptoRepository,
@@ -20,6 +21,9 @@ class CryptoViewModel @Inject constructor(
 
     private val _cryptoList = MutableStateFlow<List<CryptoDto>>(emptyList())
     val cryptoList: StateFlow<List<CryptoDto>> = _cryptoList.asStateFlow()
+
+    private val _userBalance = MutableStateFlow<Map<String, Double>>(emptyMap())  // Баланс пользователя
+    val userBalance: StateFlow<Map<String, Double>> = _userBalance.asStateFlow()
 
     val priceUpdates = webSocketClient.priceUpdates
 
@@ -32,6 +36,7 @@ class CryptoViewModel @Inject constructor(
     init {
         Log.d("CryptoViewModel", "INIT CALLED")
         loadCryptoList()
+        loadUserBalance() // Загрузка баланса пользователя
     }
 
     private fun loadCryptoList() {
@@ -52,6 +57,17 @@ class CryptoViewModel @Inject constructor(
                 Log.e("CryptoViewModel", "Error loading crypto list: ${e.message}")
             }
         }
+    }
+
+    private fun loadUserBalance() {
+        // Загрузка баланса пользователя
+        // Например, это можно сделать через запрос к серверу или получение данных из локального хранилища
+        // Сейчас добавим временные данные, чтобы проверить логику
+        _userBalance.value = mapOf(
+            "bitcoin" to 0.5,
+            "ethereum" to 2.0,
+            "ripple" to 0.0
+        )
     }
 
     override fun onCleared() {
