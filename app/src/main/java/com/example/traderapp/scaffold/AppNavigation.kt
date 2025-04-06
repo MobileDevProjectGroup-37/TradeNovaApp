@@ -66,7 +66,7 @@ fun AppNavigation() {
             }
 
             composable(Constants.TRADE_SCREEN_ROUTE) {
-                TradeScreen() 
+                TradeScreen(navController)
             }
 
             composable(Constants.ONBOARDING_SCREEN_ROUTE) {

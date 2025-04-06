@@ -127,7 +127,8 @@ fun TradeScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(20.dp))
 
             // Display portfolio balance
-            PortfolioBalanceSection(balance = portfolioBalance, percentageChange = 2.5)
+            PortfolioBalanceSection(balance = portfolioBalance, percentageChange = 2.5, isLoading = false)
+
         }
     }
 }

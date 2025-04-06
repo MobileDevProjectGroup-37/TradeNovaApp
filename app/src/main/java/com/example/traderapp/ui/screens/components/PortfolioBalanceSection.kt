@@ -16,11 +16,7 @@ import com.example.traderapp.ui.screens.components.texts.SubTitle
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun PortfolioBalanceSection(
-    balance: Double?,
-    percentageChange: Double,
-    isLoading: Boolean
-) {
+fun PortfolioBalanceSection(balance: Double, percentageChange: Double, isLoading: Boolean)  {
     Column(
         modifier = Modifier
             .fillMaxWidth()
