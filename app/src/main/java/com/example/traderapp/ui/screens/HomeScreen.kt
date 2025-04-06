@@ -97,6 +97,11 @@ fun HomeScreen(
                         priceUpdates = priceUpdates
                     )
                 }
+
+
+
+
+
             }
 
             item {

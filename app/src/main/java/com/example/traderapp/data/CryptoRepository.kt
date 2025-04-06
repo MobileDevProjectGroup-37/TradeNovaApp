@@ -5,11 +5,16 @@ import android.util.Log
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.network.CryptoApi
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
 import kotlin.math.round
+
+// Wrapper class for cached data with a timestamp
+data class CryptoCacheData(
+    val timestamp: Long,
+    val data: List<CryptoDto>
+)
 
 class CryptoRepository @Inject constructor(
     private val api: CryptoApi,
@@ -18,12 +23,18 @@ class CryptoRepository @Inject constructor(
     private val gson = Gson()
     private val fileName = "crypto_list.json"
 
-    suspend fun getCryptoList(): List<CryptoDto> {
+    // Cache validity period in milliseconds (e.g., 15 minutes)
+    private val cacheValidityMillis = 15 * 60 * 1000
 
-        val cache = readFromCache()
-        if (cache != null) {
-            Log.d("CryptoRepository", "Loaded from cache")
-            return cache
+    suspend fun getCryptoList(): List<CryptoDto> {
+        val cached = readFromCache()
+
+        val now = System.currentTimeMillis()
+
+        // Return cache if valid
+        if (cached != null && (now - cached.timestamp) < cacheValidityMillis) {
+            Log.d("CryptoRepository", "Loaded from cache (still valid)")
+            return cached.data
         }
 
         return try {
@@ -42,8 +53,11 @@ class CryptoRepository @Inject constructor(
                 val price = priceMap[symbol]?.price ?: ""
                 val ticker = tickerMap[symbol]
 
-                val percentChange = ticker?.priceChangePercent?.toDoubleOrNull()?.let { round(it * 100) / 100 } ?: 0.0
-                val volume = ticker?.quoteVolume?.toDoubleOrNull()?.let { round(it * 100) / 100 } ?: 0.0
+                val percentChange = ticker?.priceChangePercent?.toDoubleOrNull()
+                    ?.let { round(it * 100) / 100 } ?: 0.0
+
+                val volume = ticker?.quoteVolume?.toDoubleOrNull()
+                    ?.let { round(it * 100) / 100 } ?: 0.0
 
                 CryptoDto(
                     id = symbol,
@@ -58,20 +72,18 @@ class CryptoRepository @Inject constructor(
             saveToCache(data)
             Log.d("CryptoRepository", "Loaded from network and saved to cache")
             data
-
         } catch (e: Exception) {
             Log.e("CryptoRepository", "Failed to load from network: ${e.message}")
-            emptyList()
+            cached?.data ?: emptyList() // fallback to cache even if stale
         }
     }
 
-    private fun readFromCache(): List<CryptoDto>? {
+    private fun readFromCache(): CryptoCacheData? {
         return try {
             val file = File(context.filesDir, fileName)
             if (!file.exists()) return null
             val json = file.readText()
-            val type = object : TypeToken<List<CryptoDto>>() {}.type
-            gson.fromJson<List<CryptoDto>>(json, type)
+            gson.fromJson(json, CryptoCacheData::class.java)
         } catch (e: Exception) {
             Log.e("CryptoRepository", "Error reading cache: ${e.message}")
             null
@@ -81,7 +93,11 @@ class CryptoRepository @Inject constructor(
     private fun saveToCache(data: List<CryptoDto>) {
         try {
             val file = File(context.filesDir, fileName)
-            val json = gson.toJson(data)
+            val cacheData = CryptoCacheData(
+                timestamp = System.currentTimeMillis(),
+                data = data
+            )
+            val json = gson.toJson(cacheData)
             file.writeText(json)
         } catch (e: Exception) {
             Log.e("CryptoRepository", "Error writing cache: ${e.message}")

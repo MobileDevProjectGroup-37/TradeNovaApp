@@ -18,7 +18,7 @@ import kotlin.math.abs
 
 @Composable
 fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
-    // Форматируем цену, чтобы она не отображала более 5 знаков после запятой
+
     val formattedPrice = String.format("%.6f", currentPrice)
 
     Box(
@@ -35,7 +35,7 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Название криптовалютной пары (например, BTC/USDT)
+
             Column(
                 modifier = Modifier.weight(2.4f),
                 horizontalAlignment = Alignment.Start
@@ -44,7 +44,7 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
                 // Text(text = "$formattedPrice/USDT", color = MaterialTheme.colorScheme.secondary)
             }
 
-            // Последняя цена (Last Price)
+
             Column(
                 modifier = Modifier
                     .weight(2f)
