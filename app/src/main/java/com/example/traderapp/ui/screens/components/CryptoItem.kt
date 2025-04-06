@@ -19,7 +19,7 @@ import kotlin.math.abs
 @Composable
 fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
 
-    val formattedPrice = String.format("%.6f", currentPrice)
+    val formattedPrice = String.format("%.4f", currentPrice)
 
     Box(
         modifier = Modifier
@@ -37,7 +37,7 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
         ) {
 
             Column(
-                modifier = Modifier.weight(2.4f),
+                modifier = Modifier.weight(2f),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(text = "${crypto.name}/USDT", fontWeight = FontWeight.Bold)
@@ -47,7 +47,7 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
 
             Column(
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(1.6f)
                     .padding(4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -59,7 +59,7 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
             // 24H Change
             Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1.2f)
                     .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

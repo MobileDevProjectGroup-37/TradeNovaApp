@@ -35,4 +35,10 @@
     <string name="welcome">Hello! Start your crypto investment today</string>
     <string name="sign_up_with_email">Sign up with email</string>
     <string name="already_have_an_account2">" Already have an account? "</string>
+    <string name="exchange_crypto">Exchange crypto</string>
+    <string name="enter_the_amount_of_crypto">Enter the amount of crypto:</string>
+    <string name="the_amount">The amount</string>
+    <string name="enter_a_valid_number">Enter a valid number</string>
+    <string name="the_amount_in_usd">The amount in USD:</string>
+    <string name="exchange">Exchange</string>
 </resources>
