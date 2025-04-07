@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.traderapp.data.network.UserSessionViewModel
 import com.example.traderapp.ui.screens.HomeScreen
 import com.example.traderapp.ui.screens.MarketScreen
 import com.example.traderapp.ui.screens.OnBoardingScreen
@@ -27,7 +28,12 @@ import com.example.traderapp.viewmodel.OnBoardingViewModel
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    //Create one hiltViewModel for the whole app
     val authViewModel: AuthViewModel = hiltViewModel()
+    val cryptoViewModel: CryptoViewModel = hiltViewModel()
+
+    val userSessionViewModel: UserSessionViewModel = hiltViewModel()
+    val userSession = userSessionViewModel.userSession
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
     Scaffold(
@@ -55,16 +61,14 @@ fun AppNavigation() {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Constants.HOME_SCREEN_ROUTE) {
-                HomeScreen(navController)
+                HomeScreen(navController, cryptoViewModel, userSession)
             }
-            composable(Constants.MARKET_SCREEN_ROUTE) {
-                val cryptoViewModel: CryptoViewModel = hiltViewModel()
+            composable(Constants.MARKET_SCREEN_ROUTE)  {
                 MarketScreen(navController, cryptoViewModel)
             }
 
-            // Маршрут для экрана Trade
             composable(Constants.TRADE_SCREEN_ROUTE) {
-                TradeScreen()  // Экран для торговли
+                TradeScreen(navController)
             }
 
             composable(Constants.ONBOARDING_SCREEN_ROUTE) {

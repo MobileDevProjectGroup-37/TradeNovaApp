@@ -15,7 +15,8 @@ import androidx.compose.ui.unit.sp
 fun AppTitle(
     text: String,
     modifier: Modifier = Modifier,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    color: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface
 ) {
     Text(
         text = text,
@@ -23,7 +24,7 @@ fun AppTitle(
             fontWeight = FontWeight.Bold,
             letterSpacing = 0.5.sp
         ),
-        color = MaterialTheme.colorScheme.onSurface,
+        color = color,
         textAlign = textAlign,
         modifier = modifier
             .padding(top = 16.dp)

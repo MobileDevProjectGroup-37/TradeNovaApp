@@ -25,7 +25,7 @@ import com.example.traderapp.viewmodel.AuthViewModel
 @Composable
 fun ConfirmMail(
     navController: NavController,
-    authViewModel: AuthViewModel // ✅ Получаем из AppNavigation
+    authViewModel: AuthViewModel
 ) {
     Scaffold(
         topBar = {

@@ -18,8 +18,8 @@ import kotlin.math.abs
 
 @Composable
 fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
-    // Форматируем цену, чтобы она не отображала более 5 знаков после запятой
-    val formattedPrice = String.format("%.6f", currentPrice)
+
+    val formattedPrice = String.format("%.4f", currentPrice)
 
     Box(
         modifier = Modifier
@@ -35,19 +35,19 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Название криптовалютной пары (например, BTC/USDT)
+
             Column(
-                modifier = Modifier.weight(2.4f),
+                modifier = Modifier.weight(2f),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(text = "${crypto.name}/USDT", fontWeight = FontWeight.Bold)
                 // Text(text = "$formattedPrice/USDT", color = MaterialTheme.colorScheme.secondary)
             }
 
-            // Последняя цена (Last Price)
+
             Column(
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(1.6f)
                     .padding(4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -59,13 +59,13 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
             // 24H Change
             Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(1.2f)
                     .padding(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val rawChange = crypto.changePercent24Hr ?: 0.0
-                val formattedChange = String.format("%.2f", abs(rawChange))
-                val sign = if (rawChange >= 0) "+" else "-"
+                val formattedChange = String.format("%.2f", rawChange)
+                val sign = if (rawChange >= 0) "+" else ""
                 val color = if (rawChange >= 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
 
                 Text(

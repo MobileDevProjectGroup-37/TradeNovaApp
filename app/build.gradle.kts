@@ -17,7 +17,11 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
+        buildConfigField(
+            type = "String",
+            name = "COINCAP_API_KEY",
+            value = "\"5b59f8cdeb486afbe3e45fe31e773e33a7ebad9bcc71f7e394241d51ad250fa9\""
+        )
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

@@ -5,7 +5,10 @@ import android.content.Context
 import dagger.Module
 import com.example.traderapp.data.AuthRepository
 import com.example.traderapp.data.FirebaseAuthRepository
+import com.example.traderapp.data.network.CryptoApi
+import com.example.traderapp.data.network.RetrofitInstance
 import com.example.traderapp.data.network.UserSession
+import com.example.traderapp.data.network.WebSocketClient
 import com.example.traderapp.utils.AuthPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,7 +43,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideUserSession(): UserSession {
-        return UserSession()
+    fun provideCryptoApi(): CryptoApi {
+        return RetrofitInstance.api
     }
+
+    @Provides
+    @Singleton
+    fun provideWebSocketClient(): WebSocketClient {
+        return WebSocketClient()
+    }
+
 }
