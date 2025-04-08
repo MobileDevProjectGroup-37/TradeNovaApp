@@ -35,7 +35,7 @@ fun HomeScreen(
     val userBalance by tradeViewModel.userBalance.collectAsState()
     val portfolioValue by tradeViewModel.portfolioValue.collectAsState()
     val totalValue by tradeViewModel.totalValue.collectAsState()
-
+    val percentChange by tradeViewModel.percentageChange.collectAsState()
     // Observe prices from CryptoViewModel
     val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
     val marketMovers by cryptoViewModel.marketMovers.collectAsState()
@@ -73,9 +73,8 @@ fun HomeScreen(
                 // Show totalValue as "balance" on HomeScreen
                 PortfolioBalanceSection(
                     balance = totalValue,
-                    // If у вас есть отдельный percentageChange — берите из viewModel
-                    percentageChange = cryptoViewModel.percentageChange.collectAsState().value,
-                    isLoading = false // или использовать логику загрузки
+                    percentageChange = percentChange,
+                    isLoading = false
                 )
             }
 
@@ -86,11 +85,6 @@ fun HomeScreen(
                         priceUpdates = priceUpdates
                     )
 
-                    // Если хотите показать "портфель" как список активов юзера:
-                    // Текущий код PortfolioSection принимает cryptoList,
-                    // но нужно как-то учитывать количество монет, которые есть у юзера.
-                    // Либо расширить PortfolioSection, чтобы она принимала userAssets
-                    // и сама умножала на цену.
                     PortfolioSection(
                         portfolioItems = cryptoViewModel.cryptoList.collectAsState().value,
                         priceUpdates = priceUpdates

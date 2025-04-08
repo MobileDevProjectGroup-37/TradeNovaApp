@@ -48,6 +48,9 @@ class TradeViewModel @Inject constructor(
     // We'll collect them in observePriceUpdates(...) below
     private var priceUpdates: Map<String, Double> = emptyMap()
 
+    private val _percentageChange = MutableStateFlow(0.0)
+    val percentageChange: StateFlow<Double> = _percentageChange.asStateFlow()
+
     init {
         // Load user data (fiat balance, etc.) once from userSession
         viewModelScope.launch {
@@ -126,6 +129,7 @@ class TradeViewModel @Inject constructor(
      */
     private fun recalcTotalValue() {
         _totalValue.value = _userBalance.value + _portfolioValue.value
+        calculatePercentageChange()
     }
 
     /**
@@ -254,5 +258,14 @@ class TradeViewModel @Inject constructor(
             currentMap[assetId] = newQty
         }
         _userAssets.value = currentMap
+    }
+
+    fun calculatePercentageChange() {
+        val initial = userSession.userData.value?.initialTotalBalance ?: return
+        val current = _totalValue.value
+        if (initial != 0.0) {
+            val percent = ((current - initial) / initial) * 100
+            _percentageChange.value = percent
+        }
     }
 }
