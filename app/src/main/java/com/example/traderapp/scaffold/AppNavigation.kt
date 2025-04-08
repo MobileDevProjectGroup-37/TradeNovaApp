@@ -60,7 +60,7 @@ fun AppNavigation() {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Constants.HOME_SCREEN_ROUTE) {
-                HomeScreen(navController, cryptoViewModel, userSession)
+                HomeScreen(navController, cryptoViewModel,tardeViewModel,userSession)
             }
             composable(Constants.MARKET_SCREEN_ROUTE)  {
                 MarketScreen(navController, cryptoViewModel)
