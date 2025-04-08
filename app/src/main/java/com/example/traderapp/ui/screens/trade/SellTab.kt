@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.screens.trade
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,6 +41,16 @@ fun SellTab(
     var selectedCrypto by remember { mutableStateOf<CryptoDto?>(null) }
     var cryptoInput by remember { mutableStateOf("") }
 
+    LaunchedEffect(userAssets) {
+        Log.d("SELL_TAB", "userAssets changed => $userAssets")
+        if (selectedCrypto != null) {
+            val remaining = userAssets[selectedCrypto!!.id] ?: 0.0
+            if (remaining <= 0.0) {
+                selectedCrypto = null
+                cryptoInput = ""
+            }
+        }
+    }
     val conversionRate = selectedCrypto?.let {
         priceUpdates[it.id] ?: it.priceUsd.toDoubleOrNull()
     } ?: 1.0
@@ -100,6 +111,7 @@ fun SellTab(
                     val assetId = selectedCrypto?.id.orEmpty()
                     val assetName = selectedCrypto?.name.orEmpty()
 
+                    Log.d("SELL_TAB", "User wants to sell quantity=$quantity of $assetName @$price")
                     if (quantity > 0 && price > 0 && assetId.isNotEmpty()) {
                         tradeViewModel.executeTrade(
                             type = TradeType.SELL,

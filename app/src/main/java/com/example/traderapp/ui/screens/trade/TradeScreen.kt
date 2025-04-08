@@ -98,7 +98,11 @@ fun TradeScreen(
                     SellTab(navController = navController,cryptoViewModel, tradeViewModel, userSession)
                 }
                 "Exchange" -> {
-                    ExchangeTab(navController = navController)
+                    ExchangeTab(
+                        navController = navController,
+                        tradeViewModel = tradeViewModel,
+                        cryptoViewModel = cryptoViewModel
+                    )
                 }
             }
 

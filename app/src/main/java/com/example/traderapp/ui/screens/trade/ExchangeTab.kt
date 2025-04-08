@@ -18,15 +18,17 @@ import androidx.navigation.NavController
 import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.CryptoViewModel
+import com.example.traderapp.viewmodel.TradeViewModel
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun ExchangeTab(
-    navController: NavController
+    navController: NavController,
+    tradeViewModel: TradeViewModel,
+    cryptoViewModel: CryptoViewModel
 ) {
-    val viewModel: CryptoViewModel = hiltViewModel()
-    val cryptoList by viewModel.cryptoList.collectAsState()
-    val priceUpdates by viewModel.priceUpdates.collectAsState()
+    val cryptoList by cryptoViewModel.cryptoList.collectAsState()
+    val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
 
     if (cryptoList.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -39,6 +41,7 @@ fun ExchangeTab(
     var selectedCryptoTo by remember { mutableStateOf(cryptoList.getOrNull(1)) }
     var cryptoInput by remember { mutableStateOf("") }
     var fiatInput by remember { mutableStateOf("") }
+    var lastChanged by remember { mutableStateOf("crypto") }
 
     val conversionRateFrom = selectedCryptoFrom?.let {
         priceUpdates[it.id] ?: it.priceUsd.toDoubleOrNull()
@@ -49,17 +52,16 @@ fun ExchangeTab(
 
     LaunchedEffect(cryptoInput, selectedCryptoFrom) {
         val cryptoDouble = cryptoInput.toDoubleOrNull()
-        if (cryptoDouble != null && conversionRateFrom != 0.0) {
-            fiatInput = String.format("%.2f", cryptoDouble * conversionRateFrom)
+        if (cryptoDouble != null && conversionRateFrom > 0) {
+            val usd = cryptoDouble * conversionRateFrom
+            fiatInput = String.format("%.2f", usd)
+
+            println("🧮 [ExchangeTab] $cryptoDouble ${selectedCryptoFrom?.symbol} = $usd USD @ rate $conversionRateFrom")
+        } else {
+            println("⚠️ [ExchangeTab] Invalid conversion rate or input: $cryptoInput @ $conversionRateFrom")
         }
     }
 
-    LaunchedEffect(fiatInput, selectedCryptoTo) {
-        val amountDouble = fiatInput.toDoubleOrNull()
-        if (amountDouble != null && conversionRateTo != 0.0) {
-            cryptoInput = String.format("%.6f", amountDouble / conversionRateTo)
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -89,7 +91,6 @@ fun ExchangeTab(
                 },
                 modifier = Modifier.padding(horizontal = 8.dp),
                 colors = IconButtonDefaults.iconButtonColors(
-
                     contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
@@ -113,7 +114,10 @@ fun ExchangeTab(
         Text(stringResource(R.string.enter_the_amount_of_crypto))
         OutlinedTextField(
             value = cryptoInput,
-            onValueChange = { cryptoInput = it },
+            onValueChange = {
+                cryptoInput = it
+                lastChanged = "crypto"
+            },
             label = { Text(stringResource(R.string.the_amount)) },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -130,8 +134,11 @@ fun ExchangeTab(
         Text(stringResource(R.string.the_amount_in_usd))
         OutlinedTextField(
             value = fiatInput,
-            onValueChange = { fiatInput = it },
-            label = { Text(stringResource(R.string.the_amount_in_usd))},
+            onValueChange = {
+                fiatInput = it
+                lastChanged = "fiat"
+            },
+            label = { Text(stringResource(R.string.the_amount_in_usd)) },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             enabled = false
@@ -142,11 +149,14 @@ fun ExchangeTab(
         CustomButton(
             text = stringResource(R.string.exchange),
             onClick = {
-                if (selectedCryptoFrom != null && selectedCryptoTo != null && cryptoInput.isNotEmpty()) {
-                    navController.navigate("confirmation_screen") {
-                        launchSingleTop = true
-                        restoreState = true
-                    }
+                val amount = cryptoInput.toDoubleOrNull()
+                if (selectedCryptoFrom != null && selectedCryptoTo != null && amount != null) {
+                    tradeViewModel.executeExchange(
+                        fromAssetId = selectedCryptoFrom!!.id,
+                        toAssetId = selectedCryptoTo!!.id,
+                        fromAmount = amount,
+                        priceMap = priceUpdates
+                    )
                 }
             },
             backgroundColor = MaterialTheme.colorScheme.primary,
