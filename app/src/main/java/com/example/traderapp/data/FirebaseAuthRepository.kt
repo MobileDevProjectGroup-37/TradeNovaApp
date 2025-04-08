@@ -1,5 +1,7 @@
 package com.example.traderapp.data
 
+import com.example.traderapp.data.model.CryptoDto
+import com.example.traderapp.data.model.UserData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +24,9 @@ class FirebaseAuthRepository @Inject constructor(
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val userId = result.user?.uid ?: return false
 
-            val user = UserData(email)
+            val user = UserData(
+                email,
+            )
             db.collection("users").document(userId).set(user)
             true
         } catch (e: Exception) {
@@ -45,4 +49,3 @@ class FirebaseAuthRepository @Inject constructor(
     }
 }
 
-data class UserData(val email: String = "", val balance: Double = 1000.00, val tradeVolume: Int = 0, val profit: Int = 0)

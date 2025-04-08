@@ -50,9 +50,9 @@ fun HomeScreen(
     val priceUpdates by viewModel.priceUpdates.collectAsState()
 
     TransparentStatusBar()
-    Log.d("CRYPTO_LIST", "Items: ${portfolioItems.size}")
-    Log.d("MARKET_MOVERS", "Items: ${marketMovers.size}")
-    Log.d("PRICE_UPDATES", "Items: ${priceUpdates.size}")
+   // Log.d("CRYPTO_LIST", "Items: ${portfolioItems.size}")
+   // Log.d("MARKET_MOVERS", "Items: ${marketMovers.size}")
+   // Log.d("PRICE_UPDATES", "Items: ${priceUpdates.size}")
     Scaffold(
         topBar = {
             AppTopBarHome(

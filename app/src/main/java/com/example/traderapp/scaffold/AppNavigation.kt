@@ -22,6 +22,7 @@ import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.OnBoardingViewModel
+import com.example.traderapp.viewmodel.TradeViewModel
 
 @Composable
 fun AppNavigation() {
@@ -29,7 +30,7 @@ fun AppNavigation() {
     //Create one hiltViewModel for the whole app
     val authViewModel: AuthViewModel = hiltViewModel()
     val cryptoViewModel: CryptoViewModel = hiltViewModel()
-
+    val tardeViewModel: TradeViewModel = hiltViewModel()
     val userSessionViewModel: UserSessionViewModel = hiltViewModel()
     val userSession = userSessionViewModel.userSession
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
@@ -66,7 +67,7 @@ fun AppNavigation() {
             }
 
             composable(Constants.TRADE_SCREEN_ROUTE) {
-                TradeScreen(navController)
+                TradeScreen(navController, cryptoViewModel, tardeViewModel, userSession)
             }
 
             composable(Constants.ONBOARDING_SCREEN_ROUTE) {

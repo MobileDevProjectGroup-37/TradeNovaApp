@@ -2,7 +2,7 @@ package com.example.traderapp.data.network
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.traderapp.data.UserData
+import com.example.traderapp.data.model.UserData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel

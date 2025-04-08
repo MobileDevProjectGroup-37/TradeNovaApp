@@ -14,18 +14,28 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.traderapp.data.model.CryptoDto
+import com.example.traderapp.data.model.TradeType
+import com.example.traderapp.data.network.UserSession
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.CryptoViewModel
+import com.example.traderapp.viewmodel.TradeViewModel
 
 
 @Composable
-fun SellTab(navController: NavController) {
-    // get ViewModel via hiltViewModel()
-    val viewModel: CryptoViewModel = hiltViewModel()
+fun SellTab(
+    navController: NavController,
+    cryptoViewModel: CryptoViewModel,
+    tradeViewModel: TradeViewModel,
+    userSession: UserSession
+) {
+    val cryptoList by cryptoViewModel.cryptoList.collectAsState()
+    val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
+    val userAssets by tradeViewModel.userAssets.collectAsState()
 
-    val cryptoList by viewModel.cryptoList.collectAsState()
-    val priceUpdates by viewModel.priceUpdates.collectAsState()
-    val userBalance by viewModel.userBalance.collectAsState()
+    // загружаем активы при первом входе
+    LaunchedEffect(Unit) {
+        tradeViewModel.loadUserAssets()
+    }
 
     var selectedCrypto by remember { mutableStateOf<CryptoDto?>(null) }
     var cryptoInput by remember { mutableStateOf("") }
@@ -34,17 +44,7 @@ fun SellTab(navController: NavController) {
         priceUpdates[it.id] ?: it.priceUsd.toDoubleOrNull()
     } ?: 1.0
 
-    LaunchedEffect(cryptoInput, selectedCrypto) {
-        if (selectedCrypto != null) {
-            val cryptoDouble = cryptoInput.toDoubleOrNull()
-            if (cryptoDouble != null) {
-                // Обновление суммы в USD на основе введенного количества криптовалюты
-            }
-        }
-    }
-
     Column(Modifier.fillMaxWidth().padding(16.dp)) {
-
         Text("Choose crypto to sell", style = MaterialTheme.typography.titleMedium)
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -57,17 +57,16 @@ fun SellTab(navController: NavController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Filter crypto list to show only those that the user has
+        // Filter assets which are larger than 0
         val availableCryptos = cryptoList.filter { crypto ->
-            userBalance[crypto.id]?.let { it > 0 } == true  // Filtered by user's balance
+            userAssets[crypto.id]?.let { it > 0.0 } == true
         }
 
-        //If a user has a list of crypto which he can sell, show it
         if (availableCryptos.isNotEmpty()) {
             LazyColumn {
                 items(availableCryptos) { crypto ->
                     Text(
-                        text = crypto.name,
+                        text = "${crypto.name} — amount: ${String.format("%.4f", userAssets[crypto.id] ?: 0.0)}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
@@ -81,7 +80,6 @@ fun SellTab(navController: NavController) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Enter the amount of crypto to sell
         if (selectedCrypto != null) {
             Text("Enter the amount of ${selectedCrypto?.name} to sell:")
             OutlinedTextField(
@@ -94,11 +92,25 @@ fun SellTab(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
             CustomButton(
                 text = "Sell",
                 onClick = {
-                    // logic for selling crypto
+                    val quantity = cryptoInput.toDoubleOrNull() ?: 0.0
+                    val price = priceUpdates[selectedCrypto?.id] ?: selectedCrypto?.priceUsd?.toDoubleOrNull() ?: 0.0
+                    val assetId = selectedCrypto?.id.orEmpty()
+                    val assetName = selectedCrypto?.name.orEmpty()
+
+                    if (quantity > 0 && price > 0 && assetId.isNotEmpty()) {
+                        tradeViewModel.executeTrade(
+                            type = TradeType.SELL,
+                            assetId = assetId,
+                            assetName = assetName,
+                            currentPrice = price,
+                            quantity = quantity
+                        )
+                        cryptoInput = ""
+                        selectedCrypto = null
+                    }
                 },
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 textColor = Color.White
@@ -106,3 +118,4 @@ fun SellTab(navController: NavController) {
         }
     }
 }
+

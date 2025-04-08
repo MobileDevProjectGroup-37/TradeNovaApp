@@ -1,6 +1,7 @@
 package com.example.traderapp.ui.screens.trade
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.clickable
@@ -24,22 +25,27 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.data.model.CryptoDto
+import com.example.traderapp.data.model.TradeType
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
+import com.example.traderapp.viewmodel.TradeViewModel
 
 @SuppressLint("DefaultLocale")
 @Composable
 fun BuyTab(
-    navController: NavController
+    navController: NavController,
+    cryptoViewModel: CryptoViewModel,
+    tradeViewModel: TradeViewModel,
 ) {
 
-    val viewModel: CryptoViewModel = hiltViewModel()
 
-    val cryptoList by viewModel.cryptoList.collectAsState()
-    val priceUpdates by viewModel.priceUpdates.collectAsState()
+    val cryptoList by cryptoViewModel.cryptoList.collectAsState()
+    val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
 
     var selectedCrypto by remember { mutableStateOf<CryptoDto?>(null) }
     var fiatInput by remember { mutableStateOf("") }
     var cryptoInput by remember { mutableStateOf("") }
+
+    val tradeError by tradeViewModel.tradeError.collectAsState()
 
     val conversionRate = selectedCrypto?.let {
         priceUpdates[it.id] ?: it.priceUsd.toDoubleOrNull()
@@ -120,7 +126,26 @@ fun BuyTab(
 
             CustomButton(
                 text = "Buy",
-                onClick = { /* logic */ },
+                onClick = {
+                    val price = conversionRate
+                    val quantity = cryptoInput.toDoubleOrNull()?: 0.0
+                    val id = selectedCrypto?.id.orEmpty()
+                    val name = selectedCrypto?.name.orEmpty()
+                    Log.d("BUY_TAB", "Buy clicked. id=$id, name=$name, price=$price, quantity=$quantity")
+                    if (id.isNotEmpty() && name.isNotEmpty() && price > 0 && quantity > 0) {
+                        Log.d("BUY_TAB", "Valid input, calling executeTrade()")
+                        tradeViewModel.executeTrade(
+                            type = TradeType.BUY,
+                            assetId = id,
+                            assetName = name,
+                            currentPrice = price,
+                            quantity = quantity
+                        )
+                    }
+                    else{
+                        Log.e("BUY_TAB", "Invalid input. Skipping trade.")
+                    }
+                },
                 backgroundColor = MaterialTheme.colorScheme.primary,
                 textColor = Color.White
             )

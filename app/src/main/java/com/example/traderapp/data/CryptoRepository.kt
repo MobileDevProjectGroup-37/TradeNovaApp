@@ -66,7 +66,6 @@ class CryptoRepository @Inject constructor(
                     priceUsd = price,
                     changePercent24Hr = percentChange,
                     volumeUsd24Hr = volume,
-                    balance = 0.0
                 )
             }
 
