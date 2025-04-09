@@ -186,9 +186,9 @@ class TradeViewModel @Inject constructor(
     private var cryptoList: List<CryptoDto> = emptyList()
 
     fun preloadCryptoList(list: List<CryptoDto>) {
-        cryptoList = list
+        cryptoList = list //http resp
     }
-
+    //updateprices = local structure to keep
     private fun recalcPortfolioValue() {
         // Get the user's current crypto holdings
         val assets = _userAssets.value
@@ -212,6 +212,18 @@ class TradeViewModel @Inject constructor(
         recalcTotalValue()
     }
 
+    private fun updateUserRoiInDatabase(newRoi: Double) {
+        val uid = auth.currentUser?.uid ?: return
+        val userRef = db.collection("users").document(uid)
+
+        userRef.update("profit", newRoi)
+            .addOnSuccessListener {
+                Log.d("ROI_UPDATE", "ROI updated successfully in Firestore: $newRoi")
+            }
+            .addOnFailureListener { e ->
+                Log.e("ROI_UPDATE", "Failed to update ROI: ${e.message}")
+            }
+    }
 
     private fun recalcTotalValue() {
         _totalValue.value = _userBalance.value + _portfolioValue.value
@@ -222,9 +234,14 @@ class TradeViewModel @Inject constructor(
         val initial = userSession.userData.value?.initialTotalBalance ?: return
         val current = _totalValue.value
         if (initial != 0.0) {
-            _percentageChange.value = ((current - initial) / initial) * 100
+            val newRoi = ((current - initial) / initial) * 100
+            _percentageChange.value = newRoi
+
+
+            updateUserRoiInDatabase(newRoi)
         }
     }
+
 
     private fun updateLocalAssets(type: TradeType, assetId: String, quantity: Double) {
         Log.d("LOCAL_ASSETS", "Updating local assets: type=$type, assetId=$assetId, qty=$quantity")
@@ -262,7 +279,6 @@ class TradeViewModel @Inject constructor(
     }
 
     // endregion
-
 
     //exchange region
     fun executeExchange(
@@ -351,8 +367,5 @@ class TradeViewModel @Inject constructor(
             Log.d("EXCHANGE", "Exchange finished successfully")
         }
     }
-
-
-
-
+    
 }

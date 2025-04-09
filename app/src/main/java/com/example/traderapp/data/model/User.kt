@@ -5,4 +5,5 @@ data class UserData(val email: String = "",
                     val tradeVolume: Int = 0,
                     val profit: Int = 0,
                     val cryptoList: List<CryptoDto> = emptyList(),
-                    val initialTotalBalance: Double = 1000.00)
+                    val initialTotalBalance: Double = 1000.00,
+                    )

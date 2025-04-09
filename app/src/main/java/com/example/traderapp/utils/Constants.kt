@@ -19,4 +19,5 @@ object Constants {
     // route for trading
     const val TRADE_SCREEN_ROUTE = "trade"
     const val MARKET_SCREEN_ROUTE = "market"
+    const val LEADERBOARD_SCREEN_ROUTE = "leaderboard_screen"
 }

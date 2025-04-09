@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.traderapp.data.network.UserSessionViewModel
 import com.example.traderapp.ui.screens.HomeScreen
+import com.example.traderapp.ui.screens.LeaderboardScreen
 import com.example.traderapp.ui.screens.MarketScreen
 import com.example.traderapp.ui.screens.OnBoardingScreen
 import com.example.traderapp.ui.screens.SettingsScreen
@@ -21,6 +22,7 @@ import com.example.traderapp.ui.screens.trade.TradeScreen
 import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
+import com.example.traderapp.viewmodel.LeaderboardViewModel
 import com.example.traderapp.viewmodel.OnBoardingViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
 
@@ -34,7 +36,7 @@ fun AppNavigation() {
     val userSessionViewModel: UserSessionViewModel = hiltViewModel()
     val userSession = userSessionViewModel.userSession
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
-
+    val leaderboardViewModel: LeaderboardViewModel = hiltViewModel()
     Scaffold(
         topBar = {
             val currentRoute = navController.currentDestination?.route
@@ -103,6 +105,9 @@ fun AppNavigation() {
             }
             composable(Constants.SETTINGS_SCREEN_ROUTE) {
                 SettingsScreen(navController, authViewModel)
+            }
+            composable(Constants.LEADERBOARD_SCREEN_ROUTE) {
+                LeaderboardScreen(navController, leaderboardViewModel)
             }
         }
     }
