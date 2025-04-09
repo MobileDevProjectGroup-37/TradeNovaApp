@@ -46,6 +46,7 @@ fun HomeScreen(
         delay(300) // small delay, so userSession has data
         tradeViewModel.loadUserAssets()
         tradeViewModel.observePriceUpdates(cryptoViewModel.priceUpdates)
+        tradeViewModel.preloadCryptoList(cryptoViewModel.cryptoList.value)
     }
 
     Scaffold(

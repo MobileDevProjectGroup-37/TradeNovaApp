@@ -3,6 +3,7 @@ package com.example.traderapp.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.TradeRecord
 import com.example.traderapp.data.model.TradeType
 import com.example.traderapp.data.network.UserSession
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class TradeViewModel @Inject constructor(
     private val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
-    private val userSession: UserSession
+    private val userSession: UserSession,
 ) : ViewModel() {
 
     // region === State ===
@@ -181,16 +182,36 @@ class TradeViewModel @Inject constructor(
     // endregion
 
     // region === Helpers ===
+    //get pointer to cryptolist from cryptoviewmodel
+    private var cryptoList: List<CryptoDto> = emptyList()
+
+    fun preloadCryptoList(list: List<CryptoDto>) {
+        cryptoList = list
+    }
 
     private fun recalcPortfolioValue() {
+        // Get the user's current crypto holdings
         val assets = _userAssets.value
+
+        // Sum the total value of all crypto assets
         val totalAssetsValue = assets.entries.sumOf { (id, qty) ->
-            val currentPrice = priceUpdates[id] ?: 0.0
+            // Try to find a fallback price from the original crypto list if live price is unavailable
+            val fallbackPrice = cryptoList.find { it.id == id }?.priceUsd?.toDoubleOrNull() ?: 0.0
+
+            // Use live price if available, otherwise use the fallback static price
+            val currentPrice = priceUpdates[id] ?: fallbackPrice
+
+            // Multiply quantity by price to get total value of this asset
             qty * currentPrice
         }
+
+        // Update the portfolio value with the calculated total
         _portfolioValue.value = totalAssetsValue
+
+        // Recalculate the total value (portfolio + fiat balance)
         recalcTotalValue()
     }
+
 
     private fun recalcTotalValue() {
         _totalValue.value = _userBalance.value + _portfolioValue.value

@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.screens.trade
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,6 +23,7 @@ import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
 
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun SellTab(
     navController: NavController,
