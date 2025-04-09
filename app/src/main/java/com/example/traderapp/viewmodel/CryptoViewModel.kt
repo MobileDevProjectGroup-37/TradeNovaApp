@@ -25,6 +25,10 @@ class CryptoViewModel @Inject constructor(
     private val _userBalance = MutableStateFlow<Map<String, Double>>(emptyMap())  // Баланс пользователя
     val userBalance: StateFlow<Map<String, Double>> = _userBalance.asStateFlow()
 
+    // We do NOT mutate cryptoList directly to avoid breaking Compose reactivity.
+    // priceUpdates holds live prices separately, ensuring clean separation of static data (cryptoList) and dynamic state.
+    // This avoids costly list rebuilding and ensures UI updates correctly.
+
     val priceUpdates = webSocketClient.priceUpdates
 
     private val _percentageChange = MutableStateFlow(2.60)
@@ -36,7 +40,6 @@ class CryptoViewModel @Inject constructor(
     init {
         Log.d("CryptoViewModel", "INIT CALLED")
         loadCryptoList()
-        loadUserBalance() // Загрузка баланса пользователя
     }
 
     private fun loadCryptoList() {
@@ -46,10 +49,10 @@ class CryptoViewModel @Inject constructor(
                 Log.d("CryptoViewModel", "Loaded crypto list: $cryptoData")
                 _cryptoList.value = cryptoData
 
-                val updatedList = cryptoData.map {
-                    it.copy(changePercent24Hr = Random.nextDouble(-5.0, 5.0))
-                }
-                _marketMovers.value = updatedList.sortedByDescending { it.changePercent24Hr }.take(5)
+                // getting real % from API
+                _marketMovers.value = cryptoData
+                    .sortedByDescending { it.changePercent24Hr }
+                    .take(5)
 
                 val symbols = cryptoData.map { it.id.lowercase() }
                 webSocketClient.connect(symbols)
@@ -59,16 +62,6 @@ class CryptoViewModel @Inject constructor(
         }
     }
 
-    private fun loadUserBalance() {
-        // Загрузка баланса пользователя
-        // Например, это можно сделать через запрос к серверу или получение данных из локального хранилища
-        // Сейчас добавим временные данные, чтобы проверить логику
-        _userBalance.value = mapOf(
-            "bitcoin" to 0.5,
-            "ethereum" to 2.0,
-            "ripple" to 0.0
-        )
-    }
 
     override fun onCleared() {
         super.onCleared()
