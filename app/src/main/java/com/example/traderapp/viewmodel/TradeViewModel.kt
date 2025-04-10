@@ -316,6 +316,19 @@ class TradeViewModel @Inject constructor(
             .sumOf { if (it.type == "buy") it.quantity else -it.quantity }
     }
 
+    fun getAssetUsdValue(assetId: String): Double {
+        val amount = userAssets.value[assetId] ?: 0.0
+
+        val livePrice = priceUpdates[assetId]
+        val fallbackPrice = cryptoList.find { it.id == assetId }?.priceUsd?.toDoubleOrNull()
+
+        val price = livePrice ?: fallbackPrice ?: 0.0
+
+        return amount * price
+    }
+
+//
+
     // endregion
 
     //exchange region

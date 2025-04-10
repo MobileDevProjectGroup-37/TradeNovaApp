@@ -32,7 +32,6 @@ fun SellTab(
     userSession: UserSession
 ) {
     val cryptoList by cryptoViewModel.cryptoList.collectAsState()
-    val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
     val userAssets by tradeViewModel.userAssets.collectAsState()
 
     // загружаем активы при первом входе
@@ -44,7 +43,6 @@ fun SellTab(
     var cryptoInput by remember { mutableStateOf("") }
 
     LaunchedEffect(userAssets) {
-        Log.d("SELL_TAB", "userAssets changed => $userAssets")
         if (selectedCrypto != null) {
             val remaining = userAssets[selectedCrypto!!.id] ?: 0.0
             if (remaining <= 0.0) {
@@ -53,9 +51,6 @@ fun SellTab(
             }
         }
     }
-    val conversionRate = selectedCrypto?.let {
-        priceUpdates[it.id] ?: it.priceUsd.toDoubleOrNull()
-    } ?: 1.0
 
     Column(Modifier.fillMaxWidth().padding(16.dp)) {
         Text("Choose crypto to sell", style = MaterialTheme.typography.titleMedium)
@@ -78,8 +73,11 @@ fun SellTab(
         if (availableCryptos.isNotEmpty()) {
             LazyColumn {
                 items(availableCryptos) { crypto ->
+                    val amount = userAssets[crypto.id] ?: 0.0
+                    val valueUsd = tradeViewModel.getAssetUsdValue(crypto.id)
+
                     Text(
-                        text = "${crypto.name} — amount: ${String.format("%.4f", userAssets[crypto.id] ?: 0.0)}",
+                        text = "${crypto.name} — amount: ${"%.4f".format(amount)} — \$${"%.2f".format(valueUsd)}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
@@ -94,6 +92,13 @@ fun SellTab(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (selectedCrypto != null) {
+            val amount = userAssets[selectedCrypto!!.id] ?: 0.0
+            val valueUsd = tradeViewModel.getAssetUsdValue(selectedCrypto!!.id)
+
+            Text("You own ${"%.4f".format(amount)} worth \$${"%.2f".format(valueUsd)}")
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text("Enter the amount of ${selectedCrypto?.name} to sell:")
             OutlinedTextField(
                 value = cryptoInput,
@@ -109,11 +114,10 @@ fun SellTab(
                 text = "Sell",
                 onClick = {
                     val quantity = cryptoInput.toDoubleOrNull() ?: 0.0
-                    val price = priceUpdates[selectedCrypto?.id] ?: selectedCrypto?.priceUsd?.toDoubleOrNull() ?: 0.0
+                    val price = tradeViewModel.getAssetUsdValue(selectedCrypto!!.id) / amount
                     val assetId = selectedCrypto?.id.orEmpty()
                     val assetName = selectedCrypto?.name.orEmpty()
 
-                    Log.d("SELL_TAB", "User wants to sell quantity=$quantity of $assetName @$price")
                     if (quantity > 0 && price > 0 && assetId.isNotEmpty()) {
                         tradeViewModel.executeTrade(
                             type = TradeType.SELL,
