@@ -84,9 +84,7 @@ class TradeViewModel @Inject constructor(
 
                 // 4) Preload the static cryptoList if needed
                 preloadCryptoList(cryptoViewModel.cryptoList.value)
-
-                // After everything is loaded, set isLoading to false
-                _isLoading.value = false
+                
             } catch (e: Exception) {
                 Log.e("TRADE_ERROR", "Failed to load initial data: ${e.message}")
                 _isLoading.value = false
@@ -128,12 +126,20 @@ class TradeViewModel @Inject constructor(
 
     fun observePriceUpdates(priceFlow: StateFlow<Map<String, Double>>) {
         viewModelScope.launch {
+            var firstUpdate = true
             priceFlow.collect { updates ->
                 priceUpdates = updates
                 recalcPortfolioValue()
+
+                // after the first update drop the flag
+                if (firstUpdate) {
+                    _isLoading.value = false
+                    firstUpdate = false
+                }
             }
         }
     }
+
 
     fun executeTrade(
         type: TradeType,
