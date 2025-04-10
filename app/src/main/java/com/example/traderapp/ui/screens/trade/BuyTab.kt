@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.TradeType
+import com.example.traderapp.ui.screens.components.PortfolioItem
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.TradeViewModel
 
@@ -77,12 +78,12 @@ fun BuyTab(
         if (selectedCrypto == null) {
             LazyColumn {
                 items(cryptoList) { crypto ->
-                    Text(
-                        text = crypto.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clickable { selectedCrypto = crypto }
+                    val price = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
+
+                    PortfolioItem(
+                        crypto = crypto.name,
+                        currentPrice = String.format("%.2f", price),
+                        onClick = { selectedCrypto = crypto }
                     )
                 }
             }

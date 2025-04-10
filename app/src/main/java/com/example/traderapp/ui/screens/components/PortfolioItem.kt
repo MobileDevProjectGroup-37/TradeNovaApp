@@ -1,6 +1,7 @@
 package com.example.traderapp.ui.screens.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -12,11 +13,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PortfolioItem(crypto: String, currentPrice: String) {
+fun PortfolioItem(
+    crypto: String,
+    currentPrice: String,
+    onClick: () -> Unit = {}) {
     Box(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
+            .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier

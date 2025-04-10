@@ -42,7 +42,7 @@ fun PortfolioSection(
 
         itemsToShow.forEach { crypto ->
             val currentPrice = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
-            val formattedPrice = String.format("%.4f", currentPrice)
+            val formattedPrice = String.format("%.2f", currentPrice)
 
             PortfolioItem(
                 crypto = crypto.name,
