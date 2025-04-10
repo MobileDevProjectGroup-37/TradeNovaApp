@@ -3,33 +3,27 @@ package com.example.traderapp.ui.screens.trade
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.clickable
-import androidx.compose.material3.*
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.TradeType
 import com.example.traderapp.data.network.UserSession
 import com.example.traderapp.ui.screens.components.PortfolioItem
+import com.example.traderapp.ui.screens.components.bars.SearchBar
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
+import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
+import kotlin.random.Random
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -41,51 +35,66 @@ fun BuyTab(
 ) {
     val cryptoList by cryptoViewModel.cryptoList.collectAsState()
     val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
+    val tradeError by tradeViewModel.tradeError.collectAsState()
+    val userData by userSession.userData.collectAsState()
+
+    val balance = userData?.balance ?: 0.0
 
     var selectedCrypto by remember { mutableStateOf<CryptoDto?>(null) }
     var fiatInput by remember { mutableStateOf("") }
     var cryptoInput by remember { mutableStateOf("") }
-
-    val tradeError by tradeViewModel.tradeError.collectAsState()
-    val userData by userSession.userData.collectAsState()
-    val balance = userData?.balance ?: 0.0
+    var searchQuery by remember { mutableStateOf("") }
 
     val conversionRate = selectedCrypto?.let {
         priceUpdates[it.id] ?: it.priceUsd.toDoubleOrNull()
     } ?: 1.0
 
-    // 💡 Добавляем постраничный просмотр
-    var currentIndex by remember { mutableStateOf(0) }
-    val itemsPerPage = 3
-    val itemsToShow = cryptoList.drop(currentIndex).take(itemsPerPage)
-
-    // 💰 Автоматическая конвертация валют
+    // 🔁 Автоматический перерасчёт
     LaunchedEffect(fiatInput, selectedCrypto) {
-        if (selectedCrypto != null) {
-            val amountDouble = fiatInput.toDoubleOrNull()
-            if (amountDouble != null && conversionRate != 0.0) {
-                cryptoInput = String.format("%.6f", amountDouble / conversionRate)
+        selectedCrypto?.let {
+            fiatInput.toDoubleOrNull()?.let { amount ->
+                if (conversionRate != 0.0) {
+                    cryptoInput = String.format("%.6f", amount / conversionRate)
+                }
             }
         }
     }
 
     LaunchedEffect(cryptoInput, selectedCrypto) {
-        if (selectedCrypto != null) {
-            val cryptoDouble = cryptoInput.toDoubleOrNull()
-            if (cryptoDouble != null) {
-                fiatInput = String.format("%.2f", cryptoDouble * conversionRate)
+        selectedCrypto?.let {
+            cryptoInput.toDoubleOrNull()?.let { amount ->
+                fiatInput = String.format("%.2f", amount * conversionRate)
             }
         }
     }
 
-    Column(Modifier.fillMaxWidth().padding(16.dp)) {
-        // 💰 Баланс
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
         BalanceHeader(balance)
+        Spacer(modifier = Modifier.height(16.dp))
 
-        // 🔄 Если крипта не выбрана — показываем список с пагинацией
         if (selectedCrypto == null) {
-            Column {
-                itemsToShow.forEach { crypto ->
+
+            SearchBar(
+                searchQuery = searchQuery,
+                onSearchQueryChanged = { searchQuery = it }
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            val filteredList = if (searchQuery.isBlank()) {
+                cryptoList.shuffled().take(3) // 🔀 Показываем 3 случайные
+            } else {
+                cryptoList.filter {
+                    it.name.contains(searchQuery, ignoreCase = true)
+                }
+            }
+
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(filteredList) { crypto ->
                     val price = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
                     PortfolioItem(
                         crypto = crypto.name,
@@ -95,34 +104,10 @@ fun BuyTab(
                         showHint = true
                     )
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        onClick = { if (currentIndex > 0) currentIndex -= itemsPerPage },
-                        enabled = currentIndex > 0
-                    ) {
-                        Text("Back")
-                    }
-
-                    Button(
-                        onClick = {
-                            if (currentIndex + itemsPerPage < cryptoList.size) {
-                                currentIndex += itemsPerPage
-                            }
-                        },
-                        enabled = currentIndex + itemsPerPage < cryptoList.size
-                    ) {
-                        Text("Next")
-                    }
-                }
             }
+
         } else {
-            // ✅ После выбора — отображаем форму покупки
+            // ✅ После выбора крипты
             OutlinedButton(
                 onClick = { selectedCrypto = null },
                 modifier = Modifier
@@ -136,7 +121,7 @@ fun BuyTab(
                 )
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
             Text("Enter the sum in USD:")
             OutlinedTextField(
@@ -148,7 +133,7 @@ fun BuyTab(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Text("You will get this amount of ${selectedCrypto?.symbol ?: "crypto"}:")
             OutlinedTextField(
@@ -160,7 +145,7 @@ fun BuyTab(
                 enabled = false
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             CustomButton(
                 text = "Buy",
