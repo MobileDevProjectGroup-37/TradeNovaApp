@@ -82,9 +82,9 @@ class TradeViewModel @Inject constructor(
                 // 3) Observe price updates from CryptoViewModel
                 observePriceUpdates(cryptoViewModel.priceUpdates)
 
-                // 4) Preload the static cryptoList if needed
+
                 preloadCryptoList(cryptoViewModel.cryptoList.value)
-                
+
             } catch (e: Exception) {
                 Log.e("TRADE_ERROR", "Failed to load initial data: ${e.message}")
                 _isLoading.value = false
@@ -116,7 +116,7 @@ class TradeViewModel @Inject constructor(
 
                 val cleaned = assetMap.filterValues { it > 0.0 }
                 _userAssets.value = cleaned
-
+                Log.d("DEBUG", "userAssets keys = ${userAssets.value.keys}")
                 recalcPortfolioValue()
             } catch (e: Exception) {
                 Log.e("TRADE_ERROR", "Failed to load user assets: ${e.message}")
@@ -225,6 +225,7 @@ class TradeViewModel @Inject constructor(
 
     fun preloadCryptoList(list: List<CryptoDto>) {
         cryptoList = list //http resp
+        Log.d("DEBUG", "cryptoList ids = ${cryptoList.map { it.id }}")
     }
     //updateprices = local structure to keep
     private fun recalcPortfolioValue() {
@@ -317,13 +318,14 @@ class TradeViewModel @Inject constructor(
     }
 
     fun getAssetUsdValue(assetId: String): Double {
+
         val amount = userAssets.value[assetId] ?: 0.0
 
         val livePrice = priceUpdates[assetId]
         val fallbackPrice = cryptoList.find { it.id == assetId }?.priceUsd?.toDoubleOrNull()
 
         val price = livePrice ?: fallbackPrice ?: 0.0
-
+        Log.d("DEBUG", "asset=$assetId, amount=$amount, livePrice=$livePrice, fallbackPrice=$fallbackPrice, finalPrice=$price")
         return amount * price
     }
 
@@ -418,5 +420,5 @@ class TradeViewModel @Inject constructor(
             Log.d("EXCHANGE", "Exchange finished successfully")
         }
     }
-    
+
 }
