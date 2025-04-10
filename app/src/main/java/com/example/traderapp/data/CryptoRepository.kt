@@ -62,7 +62,7 @@ class CryptoRepository @Inject constructor(
                 CryptoDto(
                     id = symbol,
                     symbol = symbol,
-                    name = "${symbolInfo.baseAsset}/USDT",
+                    name = "${symbolInfo.baseAsset}",
                     priceUsd = price,
                     changePercent24Hr = percentChange,
                     volumeUsd24Hr = volume,
