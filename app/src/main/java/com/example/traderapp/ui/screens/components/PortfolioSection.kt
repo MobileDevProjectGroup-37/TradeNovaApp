@@ -58,7 +58,7 @@ fun PortfolioSection(
         ) {
             Button(
                 onClick = {
-                    if (currentIndex > 0) currentIndex -= 5
+                    if (currentIndex > 0) currentIndex -= 3
                 },
                 enabled = currentIndex > 0
             ) {
@@ -67,9 +67,9 @@ fun PortfolioSection(
 
             Button(
                 onClick = {
-                    if (currentIndex + 5 < portfolioItems.size) currentIndex += 5
+                    if (currentIndex + 3 < portfolioItems.size) currentIndex += 3
                 },
-                enabled = currentIndex + 5 < portfolioItems.size
+                enabled = currentIndex + 3 < portfolioItems.size
             ) {
                 Text("Next")
             }

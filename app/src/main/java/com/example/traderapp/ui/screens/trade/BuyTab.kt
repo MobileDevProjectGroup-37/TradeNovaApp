@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.TradeType
+import com.example.traderapp.data.network.UserSession
 import com.example.traderapp.ui.screens.components.PortfolioItem
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.TradeViewModel
@@ -36,9 +37,8 @@ fun BuyTab(
     navController: NavController,
     cryptoViewModel: CryptoViewModel,
     tradeViewModel: TradeViewModel,
+    userSession: UserSession
 ) {
-
-
     val cryptoList by cryptoViewModel.cryptoList.collectAsState()
     val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
 
@@ -47,11 +47,19 @@ fun BuyTab(
     var cryptoInput by remember { mutableStateOf("") }
 
     val tradeError by tradeViewModel.tradeError.collectAsState()
+    val userData by userSession.userData.collectAsState()
+    val balance = userData?.balance ?: 0.0
 
     val conversionRate = selectedCrypto?.let {
         priceUpdates[it.id] ?: it.priceUsd.toDoubleOrNull()
     } ?: 1.0
 
+    // 💡 Добавляем постраничный просмотр
+    var currentIndex by remember { mutableStateOf(0) }
+    val itemsPerPage = 3
+    val itemsToShow = cryptoList.drop(currentIndex).take(itemsPerPage)
+
+    // 💰 Автоматическая конвертация валют
     LaunchedEffect(fiatInput, selectedCrypto) {
         if (selectedCrypto != null) {
             val amountDouble = fiatInput.toDoubleOrNull()
@@ -71,24 +79,50 @@ fun BuyTab(
     }
 
     Column(Modifier.fillMaxWidth().padding(16.dp)) {
+        // 💰 Баланс
+        BalanceHeader(balance)
 
-        Text("Choose crypto to buy", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(16.dp))
-
+        // 🔄 Если крипта не выбрана — показываем список с пагинацией
         if (selectedCrypto == null) {
-            LazyColumn {
-                items(cryptoList) { crypto ->
+            Column {
+                itemsToShow.forEach { crypto ->
                     val price = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
-
                     PortfolioItem(
                         crypto = crypto.name,
                         currentPrice = String.format("%.2f", price),
-                        onClick = { selectedCrypto = crypto }
+                        onClick = { selectedCrypto = crypto },
+                        selected = selectedCrypto?.id == crypto.id,
+                        showHint = true
                     )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Button(
+                        onClick = { if (currentIndex > 0) currentIndex -= itemsPerPage },
+                        enabled = currentIndex > 0
+                    ) {
+                        Text("Back")
+                    }
+
+                    Button(
+                        onClick = {
+                            if (currentIndex + itemsPerPage < cryptoList.size) {
+                                currentIndex += itemsPerPage
+                            }
+                        },
+                        enabled = currentIndex + itemsPerPage < cryptoList.size
+                    ) {
+                        Text("Next")
+                    }
                 }
             }
         } else {
-
+            // ✅ После выбора — отображаем форму покупки
             OutlinedButton(
                 onClick = { selectedCrypto = null },
                 modifier = Modifier
@@ -96,9 +130,12 @@ fun BuyTab(
                     .height(56.dp),
                 shape = MaterialTheme.shapes.small.copy(all = CornerSize(10.dp))
             ) {
-                Text(selectedCrypto?.name ?: "Chosen crypto",
-                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp) )
+                Text(
+                    selectedCrypto?.name ?: "Chosen crypto",
+                    style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+                )
             }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             Text("Enter the sum in USD:")
@@ -113,11 +150,11 @@ fun BuyTab(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("You will get this amount of BTC:")
+            Text("You will get this amount of ${selectedCrypto?.symbol ?: "crypto"}:")
             OutlinedTextField(
                 value = cryptoInput,
                 onValueChange = { cryptoInput = it },
-                label = { Text("BTC Amount") },
+                label = { Text("Crypto amount") },
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 enabled = false
@@ -129,12 +166,13 @@ fun BuyTab(
                 text = "Buy",
                 onClick = {
                     val price = conversionRate
-                    val quantity = cryptoInput.toDoubleOrNull()?: 0.0
+                    val quantity = cryptoInput.toDoubleOrNull() ?: 0.0
                     val id = selectedCrypto?.id.orEmpty()
                     val name = selectedCrypto?.name.orEmpty()
+
                     Log.d("BUY_TAB", "Buy clicked. id=$id, name=$name, price=$price, quantity=$quantity")
+
                     if (id.isNotEmpty() && name.isNotEmpty() && price > 0 && quantity > 0) {
-                        Log.d("BUY_TAB", "Valid input, calling executeTrade()")
                         tradeViewModel.executeTrade(
                             type = TradeType.BUY,
                             assetId = id,
@@ -142,8 +180,7 @@ fun BuyTab(
                             currentPrice = price,
                             quantity = quantity
                         )
-                    }
-                    else{
+                    } else {
                         Log.e("BUY_TAB", "Invalid input. Skipping trade.")
                     }
                 },
