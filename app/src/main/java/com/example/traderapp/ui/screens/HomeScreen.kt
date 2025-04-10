@@ -8,7 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.traderapp.R
@@ -22,7 +23,6 @@ import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.screens.components.bars.RightIconType
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
-import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(
@@ -31,23 +31,24 @@ fun HomeScreen(
     tradeViewModel: TradeViewModel,
     userSession: UserSession
 ) {
-    // Observe values from TradeViewModel
+    //region === Observing state from TradeViewModel ===
     val userBalance by tradeViewModel.userBalance.collectAsState()
     val portfolioValue by tradeViewModel.portfolioValue.collectAsState()
     val totalValue by tradeViewModel.totalValue.collectAsState()
     val percentChange by tradeViewModel.percentageChange.collectAsState()
-    // Observe prices from CryptoViewModel
+    val isLoading by tradeViewModel.isLoading.collectAsState()
+    //endregion
+
+    //region === Observing state from CryptoViewModel ===
     val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
     val marketMovers by cryptoViewModel.marketMovers.collectAsState()
+    //endregion
 
-    // One-time effects, e.g. load data
+    //region === One-time effect to load data ===
     LaunchedEffect(Unit) {
-        userSession.loadUserData()
-        delay(300) // small delay, so userSession has data
-        tradeViewModel.loadUserAssets()
-        tradeViewModel.observePriceUpdates(cryptoViewModel.priceUpdates)
-        tradeViewModel.preloadCryptoList(cryptoViewModel.cryptoList.value)
+        tradeViewModel.loadInitialData(cryptoViewModel)
     }
+    //endregion
 
     Scaffold(
         topBar = {
@@ -64,37 +65,49 @@ fun HomeScreen(
             BottomNavigationBar(navController)
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            item {
-                // Show totalValue as "balance" on HomeScreen
-                PortfolioBalanceSection(
-                    balance = totalValue,
-                    percentageChange = percentChange,
-                    isLoading = false
-                )
+
+        // If we don't want to show partial data, we can do a "loading screen" until everything is ready:
+        if (isLoading) {
+            // Full-screen loader
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(MaterialTheme.colorScheme.background),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
-
-            item {
-                Column(modifier = Modifier.fillMaxWidth()) {
-                    MarketMoversSection(
-                        marketMovers = marketMovers,
-                        priceUpdates = priceUpdates
-                    )
-
-                    PortfolioSection(
-                        portfolioItems = cryptoViewModel.cryptoList.collectAsState().value,
-                        priceUpdates = priceUpdates
+        } else {
+            // Once isLoading == false, we show the real content
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                item {
+                    PortfolioBalanceSection(
+                        balance = totalValue,
+                        percentageChange = percentChange,
+                        isLoading = false // now safe to pass false
                     )
                 }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(80.dp))
+                item {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        MarketMoversSection(
+                            marketMovers = marketMovers,
+                            priceUpdates = priceUpdates
+                        )
+                        PortfolioSection(
+                            portfolioItems = cryptoViewModel.cryptoList.collectAsState().value,
+                            priceUpdates = priceUpdates
+                        )
+                    }
+                }
+                item {
+                    Spacer(modifier = Modifier.height(80.dp))
+                }
             }
         }
     }

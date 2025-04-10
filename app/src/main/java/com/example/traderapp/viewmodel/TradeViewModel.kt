@@ -24,6 +24,11 @@ class TradeViewModel @Inject constructor(
     private val userSession: UserSession,
 ) : ViewModel() {
 
+    // region === Loading State ===
+    // This flag controls whether data is still loading (to avoid partial updates in UI).
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    // endregion
     // region === State ===
 
     private val _tradeError = MutableStateFlow<String?>(null)
@@ -61,6 +66,33 @@ class TradeViewModel @Inject constructor(
         }
     }
 
+    // endregion
+
+    // region === Loading All Data Once ===
+    // This function ensures we load user data, user assets, prices, etc. all at once.
+    fun loadInitialData(cryptoViewModel: CryptoViewModel) {
+        viewModelScope.launch {
+            try {
+                // 1) Fetch user data from Firestore
+                userSession.loadUserData()
+
+                // 2) Load user assets from Firestore "trades" collection
+                loadUserAssets()
+
+                // 3) Observe price updates from CryptoViewModel
+                observePriceUpdates(cryptoViewModel.priceUpdates)
+
+                // 4) Preload the static cryptoList if needed
+                preloadCryptoList(cryptoViewModel.cryptoList.value)
+
+                // After everything is loaded, set isLoading to false
+                _isLoading.value = false
+            } catch (e: Exception) {
+                Log.e("TRADE_ERROR", "Failed to load initial data: ${e.message}")
+                _isLoading.value = false
+            }
+        }
+    }
     // endregion
 
     // region === Public API ===
