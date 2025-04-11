@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.trade
+ package com.example.traderapp.ui.screens.trade
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image

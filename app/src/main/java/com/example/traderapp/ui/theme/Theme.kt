@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.theme
 
+
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
@@ -120,3 +121,4 @@ fun TransparentStatusBar() {
         systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = true)
     }
 }
+
