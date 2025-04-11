@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 @HiltViewModel
 class TradeViewModel @Inject constructor(
@@ -53,43 +54,36 @@ class TradeViewModel @Inject constructor(
 
     // endregion
 
-    // region === Init ===
-
-    init {
-        viewModelScope.launch {
-            userSession.userData.collect { user ->
-                if (user != null) {
-                    _userBalance.value = user.balance
-                    recalcTotalValue()
-                }
-            }
-        }
-    }
-
-    // endregion
 
     // region === Loading All Data Once ===
     // This function ensures we load user data, user assets, prices, etc. all at once.
     fun loadInitialData(cryptoViewModel: CryptoViewModel) {
         viewModelScope.launch {
-            // Set flag true before data is not ready
             _isLoading.value = true
             try {
-                // 1) Wait userdata
+                // Load user data from userSession
                 userSession.loadUserData()
-                // 2) Load assets from firestore
-                loadUserAssets()
-                // 3) Load list of crypto
-                preloadCryptoList(cryptoViewModel.cryptoList.value)
-
-                observePriceUpdates(cryptoViewModel.priceUpdates)
-
-                cryptoViewModel.priceUpdates.take(1).collect { firstPrice ->
-
-                    priceUpdates = firstPrice
-                    recalcPortfolioValue()
+                val user = userSession.userData.value
+                if (user != null) {
+                    _userBalance.value = user.balance
                 }
 
+                // Load user assets in the same coroutine
+                loadUserAssets() // We wait for Firestore before proceeding
+
+                // Preload crypto list for fallback prices
+                preloadCryptoList(cryptoViewModel.cryptoList.value)
+
+                // Wait for the first batch of price updates, so we have valid data
+                val firstPrice = cryptoViewModel.priceUpdates.first()
+                Log.d("DEBUG_FIRST_PRICE", "keys=${firstPrice.keys} values=${firstPrice}")
+                priceUpdates = firstPrice
+                recalcPortfolioValue()
+
+                // Now subscribe to ongoing price updates in a background job
+                observePriceUpdates(cryptoViewModel.priceUpdates)
+
+                // Turn off loading only after we have user, assets, and first prices
                 _isLoading.value = false
 
             } catch (e: Exception) {
@@ -102,34 +96,39 @@ class TradeViewModel @Inject constructor(
 
     // region === Public API ===
 
-    fun loadUserAssets() {
-        viewModelScope.launch {
-            val uid = auth.currentUser?.uid ?: return@launch
-            try {
-                val snapshot = db.collection("users")
-                    .document(uid)
-                    .collection("trades")
-                    .get()
-                    .await()
+    /**
+     * Make this function 'suspend' so we can call it sequentially and actually
+     * wait for the Firestore response before returning. No additional 'viewModelScope.launch' inside!
+     */
+    suspend fun loadUserAssets() {
+        val uid = auth.currentUser?.uid ?: return
+        try {
+            // Firestore query in the same coroutine
+            val snapshot = db.collection("users")
+                .document(uid)
+                .collection("trades")
+                .get()
+                .await()
 
-                val trades = snapshot.documents.mapNotNull { it.toObject(TradeRecord::class.java) }
-                val assetMap = mutableMapOf<String, Double>()
+            val trades = snapshot.documents.mapNotNull { it.toObject(TradeRecord::class.java) }
+            val assetMap = mutableMapOf<String, Double>()
 
-                for (trade in trades) {
-                    val delta = if (trade.type == "buy") trade.quantity else -trade.quantity
-                    val oldQty = assetMap[trade.assetId] ?: 0.0
-                    assetMap[trade.assetId] = oldQty + delta
-                }
-
-                val cleaned = assetMap.filterValues { it > 0.0 }
-                _userAssets.value = cleaned
-                Log.d("DEBUG", "userAssets keys = ${userAssets.value.keys}")
-                recalcPortfolioValue()
-            } catch (e: Exception) {
-                Log.e("TRADE_ERROR", "Failed to load user assets: ${e.message}")
+            for (trade in trades) {
+                val delta = if (trade.type == "buy") trade.quantity else -trade.quantity
+                val oldQty = assetMap[trade.assetId] ?: 0.0
+                assetMap[trade.assetId] = oldQty + delta
             }
+
+            val cleaned = assetMap.filterValues { it > 0.0 }
+            _userAssets.value = cleaned
+
+            recalcPortfolioValue()
+
+        } catch (e: Exception) {
+            Log.e("TRADE_ERROR", "Failed to load user assets: ${e.message}")
         }
     }
+
     fun observePriceUpdates(priceFlow: StateFlow<Map<String, Double>>) {
         viewModelScope.launch {
             priceFlow.collect { updates ->
@@ -234,6 +233,7 @@ class TradeViewModel @Inject constructor(
         val totalAssetsValue = assets.entries.sumOf { (id, qty) ->
             // Try to find a fallback price from the original crypto list if live price is unavailable
             val fallbackPrice = cryptoList.find { it.id == id }?.priceUsd?.toDoubleOrNull() ?: 0.0
+            Log.d("FALLBACK_CHECK 1", "For $id => fallbackPrice=$fallbackPrice")
 
             // Use live price if available, otherwise use the fallback static price
             val currentPrice = priceUpdates[id] ?: fallbackPrice
@@ -248,7 +248,7 @@ class TradeViewModel @Inject constructor(
         // Recalculate the total value (portfolio + fiat balance)
         recalcTotalValue()
     }
-
+    //ratings
     private fun updateUserRoiInDatabase(newRoi: Double) {
         val uid = auth.currentUser?.uid ?: return
         val userRef = db.collection("users").document(uid)
@@ -328,7 +328,6 @@ class TradeViewModel @Inject constructor(
     }
 
 //
-
     // endregion
 
     //exchange region

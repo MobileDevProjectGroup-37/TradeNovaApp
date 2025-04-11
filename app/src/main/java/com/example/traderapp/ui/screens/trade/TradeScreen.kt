@@ -90,10 +90,15 @@ fun TradeScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            when (selectedOption) {
-                "Buy" -> {
-                    BuyTab(navController = navController, cryptoViewModel,tradeViewModel  )
-                }
+                when (selectedOption) {
+                    "Buy" -> {
+                        BuyTab(
+                            navController = navController,
+                            cryptoViewModel = cryptoViewModel,
+                            tradeViewModel = tradeViewModel,
+                            userSession = userSession // ← вот он!
+                        )
+                    }
                 "Sell" -> {
                     SellTab(navController = navController,cryptoViewModel, tradeViewModel, userSession)
                 }
