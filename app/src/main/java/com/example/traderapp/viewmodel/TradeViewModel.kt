@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -61,29 +62,32 @@ class TradeViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                // Load user data from userSession
+
                 userSession.loadUserData()
                 val user = userSession.userData.value
                 if (user != null) {
                     _userBalance.value = user.balance
                 }
 
-                // Load user assets in the same coroutine
-                loadUserAssets() // We wait for Firestore before proceeding
+                loadUserAssets()
 
-                // Preload crypto list for fallback prices
+                // 2. Load cryptolist and wait untill it is ready
+                cryptoViewModel.cryptoList
+                    .filter { it.isNotEmpty() }
+                    .first()
+
+                // 3. Тlaunch preload only after we get full pryptolist
                 preloadCryptoList(cryptoViewModel.cryptoList.value)
 
-                // Wait for the first batch of price updates, so we have valid data
-                val firstPrice = cryptoViewModel.priceUpdates.first()
-                Log.d("DEBUG_FIRST_PRICE", "keys=${firstPrice.keys} values=${firstPrice}")
-                priceUpdates = firstPrice
+            // 4. Wait till get some prices
+                val prices = cryptoViewModel.priceUpdates
+                    .filter { it.isNotEmpty() }
+                    .first()
+
+                priceUpdates = prices
                 recalcPortfolioValue()
 
-                // Now subscribe to ongoing price updates in a background job
-                observePriceUpdates(cryptoViewModel.priceUpdates)
-
-                // Turn off loading only after we have user, assets, and first prices
+            // 5. Turn off the loader
                 _isLoading.value = false
 
             } catch (e: Exception) {
@@ -328,6 +332,7 @@ class TradeViewModel @Inject constructor(
     }
 
 //
+
     // endregion
 
     //exchange region

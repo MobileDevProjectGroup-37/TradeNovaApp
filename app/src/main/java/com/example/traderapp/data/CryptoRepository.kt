@@ -44,10 +44,12 @@ class CryptoRepository @Inject constructor(
 
             val priceMap = allPrices.associateBy { it.symbol }
             val tickerMap = ticker24hList.associateBy { it.symbol }
-
+            Log.d("DEBUG_REPO", "allPrices size = ${allPrices.size}")
+            Log.d("DEBUG_REPO", "allPrices symbols = ${allPrices.map { it.symbol }}")
+            
             val usdtSymbols = exchangeInfo.symbols
                 .filter { it.quoteAsset == "USDT" && it.status == "TRADING" }
-
+            Log.d("DEBUG_REPO", "usdtSymbols = ${usdtSymbols.map { it.symbol }}")
             val data = usdtSymbols.map { symbolInfo ->
                 val symbol = symbolInfo.symbol
                 val price = priceMap[symbol]?.price ?: ""
