@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-
+import kotlinx.coroutines.flow.take
 @HiltViewModel
 class TradeViewModel @Inject constructor(
     private val auth: FirebaseAuth,
@@ -72,22 +72,29 @@ class TradeViewModel @Inject constructor(
     // This function ensures we load user data, user assets, prices, etc. all at once.
     fun loadInitialData(cryptoViewModel: CryptoViewModel) {
         viewModelScope.launch {
+            // Set flag true before data is not ready
+            _isLoading.value = true
             try {
-                // 1) Fetch user data from Firestore
+                // 1) Wait userdata
                 userSession.loadUserData()
-
-                // 2) Load user assets from Firestore "trades" collection
+                // 2) Load assets from firestore
                 loadUserAssets()
-
-                // 3) Observe price updates from CryptoViewModel
-                observePriceUpdates(cryptoViewModel.priceUpdates)
-
-
+                // 3) Load list of crypto
                 preloadCryptoList(cryptoViewModel.cryptoList.value)
 
-            } catch (e: Exception) {
-                Log.e("TRADE_ERROR", "Failed to load initial data: ${e.message}")
+                observePriceUpdates(cryptoViewModel.priceUpdates)
+
+                cryptoViewModel.priceUpdates.take(1).collect { firstPrice ->
+
+                    priceUpdates = firstPrice
+                    recalcPortfolioValue()
+                }
+
                 _isLoading.value = false
+
+            } catch (e: Exception) {
+                _isLoading.value = false
+                Log.e("TRADE_ERROR", "Failed to load initial data: ${e.message}")
             }
         }
     }
@@ -123,24 +130,15 @@ class TradeViewModel @Inject constructor(
             }
         }
     }
-
     fun observePriceUpdates(priceFlow: StateFlow<Map<String, Double>>) {
         viewModelScope.launch {
-            var firstUpdate = true
             priceFlow.collect { updates ->
                 priceUpdates = updates
                 recalcPortfolioValue()
-
-                // after the first update drop the flag
-                if (firstUpdate) {
-                    _isLoading.value = false
-                    firstUpdate = false
-                }
             }
         }
     }
-
-
+    
     fun executeTrade(
         type: TradeType,
         assetId: String,
