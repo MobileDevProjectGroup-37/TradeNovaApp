@@ -1,27 +1,23 @@
 package com.example.traderapp.ui.screens
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.CryptoItem
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.screens.components.bars.RightIconType
+import com.example.traderapp.ui.screens.components.bars.SearchBar // ← вот он!
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.CryptoViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MarketScreen(navController: NavController, viewModel: CryptoViewModel) {
     val cryptoList by viewModel.cryptoList.collectAsState()
@@ -50,9 +46,11 @@ fun MarketScreen(navController: NavController, viewModel: CryptoViewModel) {
                 .padding(paddingValues)
                 .padding(12.dp)
         ) {
-
-            SearchBar(searchQuery) { query -> searchQuery = query }
-
+            // 👇 Переиспользуемый SearchBar
+            SearchBar(
+                searchQuery = searchQuery,
+                onSearchQueryChanged = { query -> searchQuery = query }
+            )
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 item {
@@ -71,35 +69,3 @@ fun MarketScreen(navController: NavController, viewModel: CryptoViewModel) {
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SearchBar(searchQuery: String, onSearchQueryChanged: (String) -> Unit) {
-    TextField(
-        value = searchQuery,
-        onValueChange = onSearchQueryChanged,
-        label = { Text("Cryptocoin search") },
-        leadingIcon = {
-            Image(
-                painter = painterResource(id = R.drawable.search_icon),
-                contentDescription = "Search",
-                modifier = Modifier.size(30.dp)
-            )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp)
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.primaryContainer,
-                shape = RoundedCornerShape(16.dp)
-            ),
-        colors = TextFieldDefaults.textFieldColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-        ),
-        shape = RoundedCornerShape(16.dp)
-    )
-}
-

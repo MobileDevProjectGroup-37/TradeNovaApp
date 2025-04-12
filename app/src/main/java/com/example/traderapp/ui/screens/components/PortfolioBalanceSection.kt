@@ -13,10 +13,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.traderapp.ui.screens.components.texts.SubTitle
 
-
 @SuppressLint("DefaultLocale")
 @Composable
-fun PortfolioBalanceSection(balance: Double, percentageChange: Double, isLoading: Boolean)  {
+fun PortfolioBalanceSection(
+    balance: Double,
+    percentageChange: Double,
+    isLoading: Boolean
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,7 +44,7 @@ fun PortfolioBalanceSection(balance: Double, percentageChange: Double, isLoading
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "${String.format("+%.2f", percentageChange)}%",
+                text = "${String.format("%+.2f", percentageChange)}%",
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
@@ -56,7 +59,7 @@ fun PortfolioBalanceSection(balance: Double, percentageChange: Double, isLoading
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center
         ) {
-            Text("Graph Placeholder")
+            Text("Graph Placeholder", color = MaterialTheme.colorScheme.onSurface)
         }
     }
 }

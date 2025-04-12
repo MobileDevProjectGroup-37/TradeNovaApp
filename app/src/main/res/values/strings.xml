@@ -44,9 +44,4 @@
     <string name="password_reset">"Reset Password"</string>
     <string name="password_reset_instruction">"Please enter your registered email address to reset your password"</string>
     <string name="or">"or"</string>
-    <string name="transaction_completed">Transaction Completed</string>
-    <string name="transaction_success">Transaction Success</string>
-    <string name="transaction_detail">You have successfully initiated the transaction. Amount will reflect in wallet within 1 hour</string>
-    <string name="done">Done</string>
-
 </resources>

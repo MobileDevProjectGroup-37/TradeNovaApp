@@ -10,22 +10,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.traderapp.data.network.UserSession
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.screens.components.bars.RightIconType
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.CryptoViewModel
+import com.example.traderapp.viewmodel.TradeViewModel
 
 @Composable
-fun TradeScreen(navController: NavController) {
+fun TradeScreen(
+    navController: NavController,
+    cryptoViewModel: CryptoViewModel,
+    tradeViewModel: TradeViewModel,
+    userSession: UserSession,) {
     TransparentStatusBar()
 
     // state for chosen tab
     var selectedOption by remember { mutableStateOf("Buy") }
-    val viewModel: CryptoViewModel = hiltViewModel()
 
     Scaffold(
         topBar = {
@@ -86,15 +90,24 @@ fun TradeScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            when (selectedOption) {
-                "Buy" -> {
-                    BuyTab(navController = navController)
-                }
+                when (selectedOption) {
+                    "Buy" -> {
+                        BuyTab(
+                            navController = navController,
+                            cryptoViewModel = cryptoViewModel,
+                            tradeViewModel = tradeViewModel,
+                            userSession = userSession // ← вот он!
+                        )
+                    }
                 "Sell" -> {
-                    SellTab(navController = navController)
+                    SellTab(navController = navController,cryptoViewModel, tradeViewModel, userSession)
                 }
                 "Exchange" -> {
-                    ExchangeTab(navController = navController)
+                    ExchangeTab(
+                        navController = navController,
+                        tradeViewModel = tradeViewModel,
+                        cryptoViewModel = cryptoViewModel
+                    )
                 }
             }
 

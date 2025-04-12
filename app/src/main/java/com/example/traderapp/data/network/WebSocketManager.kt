@@ -34,11 +34,11 @@ class WebSocketClient @Inject constructor() {
 
         webSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
-                Log.d("WebSocketClient", "✅ WebSocket opened")
+               // Log.d("WebSocketClient", "✅ WebSocket opened")
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
-                Log.d("WebSocketClient", "📩 Message received: $text")
+               // Log.d("WebSocketClient", "📩 Message received: $text")
 
 
                 try {

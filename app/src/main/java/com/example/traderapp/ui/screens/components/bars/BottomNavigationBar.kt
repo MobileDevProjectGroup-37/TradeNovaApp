@@ -3,44 +3,44 @@ package com.example.traderapp.ui.screens.components.bars
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.compose.ui.graphics.Color
 import com.example.traderapp.R
-import java.util.Locale
+import com.example.traderapp.utils.Constants
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    // get the route fromt the back stack
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
+    val items = listOf(
+        Triple(Constants.HOME_SCREEN_ROUTE, R.drawable.home_icon, "Home"),
+        Triple(Constants.TRADE_SCREEN_ROUTE, R.drawable.tr_icon, "Trade"),
+        Triple(Constants.MARKET_SCREEN_ROUTE, R.drawable.market_icon, "Market"),
+        Triple("favorites", R.drawable.favorites_icon, "Favorites"),
+        Triple(Constants.LEADERBOARD_SCREEN_ROUTE, R.drawable.wallet_icon, "Rating")
+    )
 
     NavigationBar(
         containerColor = Color.Transparent
     ) {
-
-        listOf(
-            "home" to painterResource(id = R.drawable.home_icon),
-            "trade" to painterResource(id = R.drawable.tr_icon),
-            "market" to painterResource(id = R.drawable.market_icon),
-            "favorites" to painterResource(id = R.drawable.favorites_icon),
-            "wallet" to painterResource(id = R.drawable.wallet_icon),
-        ).forEach { (screen, icon) ->
+        items.forEach { (route, iconId, labelText) ->
             NavigationBarItem(
                 icon = {
                     Icon(
-                        painter = icon,
-                        contentDescription = screen,
+                        painter = painterResource(id = iconId),
+                        contentDescription = labelText,
                         modifier = Modifier.size(28.dp),
-                        tint = if (currentRoute == screen) MaterialTheme.colorScheme.primary else Color.Unspecified // Цвет иконки
+                        tint = if (currentRoute == route) MaterialTheme.colorScheme.primary else Color.Unspecified
                     )
                 },
-                label = { Text(screen.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }) },
-                selected = false,
+                label = { Text(labelText) },
+                selected = currentRoute == route,
                 onClick = {
-                    navController.navigate(screen) {
+                    navController.navigate(route) {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true
                     }

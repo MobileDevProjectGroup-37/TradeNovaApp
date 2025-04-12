@@ -27,7 +27,7 @@ fun PortfolioSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Portfolio",
+                text = "My portfolio",
                 style = MaterialTheme.typography.titleMedium
             )
             ClickableText(
@@ -42,7 +42,7 @@ fun PortfolioSection(
 
         itemsToShow.forEach { crypto ->
             val currentPrice = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
-            val formattedPrice = "$" + String.format("%.6f", currentPrice)
+            val formattedPrice = String.format("%.2f", currentPrice)
 
             PortfolioItem(
                 crypto = crypto.name,
@@ -58,7 +58,7 @@ fun PortfolioSection(
         ) {
             Button(
                 onClick = {
-                    if (currentIndex > 0) currentIndex -= 5
+                    if (currentIndex > 0) currentIndex -= 3
                 },
                 enabled = currentIndex > 0
             ) {
@@ -67,9 +67,9 @@ fun PortfolioSection(
 
             Button(
                 onClick = {
-                    if (currentIndex + 5 < portfolioItems.size) currentIndex += 5
+                    if (currentIndex + 3 < portfolioItems.size) currentIndex += 3
                 },
-                enabled = currentIndex + 5 < portfolioItems.size
+                enabled = currentIndex + 3 < portfolioItems.size
             ) {
                 Text("Next")
             }

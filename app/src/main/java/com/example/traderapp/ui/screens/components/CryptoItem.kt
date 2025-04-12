@@ -40,7 +40,7 @@ fun CryptoItem(crypto: CryptoDto, currentPrice: Double) {
                 modifier = Modifier.weight(2f),
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(text = "${crypto.name}/USDT", fontWeight = FontWeight.Bold)
+                Text(text = "${crypto.name}", fontWeight = FontWeight.Bold)
                 // Text(text = "$formattedPrice/USDT", color = MaterialTheme.colorScheme.secondary)
             }
 
