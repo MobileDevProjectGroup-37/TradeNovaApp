@@ -41,4 +41,7 @@
     <string name="enter_a_valid_number">Enter a valid number</string>
     <string name="the_amount_in_usd">The amount in USD:</string>
     <string name="exchange">Exchange</string>
+    <string name="password_reset">"Reset Password"</string>
+    <string name="password_reset_instruction">"Please enter your registered email address to reset your password"</string>
+    <string name="or">"or"</string>
 </resources>
