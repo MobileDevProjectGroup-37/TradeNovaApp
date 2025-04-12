@@ -1,7 +1,6 @@
 package com.example.traderapp.ui.screens.trade
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -19,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.traderapp.R
 import com.example.traderapp.data.model.CryptoDto
@@ -108,7 +106,8 @@ fun BuyTab(
                         currentPrice = String.format("%.2f", price),
                         onClick = { selectedCrypto = crypto },
                         selected = selectedCrypto?.id == crypto.id,
-                        showHint = true
+                        showHint = true,
+                        hintText = "Tap to buy"
                     )
                 }
             }

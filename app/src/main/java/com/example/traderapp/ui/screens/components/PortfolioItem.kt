@@ -1,3 +1,4 @@
+// PortfolioItem.kt
 package com.example.traderapp.ui.screens.components
 
 import androidx.compose.foundation.background
@@ -17,9 +18,12 @@ import androidx.compose.ui.unit.dp
 fun PortfolioItem(
     crypto: String,
     currentPrice: String,
+    amount: String? = null,
+    usdValue: String? = null,
     onClick: () -> Unit = {},
     selected: Boolean = false,
-    showHint: Boolean = false
+    showHint: Boolean = false,
+    hintText: String = ""
 ) {
     val backgroundColor = if (selected)
         MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)
@@ -57,27 +61,36 @@ fun PortfolioItem(
         ) {
             Column(
                 modifier = Modifier.padding(12.dp),
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.spacedBy(6.dp),
                 horizontalAlignment = Alignment.Start
             ) {
-                Text(
-                    text = crypto,
-                    fontWeight = FontWeight.Bold
-                )
+                // 🔹 Название криптовалюты
+                Text(text = crypto, fontWeight = FontWeight.Bold)
 
+                // 🔹 Кол-во криптовалюты
+                amount?.let {
+                    Text("Owned: $it")
+                }
+
+                // 🔹 Суммарная стоимость в $
+                usdValue?.let {
+                    Text("Total value: \$$it")
+                }
+
+                // 🔹 Цена за 1 единицу + hint
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "$$currentPrice",
+                        text = "1 $crypto ≈ \$$currentPrice",
                         color = MaterialTheme.colorScheme.secondary
                     )
 
                     if (showHint) {
                         Text(
-                            text = if (selected) "✓ Selected" else "Tap to buy",
+                            text = if (selected) "✓ Selected" else hintText,
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )
