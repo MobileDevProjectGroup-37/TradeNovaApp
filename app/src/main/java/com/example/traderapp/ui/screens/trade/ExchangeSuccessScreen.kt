@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.screens.trade
 
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,7 +27,7 @@ import com.example.traderapp.ui.screens.components.texts.AppTitle
 import com.example.traderapp.ui.theme.TraderAppTheme
 
 @Composable
-fun TransactionSuccessScreen(
+fun ExchangeSuccessScreen(
     navController: NavController
 ) {
     Scaffold(
@@ -34,7 +35,7 @@ fun TransactionSuccessScreen(
             AppTopBar(
                 showBackButton = true,
                 onBackClick = { navController.popBackStack() },
-                title = stringResource(id = R.string.transaction_completed),
+                title = stringResource(id = R.string.exchange_completed),
 //                showInfoButton = true
             )
         }
@@ -52,20 +53,20 @@ fun TransactionSuccessScreen(
 
             Image(
                 painter = painterResource(id = R.drawable.transaction_success),
-                contentDescription = stringResource(R.string.transaction_completed),
+                contentDescription = stringResource(R.string.exchange_completed),
                 modifier = Modifier
                     .size(350.dp)
                     .padding(16.dp)
             )
 
             AppTitle(
-                text = stringResource(R.string.transaction_success),
+                text = stringResource(R.string.exchange_success),
                 modifier = Modifier.padding(top = 20.dp),
                 textAlign = TextAlign.Center
             )
 
             Text(
-                text = stringResource(R.string.transaction_detail),
+                text = stringResource(R.string.exchange_detail),
                 modifier = Modifier.padding(top = 8.dp),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface,
@@ -74,11 +75,11 @@ fun TransactionSuccessScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            TransactionAmountBox(
-                leftCurrency = "Dollar USA",
-                leftAmount = "1001",
-                rightCurrency = "Bitcoin BTC",
-                rightAmount = "0.040141"
+            ExchangeAmountBox(
+                leftCurrency = "Bitcoin BTC",
+                leftAmount = "0.040141",
+                rightCurrency = "Ethereum BTC",
+                rightAmount = "0.689612"
             )
 
             Divider(
@@ -104,7 +105,7 @@ fun TransactionSuccessScreen(
 }
 
 @Composable
-fun TransactionAmountBox(
+fun ExchangeAmountBox(
     leftCurrency: String,
     leftAmount: String,
     rightCurrency: String,
@@ -145,10 +146,10 @@ fun TransactionAmountBox(
 
 @Preview(showBackground = true)
 @Composable
-fun TransactionSuccessScreenPreview() {
+fun ExchangeSuccessScreenPreview() {
     TraderAppTheme {
         val navController = rememberNavController()
-        TransactionSuccessScreen(navController = navController)
+        ExchangeSuccessScreen(navController = navController)
     }
 }
 
