@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.screens.components
 
+import PortfolioItem
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -46,8 +47,11 @@ fun PortfolioSection(
 
             PortfolioItem(
                 crypto = crypto.name,
-                currentPrice = formattedPrice
+                currentPrice = formattedPrice,
+                changePercent = crypto.changePercent24Hr,
+                compact = true // 👈 ключ
             )
+
         }
 
         Spacer(modifier = Modifier.height(16.dp))

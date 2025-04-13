@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.screens.trade
 
+import PortfolioItem
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -23,7 +24,6 @@ import com.example.traderapp.R
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.TradeType
 import com.example.traderapp.data.network.UserSession
-import com.example.traderapp.ui.screens.components.PortfolioItem
 import com.example.traderapp.ui.screens.components.bars.SearchBar
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.CryptoViewModel
@@ -97,23 +97,28 @@ fun BuyTab(
                 }
             }
 
-            LazyColumn(modifier = Modifier.weight(1f)
-                .padding(0.dp)) {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(0.dp)
+            ) {
                 items(filteredList) { crypto ->
                     val price = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
+                    val formattedPrice = String.format("%.2f", price)
+
                     PortfolioItem(
                         crypto = crypto.name,
-                        currentPrice = String.format("%.2f", price),
+                        currentPrice = formattedPrice,
                         onClick = { selectedCrypto = crypto },
                         selected = selectedCrypto?.id == crypto.id,
                         showHint = true,
-                        hintText = "Tap to buy"
+                        hintText = "Tap to buy",
+                        compact = false // ⬅️ подробный стиль карточки
                     )
                 }
             }
 
         } else {
-            // 💳 Карточка покупки с кнопкой Change
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
@@ -173,7 +178,6 @@ fun BuyTab(
             }
         }
 
-        // ✅ Confirm Dialog
         if (showConfirmation) {
             AlertDialog(
                 onDismissRequest = { showConfirmation = false },
@@ -211,7 +215,6 @@ fun BuyTab(
             )
         }
 
-        // ✅ Success Dialog
         if (showSuccess) {
             val scale by animateFloatAsState(
                 targetValue = 1f,
@@ -224,7 +227,6 @@ fun BuyTab(
                 confirmButton = {
                     TextButton(onClick = {
                         showSuccess = false
-                        // 💡 Теперь очищаем всё!
                         confirmedCrypto = null
                         selectedCrypto = null
                         fiatInput = ""
