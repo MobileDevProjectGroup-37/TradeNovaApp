@@ -85,10 +85,9 @@ fun BuyTab(
         if (selectedCrypto == null) {
             SearchBar(
                 searchQuery = searchQuery,
-                onSearchQueryChanged = { searchQuery = it }
+                onSearchQueryChanged = { searchQuery = it },
+                modifier = Modifier.padding(bottom = 12.dp)
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
 
             val filteredList = if (searchQuery.isBlank()) {
                 cryptoList.shuffled().take(3)
@@ -98,7 +97,8 @@ fun BuyTab(
                 }
             }
 
-            LazyColumn(modifier = Modifier.weight(1f)) {
+            LazyColumn(modifier = Modifier.weight(1f)
+                .padding(0.dp)) {
                 items(filteredList) { crypto ->
                     val price = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
                     PortfolioItem(

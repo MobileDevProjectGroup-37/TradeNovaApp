@@ -16,7 +16,8 @@ import com.example.traderapp.R
 @Composable
 fun SearchBar(
     searchQuery: String,
-    onSearchQueryChanged: (String) -> Unit
+    onSearchQueryChanged: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     TextField(
         value = searchQuery,

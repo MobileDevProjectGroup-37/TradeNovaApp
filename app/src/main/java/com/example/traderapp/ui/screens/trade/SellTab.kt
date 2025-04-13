@@ -40,10 +40,7 @@ fun SellTab(
     }
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
-        Text(
-            text = "Sell your crypto",
-            style = MaterialTheme.typography.titleLarge
-        )
+
 
         Spacer(modifier = Modifier.height(16.dp))
 

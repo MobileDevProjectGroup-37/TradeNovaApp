@@ -31,7 +31,7 @@ val LightError      = Color(0xFFCD0000)
 /********************************
  *  Цветовые константы (Dark)
  ********************************/
-val DarkBackground = Color(0xFF0D0D16)  // #0D0D16
+val DarkBackground = Color(0xFF090D16)  // #0D0D16
 val DarkSurface    = Color(0xFF22283A) // #22283A
 val DarkOffline    = Color(0xFF3D455C) // #3D455C
 val DarkSecondary  = Color(0xFF9096A2) // #9096A2

@@ -57,7 +57,8 @@ fun PortfolioItem(
                 .shadow(4.dp, shape = MaterialTheme.shapes.medium)
                 .border(1.5.dp, borderColor, MaterialTheme.shapes.medium),
             shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(containerColor = backgroundColor),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         ) {
             Column(
                 modifier = Modifier.padding(12.dp),
