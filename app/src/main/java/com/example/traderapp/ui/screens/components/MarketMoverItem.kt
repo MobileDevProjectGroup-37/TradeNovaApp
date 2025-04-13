@@ -37,7 +37,7 @@ fun MarketMoverItem(crypto: CryptoDto, currentPrice: Double, priceChange: Double
                 .fillMaxWidth()
                 .shadow(4.dp, shape = MaterialTheme.shapes.medium),
             shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors( containerColor = MaterialTheme.colorScheme.surface),
         ) {
             Column(
                 modifier = Modifier.padding(8.dp),

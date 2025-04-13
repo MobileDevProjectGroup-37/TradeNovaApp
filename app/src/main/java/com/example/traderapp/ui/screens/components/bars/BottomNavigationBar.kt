@@ -34,7 +34,7 @@ fun BottomNavigationBar(navController: NavController) {
                         painter = painterResource(id = iconId),
                         contentDescription = labelText,
                         modifier = Modifier.size(28.dp),
-                        tint = if (currentRoute == route) MaterialTheme.colorScheme.primary else Color.Unspecified
+                        tint = if (currentRoute == route) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                     )
                 },
                 label = { Text(labelText) },
@@ -44,7 +44,10 @@ fun BottomNavigationBar(navController: NavController) {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true
                     }
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = Color.Transparent
+                )
             )
         }
     }
