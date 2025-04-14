@@ -27,6 +27,7 @@ val LightPrimary    = Color(0xFF5DDC71) // #5DDC71
 val LightUp         = Color(0xFF098C26)
 val LightFall       = Color(0xFFF7931A)
 val LightError      = Color(0xFFCD0000)
+val Outline         = Color(0xFFD7D9E4)
 
 /********************************
  *  Цветовые константы (Dark)
@@ -40,6 +41,7 @@ val DarkPrimary    = Color(0xFF5DDC71) // #5DDC71
 val DarkUp         = Color(0xFF31C451)
 val DarkFall       = Color(0xFFF89E32)
 val DarkError      = Color(0xFFFF6666)
+val DarkOutline    = Color(0xFF3D455C)
 
 /********************************
  *   Light / Dark палитры
@@ -55,6 +57,7 @@ private val LightColors = lightColorScheme(
     onSurface = LightText,
     error = LightError,
     onError = Color.White,
+    outline = Outline
 )
 
 private val DarkColors = darkColorScheme(
@@ -68,6 +71,7 @@ private val DarkColors = darkColorScheme(
     onSurface = DarkText,
     error = DarkError,
     onError = Color.White,
+    outline = DarkOutline,
 )
 
 /********************************
