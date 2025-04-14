@@ -25,7 +25,7 @@ import com.example.traderapp.viewmodel.AuthViewModel
 @Composable
 fun AddMail(
     navController: NavController,
-    authViewModel: AuthViewModel // ✅ Убираем hiltViewModel(), получаем из AppNavigation
+    authViewModel: AuthViewModel //
 ) {
     val email by authViewModel.email
 
@@ -34,7 +34,7 @@ fun AddMail(
             AppTopBar(
                 showBackButton = true,
                 onBackClick = {
-                    // ✅ Убираем resetFields() здесь, чтобы не обнулять email
+
                     navController.popBackStack()
                 },
                 logoResId = R.drawable.sl_bar1,

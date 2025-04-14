@@ -1,5 +1,6 @@
 package com.example.traderapp.data
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import kotlinx.coroutines.flow.StateFlow
 
 interface AuthRepository {
@@ -7,6 +8,7 @@ interface AuthRepository {
     suspend fun login(email: String, password: String): Boolean
     fun logout()
     fun getIsAuthenticatedFlow(): StateFlow<Boolean>
+    suspend fun signInWithGoogle(account: GoogleSignInAccount): Boolean
 }
 
 

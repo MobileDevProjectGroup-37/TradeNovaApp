@@ -7,6 +7,7 @@ import com.example.traderapp.data.AuthRepository
 import com.example.traderapp.data.network.UserSession
 import com.example.traderapp.data.network.WebSocketClient
 import com.example.traderapp.utils.AuthPreferences
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.Firebase
 import com.google.firebase.functions.functions
 import com.google.firebase.functions.ktx.functions
@@ -35,7 +36,7 @@ class AuthViewModel @Inject constructor(
 
     // State to track if the user is logged in
     private val _isLoggedIn = MutableStateFlow(authRepository.getIsAuthenticatedFlow().value)
-    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn.asStateFlow()
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn. asStateFlow()
 
     fun onEmailChange(newEmail: String) {
         email.value = newEmail
@@ -150,6 +151,23 @@ class AuthViewModel @Inject constructor(
             } catch (e: Exception) {
                 println(">>> verifyOtp: exception = ${e.message}")
                 onFailure(e.message ?: "Error when checking code")
+            }
+        }
+    }
+    fun signInWithGoogle(
+        account: GoogleSignInAccount,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            val result = authRepository.signInWithGoogle(account)
+            if (result) {
+                _isLoggedIn.value = true
+                authPreferences.saveIsAuthenticated(true)
+                onSuccess()
+            } else {
+                validationError.value = "Google Sign-In failed"
+                onFailure("Google Sign-In failed")
             }
         }
     }

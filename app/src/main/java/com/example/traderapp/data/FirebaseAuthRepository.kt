@@ -2,7 +2,9 @@ package com.example.traderapp.data
 
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.UserData
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -46,6 +48,21 @@ class FirebaseAuthRepository @Inject constructor(
 
     override fun logout() {
         auth.signOut()
+    }
+    override suspend fun signInWithGoogle(account: GoogleSignInAccount): Boolean {
+        return try {
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            val result = auth.signInWithCredential(credential).await()
+            val userId = result.user?.uid ?: return false
+
+
+            val user = UserData(result.user?.email ?: "no-email")
+            db.collection("users").document(userId).set(user)
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
     }
 }
 

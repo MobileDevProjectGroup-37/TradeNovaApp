@@ -24,6 +24,14 @@ import com.example.traderapp.ui.screens.components.texts.CustomTextField
 import com.example.traderapp.ui.screens.components.texts.DividerWithText
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.AuthViewModel
+import androidx.activity.compose.rememberLauncherForActivityResult
+// Google Sign-In imports
+import android.content.Context
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.example.traderapp.utils.getGoogleSignInClient
 
 @Composable
 fun RegisterScreen(
@@ -35,6 +43,27 @@ fun RegisterScreen(
     val password by authViewModel.password
     val validationError by authViewModel.validationError
     val isPasswordValid = authViewModel.isPasswordValid()
+
+    // 🔑 Google Sign-In launcher
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)
+            if (account != null) {
+                authViewModel.signInWithGoogle(
+                    account = account,
+                    onSuccess = { navController.navigate("home") },
+                    onFailure = { error ->
+                        Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        } catch (e: ApiException) {
+            Toast.makeText(context, "Google Sign-In failed: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     TransparentStatusBar()
 
@@ -72,12 +101,16 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
+            // 🔘 Google Sign-In Button
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
                 CustomButton(
-                    onClick = { /* Google Sign-in Logic*/ },
+                    onClick = {
+                        val googleSignInClient = getGoogleSignInClient(context)
+                        launcher.launch(googleSignInClient.signInIntent)
+                    },
                     backgroundColor = Color.White,
                     textColor = Color.Black,
                     icon = painterResource(id = R.drawable.google_logo),
