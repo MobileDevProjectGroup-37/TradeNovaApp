@@ -20,12 +20,12 @@ fun BottomNavigationBar(navController: NavController) {
         Triple(Constants.HOME_SCREEN_ROUTE, R.drawable.home_icon, "Home"),
         Triple(Constants.TRADE_SCREEN_ROUTE, R.drawable.tr_icon, "Trade"),
         Triple(Constants.MARKET_SCREEN_ROUTE, R.drawable.market_icon, "Market"),
-        Triple("favorites", R.drawable.favorites_icon, "Favorites"),
-        Triple(Constants.LEADERBOARD_SCREEN_ROUTE, R.drawable.wallet_icon, "Rating")
+        Triple(Constants.LEADERBOARD_SCREEN_ROUTE, R.drawable.favorites_icon, "Rating")
     )
 
     NavigationBar(
-        containerColor = Color.Transparent
+        containerColor = MaterialTheme.colorScheme.surface,
+        tonalElevation = 0.dp
     ) {
         items.forEach { (route, iconId, labelText) ->
             NavigationBarItem(
@@ -34,7 +34,7 @@ fun BottomNavigationBar(navController: NavController) {
                         painter = painterResource(id = iconId),
                         contentDescription = labelText,
                         modifier = Modifier.size(28.dp),
-                        tint = if (currentRoute == route) MaterialTheme.colorScheme.primary else Color.Unspecified
+                        tint = if (currentRoute == route) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
                     )
                 },
                 label = { Text(labelText) },
@@ -44,7 +44,10 @@ fun BottomNavigationBar(navController: NavController) {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         launchSingleTop = true
                     }
-                }
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = Color.Transparent
+                )
             )
         }
     }

@@ -1,8 +1,5 @@
 package com.example.traderapp.ui.screens.trade
 
-import android.annotation.SuppressLint
-import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,17 +10,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.TradeType
 import com.example.traderapp.data.network.UserSession
+import com.example.traderapp.ui.screens.components.PortfolioItem
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
 
-
-@SuppressLint("DefaultLocale")
 @Composable
 fun SellTab(
     navController: NavController,
@@ -33,106 +28,149 @@ fun SellTab(
 ) {
     val cryptoList by cryptoViewModel.cryptoList.collectAsState()
     val userAssets by tradeViewModel.userAssets.collectAsState()
+    val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
 
-    // загружаем активы при первом входе
+    var selectedCrypto by remember { mutableStateOf<CryptoDto?>(null) }
+    var cryptoInput by remember { mutableStateOf("") }
+    var showConfirm by remember { mutableStateOf(false) }
+    var showSuccess by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         tradeViewModel.loadUserAssets()
     }
 
-    var selectedCrypto by remember { mutableStateOf<CryptoDto?>(null) }
-    var cryptoInput by remember { mutableStateOf("") }
+    Column(Modifier.fillMaxSize().padding(16.dp)) {
 
-    LaunchedEffect(userAssets) {
-        if (selectedCrypto != null) {
-            val remaining = userAssets[selectedCrypto!!.id] ?: 0.0
-            if (remaining <= 0.0) {
-                selectedCrypto = null
-                cryptoInput = ""
-            }
-        }
-    }
-
-    Column(Modifier.fillMaxWidth().padding(16.dp)) {
-        Text("Choose crypto to sell", style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedButton(
-            onClick = { selectedCrypto = null },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(selectedCrypto?.name ?: "Choose crypto to sell")
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Filter assets which are larger than 0
-        val availableCryptos = cryptoList.filter { crypto ->
-            userAssets[crypto.id]?.let { it > 0.0 } == true
-        }
-
-        if (availableCryptos.isNotEmpty()) {
-            LazyColumn {
-                items(availableCryptos) { crypto ->
-                    val amount = userAssets[crypto.id] ?: 0.0
-                    val valueUsd = tradeViewModel.getAssetUsdValue(crypto.id)
-
-                    Text(
-                        text = "${crypto.name} — amount: ${"%.4f".format(amount)} — \$${"%.2f".format(valueUsd)}",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clickable { selectedCrypto = crypto }
-                    )
-                }
-            }
-        } else {
-            Text("You don't have any crypto to sell.")
-        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (selectedCrypto != null) {
-            val amount = userAssets[selectedCrypto!!.id] ?: 0.0
-            val valueUsd = tradeViewModel.getAssetUsdValue(selectedCrypto!!.id)
+        if (selectedCrypto == null) {
+            val availableCryptos = cryptoList.filter { crypto ->
+                (userAssets[crypto.id] ?: 0.0) > 0.0
+            }
 
-            Text("You own ${"%.4f".format(amount)} worth \$${"%.2f".format(valueUsd)}")
+            if (availableCryptos.isNotEmpty()) {
+                LazyColumn {
+                    items(availableCryptos) { crypto ->
+                        val amount = userAssets[crypto.id] ?: 0.0
+                        val price = priceUpdates[crypto.id] ?: crypto.priceUsd.toDoubleOrNull() ?: 0.0
+                        val valueUsd = amount * price
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text("Enter the amount of ${selectedCrypto?.name} to sell:")
-            OutlinedTextField(
-                value = cryptoInput,
-                onValueChange = { cryptoInput = it },
-                label = { Text("Amount to sell") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            CustomButton(
-                text = "Sell",
-                onClick = {
-                    val quantity = cryptoInput.toDoubleOrNull() ?: 0.0
-                    val price = tradeViewModel.getAssetUsdValue(selectedCrypto!!.id) / amount
-                    val assetId = selectedCrypto?.id.orEmpty()
-                    val assetName = selectedCrypto?.name.orEmpty()
-
-                    if (quantity > 0 && price > 0 && assetId.isNotEmpty()) {
-                        tradeViewModel.executeTrade(
-                            type = TradeType.SELL,
-                            assetId = assetId,
-                            assetName = assetName,
-                            currentPrice = price,
-                            quantity = quantity
+                        PortfolioItem(
+                            crypto = crypto.name,
+                            currentPrice = "${String.format("%.2f", price)}",
+                            amount = String.format("%.4f", amount),
+                            usdValue = String.format("%.2f", valueUsd),
+                            onClick = { selectedCrypto = crypto },
+                            selected = selectedCrypto?.id == crypto.id,
+                            showHint = true,
+                            hintText = "Tap to sell"
                         )
-                        cryptoInput = ""
-                        selectedCrypto = null
+
                     }
-                },
-                backgroundColor = MaterialTheme.colorScheme.primary,
-                textColor = Color.White
-            )
+                }
+            } else {
+                Text("You don't have any crypto to sell.")
+            }
+        } else {
+            val amount = userAssets[selectedCrypto!!.id] ?: 0.0
+            val pricePerUnit = priceUpdates[selectedCrypto!!.id] ?: selectedCrypto!!.priceUsd.toDoubleOrNull() ?: 0.0
+            val quantity = cryptoInput.toDoubleOrNull() ?: 0.0
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Selling ${selectedCrypto!!.name}", style = MaterialTheme.typography.titleMedium)
+                        TextButton(onClick = {
+                            selectedCrypto = null
+                            cryptoInput = ""
+                        }) {
+                            Text("Change")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text("You own ${"%.4f".format(amount)} worth \$${"%.2f".format(amount * pricePerUnit)}")
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text("Enter amount to sell:")
+                    OutlinedTextField(
+                        value = cryptoInput,
+                        onValueChange = { cryptoInput = it },
+                        label = { Text("Crypto amount") },
+                        modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    CustomButton(
+                        text = "Sell",
+                        onClick = {
+                            if (quantity > 0 && quantity <= amount) {
+                                showConfirm = true
+                            }
+                        },
+                        backgroundColor = MaterialTheme.colorScheme.primary,
+                        textColor = Color.White
+                    )
+                }
+            }
+
+            if (showConfirm) {
+                AlertDialog(
+                    onDismissRequest = { showConfirm = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            tradeViewModel.executeTrade(
+                                type = TradeType.SELL,
+                                assetId = selectedCrypto!!.id,
+                                assetName = selectedCrypto!!.name,
+                                currentPrice = pricePerUnit,
+                                quantity = quantity
+                            )
+                            showConfirm = false
+                            showSuccess = true
+                            selectedCrypto = null
+                            cryptoInput = ""
+                        }) {
+                            Text("Confirm")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showConfirm = false }) {
+                            Text("Cancel")
+                        }
+                    },
+                    title = { Text("Confirm sale") },
+                    text = {
+                        Text("Sell $cryptoInput ${selectedCrypto?.symbol} for \$${"%.2f".format(quantity * pricePerUnit)}?")
+                    }
+                )
+            }
+
+            if (showSuccess) {
+                AlertDialog(
+                    onDismissRequest = { showSuccess = false },
+                    confirmButton = {
+                        TextButton(onClick = { showSuccess = false }) {
+                            Text("OK")
+                        }
+                    },
+                    title = { Text("Success!") },
+                    text = {
+                        Text("Sale completed successfully.")
+                    }
+                )
+            }
         }
     }
 }

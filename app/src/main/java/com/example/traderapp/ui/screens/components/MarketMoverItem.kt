@@ -19,56 +19,76 @@ import com.example.traderapp.data.model.CryptoDto
 @SuppressLint("DefaultLocale")
 @Composable
 fun MarketMoverItem(crypto: CryptoDto, currentPrice: Double, priceChange: Double) {
-    Box(
+    Card(
         modifier = Modifier
-            .padding(8.dp)
-            .width(140.dp)
+            .width(180.dp)
+            .padding(12.dp)
+            .shadow(4.dp, shape = MaterialTheme.shapes.medium),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
-
-        Box(
+        Column(
             modifier = Modifier
-                .matchParentSize()
-                .offset(y = 6.dp)
-                .background(Color(4287085311).copy(alpha = 0.2f), shape = MaterialTheme.shapes.medium)
-        )
-
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(4.dp, shape = MaterialTheme.shapes.medium),
-            shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+            horizontalAlignment = Alignment.Start
         ) {
-            Column(
-                modifier = Modifier.padding(8.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start
+            // Верхняя строка: symbol и заглушка-иконка
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = crypto.symbol, style = MaterialTheme.typography.bodyMedium)
-
-                Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Crypto Logo")
-
-                Text(text = "$${String.format("%.2f", currentPrice)}")
-
                 Text(
-                    text = if (priceChange >= 0) "+${String.format("%.2f", priceChange)}%"
-                    else "${String.format("%.2f", priceChange)}%",
-                    color = if (priceChange >= 0) MaterialTheme.colorScheme.primary else Color.Red,
-                    fontWeight = FontWeight.Bold
+                    text = crypto.name + "/USD",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold
                 )
 
-                Box(
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "${crypto.symbol} logo",
+                    tint = Color(0xFFFFC107),
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                        .background(MaterialTheme.colorScheme.secondaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Chart")
-                }
-
-                Text(text = "24H Vol: ${String.format("%.2f", crypto.volumeUsd24Hr)}")
+                        .size(28.dp)
+                )
             }
+
+            Text(
+                text = String.format("%,.2f", currentPrice),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = if (priceChange >= 0) "+${String.format("%.2f", priceChange)}%" else "${String.format("%.2f", priceChange)}%",
+                color = if (priceChange >= 0) Color(0xFF4CAF50) else Color.Red,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            // graph
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .background(Color(0xFF1E1E1E), shape = MaterialTheme.shapes.small),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "Chart", color = Color.Green)
+            }
+
+            // Volume label + значение
+            Text(
+                text = "24H Vol.",
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.labelLarge
+
+            )
+            Text(
+                text = String.format("%,.2f", crypto.volumeUsd24Hr),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }

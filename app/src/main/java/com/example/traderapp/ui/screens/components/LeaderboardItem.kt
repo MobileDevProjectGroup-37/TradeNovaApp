@@ -1,32 +1,15 @@
-
-
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-
 // --- For alignment, arrangement, spacing
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
-// --- Hilt ViewModel
-import androidx.hilt.navigation.compose.hiltViewModel
-
-// --- Logging
-import android.util.Log
-
 // --- Colors (you can place them in a separate Theme file if you prefer)
 import androidx.compose.ui.graphics.Color
-
 // --- Our custom ViewModel & Data
 import com.example.traderapp.data.model.UserData
-import com.example.traderapp.viewmodel.LeaderboardViewModel
-val UpholdGreen = Color(0xFF0EAD69)
-val UpholdLightGreen = Color(0xFF7CDB8A)
-val UpholdGrayBackground = Color(0xFFF5F5F5)
-val UpholdWhite = Color(0xFFFFFFFF)
+
 @Composable
 fun LeaderboardItem(
     rank: Int,
@@ -50,7 +33,7 @@ fun LeaderboardItem(
             Text(
                 text = "#$rank",
                 style = MaterialTheme.typography.titleMedium,
-                color = UpholdGreen,
+                color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.width(40.dp)
             )
 
@@ -71,7 +54,7 @@ fun LeaderboardItem(
             Text(
                 text = "${userData.profit}%",
                 style = MaterialTheme.typography.titleLarge,
-                color = if (userData.profit >= 0.0) UpholdGreen else Color.Red
+                color = if (userData.profit >= 0.0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             )
         }
     }
