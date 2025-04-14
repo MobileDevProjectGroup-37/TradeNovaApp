@@ -42,4 +42,5 @@
     <string name="the_amount_in_usd">The amount in USD:</string>
     <string name="exchange">Exchange</string>
     <string name="default_web_client_id">85118788110-sng41dcpkhsusa4dlnledu212f2ocol0.apps.googleusercontent.com</string>
+    <string name="crypto_amount">Crypto amount</string>
 </resources>

@@ -17,8 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.traderapp.R
 import com.example.traderapp.data.model.CryptoDto
@@ -123,7 +125,7 @@ fun BuyTab(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = MaterialTheme.shapes.medium,
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.outline)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
@@ -149,19 +151,20 @@ fun BuyTab(
                         label = { Text("Sum in USD") },
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.small.copy(all = CornerSize(12.dp)),
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            disabledBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Text("You will get this amount of ${selectedCrypto?.symbol}:")
-                    OutlinedTextField(
-                        value = cryptoInput,
-                        onValueChange = { cryptoInput = it },
-                        label = { Text("Crypto amount") },
-                        modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                        enabled = false
+                    StaticOutlinedTextFieldStyle(
+                        label = stringResource(R.string.crypto_amount),
+                        value = cryptoInput
                     )
 
                     Spacer(modifier = Modifier.height(18.dp))
@@ -173,7 +176,9 @@ fun BuyTab(
                             showConfirmation = true
                         },
                         backgroundColor = MaterialTheme.colorScheme.primary,
-                        textColor = Color.White
+                        textColor = Color.White,
+                        showBorder = false,
+                        fontSize = 20.sp
                     )
                 }
             }

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.TradeType
@@ -40,8 +41,6 @@ fun SellTab(
     }
 
     Column(Modifier.fillMaxSize().padding(16.dp)) {
-
-
         Spacer(modifier = Modifier.height(16.dp))
 
         if (selectedCrypto == null) {
@@ -66,7 +65,6 @@ fun SellTab(
                             showHint = true,
                             hintText = "Tap to sell"
                         )
-
                     }
                 }
             } else {
@@ -76,17 +74,22 @@ fun SellTab(
             val amount = userAssets[selectedCrypto!!.id] ?: 0.0
             val pricePerUnit = priceUpdates[selectedCrypto!!.id] ?: selectedCrypto!!.priceUsd.toDoubleOrNull() ?: 0.0
             val quantity = cryptoInput.toDoubleOrNull() ?: 0.0
+            val balance = userSession.userData.value?.balance ?: 0.0
+
+            BalanceHeader(balance)
+            Spacer(modifier = Modifier.height(16.dp))
+
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.outline)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Selling ${selectedCrypto!!.name}", style = MaterialTheme.typography.titleMedium)
+                        Text("Selling ${selectedCrypto!!.name}", style = MaterialTheme.typography.titleLarge)
                         TextButton(onClick = {
                             selectedCrypto = null
                             cryptoInput = ""
@@ -107,7 +110,11 @@ fun SellTab(
                         onValueChange = { cryptoInput = it },
                         label = { Text("Crypto amount") },
                         modifier = Modifier.fillMaxWidth(),
-                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                            disabledBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -120,7 +127,9 @@ fun SellTab(
                             }
                         },
                         backgroundColor = MaterialTheme.colorScheme.primary,
-                        textColor = Color.White
+                        textColor = Color.White,
+                        showBorder = false,
+                        fontSize = 20.sp
                     )
                 }
             }

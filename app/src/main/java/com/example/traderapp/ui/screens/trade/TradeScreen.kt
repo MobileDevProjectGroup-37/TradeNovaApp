@@ -16,9 +16,6 @@ import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
 
-// Импорт компонента табов
-import com.example.traderapp.ui.screens.trade.TradeTabSelector
-
 @Composable
 fun TradeScreen(
     navController: NavController,
