@@ -1,3 +1,21 @@
+package com.example.traderapp.ui.screens.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+
 @Composable
 fun PortfolioItem(
     crypto: String,
@@ -9,21 +27,23 @@ fun PortfolioItem(
     showHint: Boolean = false,
     hintText: String = "",
     changePercent: Double = 0.0,
-    compact: Boolean = false // 👈 ключевая добавка
+    compact: Boolean = false
 ) {
     if (compact) {
-        // 🔹 КОМПАКТНЫЙ ВАРИАНТ (для PortfolioSection)
+        // 🔹 КОМПАКТНЫЙ ВАРИАНТ (например, для маленьких карточек)
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 6.dp)
                 .clickable { onClick() },
             shape = MaterialTheme.shapes.medium,
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            )
         ) {
             Row(
                 modifier = Modifier
-                    .padding(horizontal = 12.dp, vertical = 16.dp),
+                    .padding(horizontal = 12.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -31,7 +51,7 @@ fun PortfolioItem(
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription = "$crypto logo",
-                        tint = Color(0xFFF7931A),
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(32.dp)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
@@ -51,16 +71,21 @@ fun PortfolioItem(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = if (changePercent >= 0) "+${String.format("%.2f", changePercent)}%" else "${String.format("%.2f", changePercent)}%",
+                        text = if (changePercent >= 0)
+                            "+${String.format("%.2f", changePercent)}%"
+                        else
+                            "${String.format("%.2f", changePercent)}%",
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (changePercent >= 0) Color(0xFF5DDC71) else Color.Red
+                        color = if (changePercent >= 0)
+                            MaterialTheme.colorScheme.primary
+                        else
+                            MaterialTheme.colorScheme.error
                     )
                 }
             }
         }
-
     } else {
-        // 🔸 ПОДРОБНЫЙ ВАРИАНТ (для BuyTab)
+        // 🔸 ПОДРОБНЫЙ ВАРИАНТ (например, для вкладок Buy/Sell)
         val borderColor = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent
 
         Box(
@@ -86,7 +111,9 @@ fun PortfolioItem(
                     .border(1.5.dp, borderColor, MaterialTheme.shapes.medium),
                 shape = MaterialTheme.shapes.medium,
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
             ) {
                 Column(
                     modifier = Modifier.padding(12.dp),
