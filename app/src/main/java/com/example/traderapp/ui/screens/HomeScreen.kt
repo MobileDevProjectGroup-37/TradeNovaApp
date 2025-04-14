@@ -86,7 +86,6 @@ fun HomeScreen(
                 }
 
                 item {
-                    // 🔹 Один блок портфеля
                     PortfolioCompactSection(
                         data = cryptoList
                             .filter { (userAssets[it.id] ?: 0.0) > 0.0 }

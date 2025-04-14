@@ -1,7 +1,6 @@
 package com.example.traderapp.ui.screens.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -86,29 +85,18 @@ fun PortfolioItem(
         }
     } else {
         // 🔸 ПОДРОБНЫЙ ВАРИАНТ (например, для вкладок Buy/Sell)
-        val borderColor = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent
-
         Box(
             modifier = Modifier
                 .padding(8.dp)
                 .fillMaxWidth()
                 .clickable { onClick() }
         ) {
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .offset(y = 6.dp)
-                    .background(
-                        Color(0xFFD9D9D9).copy(alpha = 0.2f),
-                        shape = MaterialTheme.shapes.medium
-                    )
-            )
+
 
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(4.dp, shape = MaterialTheme.shapes.medium)
-                    .border(1.5.dp, borderColor, MaterialTheme.shapes.medium),
+                    .shadow(4.dp, shape = MaterialTheme.shapes.medium),
                 shape = MaterialTheme.shapes.medium,
                 elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
                 colors = CardDefaults.cardColors(

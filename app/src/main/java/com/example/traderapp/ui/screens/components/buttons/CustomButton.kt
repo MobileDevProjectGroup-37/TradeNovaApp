@@ -13,6 +13,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
 /**
@@ -41,14 +42,21 @@ fun CustomButton(
     paddingNeeded: Boolean = true,
     buttonWidth: Dp = Dp.Unspecified,
     buttonHeight: Dp = 60.dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showBorder: Boolean = true,
+    fontSize: TextUnit = 18.sp,
 ) {
 
     Box(
         modifier = modifier
             .width(buttonWidth)
             .height(buttonHeight)
-            .border(2.dp, textColor, RoundedCornerShape(rounded))
+            .then(
+                if (showBorder)
+                    Modifier.border(2.dp, textColor, RoundedCornerShape(rounded))
+                else
+                    Modifier
+            )
             .padding(0.dp)
     ) {
         Button(
@@ -84,7 +92,7 @@ fun CustomButton(
                         text = text,
                         color = textColor,
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = 18.sp
+                            fontSize = fontSize
                         ),
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )

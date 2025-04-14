@@ -3,6 +3,7 @@ package com.example.traderapp.ui.screens.trade
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,8 +14,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.traderapp.R
+import com.example.traderapp.ui.screens.components.PortfolioBalanceSection
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
@@ -67,8 +70,7 @@ fun ExchangeTab(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Text(stringResource(R.string.exchange_crypto), style = MaterialTheme.typography.titleMedium)
-        Spacer(modifier = Modifier.height(24.dp))
+
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -119,6 +121,7 @@ fun ExchangeTab(
             },
             label = { Text(stringResource(R.string.the_amount)) },
             modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.small.copy(all = CornerSize(12.dp)),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             isError = cryptoInput.toDoubleOrNull() == null,
             supportingText = {
@@ -130,17 +133,19 @@ fun ExchangeTab(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text(stringResource(R.string.the_amount_in_usd))
         OutlinedTextField(
-            value = fiatInput,
-            onValueChange = {
-                fiatInput = it
-                lastChanged = "fiat"
-            },
-            label = { Text(stringResource(R.string.the_amount_in_usd)) },
+            value = cryptoInput,
+            onValueChange = { cryptoInput = it },
+            label = { Text(stringResource(R.string.the_amount_in_usd))},
             modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.small.copy(all = CornerSize(12.dp)),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            enabled = false
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                disabledBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+            )
+
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -154,12 +159,16 @@ fun ExchangeTab(
                         fromAssetId = selectedCryptoFrom!!.id,
                         toAssetId = selectedCryptoTo!!.id,
                         fromAmount = amount,
-                        priceMap = priceUpdates
+                        priceMap = priceUpdates,
+
                     )
                 }
             },
             backgroundColor = MaterialTheme.colorScheme.primary,
-            textColor = Color.White
+            textColor = Color.White,
+            showBorder = false,
+            fontSize = 20.sp
         )
+
     }
 }
