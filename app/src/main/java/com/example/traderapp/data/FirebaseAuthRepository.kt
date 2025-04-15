@@ -55,14 +55,27 @@ class FirebaseAuthRepository @Inject constructor(
             val result = auth.signInWithCredential(credential).await()
             val userId = result.user?.uid ?: return false
 
+            val userRef = db.collection("users").document(userId)
 
-            val user = UserData(result.user?.email ?: "no-email")
-            db.collection("users").document(userId).set(user)
+
+            val snapshot = userRef.get().await()
+            if (!snapshot.exists()) {
+
+                val newUser = UserData(email = result.user?.email ?: "no-email")
+                userRef.set(newUser).await()
+            } else {
+
+                val email = result.user?.email ?: "no-email"
+                userRef.update("email", email).await()
+
+            }
+
             true
         } catch (e: Exception) {
             e.printStackTrace()
             false
         }
     }
+
 }
 

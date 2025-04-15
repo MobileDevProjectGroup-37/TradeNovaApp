@@ -141,7 +141,8 @@ class TradeViewModel @Inject constructor(
             }
         }
     }
-    
+
+    // Safe trafic version
     fun executeTrade(
         type: TradeType,
         assetId: String,
@@ -159,30 +160,32 @@ class TradeViewModel @Inject constructor(
             }
 
             val tradeCost = currentPrice * quantity
+            val currentBalance = _userBalance.value
 
-            val updatedUser = when (type) {
+            val ownedAmount = _userAssets.value[assetId] ?: 0.0
+            val newBalance = when (type) {
                 TradeType.BUY -> {
-                    if (_userBalance.value < tradeCost) {
+                    if (currentBalance < tradeCost) {
                         _tradeError.value = "Not enough balance to complete purchase"
                         return@launch
                     }
-                    val newFiatBalance = _userBalance.value - tradeCost
-                    _userBalance.value = newFiatBalance
-                    user.copy(balance = newFiatBalance, tradeVolume = user.tradeVolume + tradeCost.toInt())
+                    currentBalance - tradeCost
                 }
-
                 TradeType.SELL -> {
-                    val ownedAmount = getUserAssetAmount(assetId)
                     if (ownedAmount < quantity) {
                         _tradeError.value = "Not enough of $assetName to sell"
                         return@launch
                     }
-                    val newFiatBalance = _userBalance.value + tradeCost
-                    _userBalance.value = newFiatBalance
-                    user.copy(balance = newFiatBalance, tradeVolume = user.tradeVolume + tradeCost.toInt())
+                    currentBalance + tradeCost
                 }
             }
 
+            val updatedUser = user.copy(
+                balance = newBalance,
+                tradeVolume = user.tradeVolume + tradeCost.toInt()
+            )
+
+            _userBalance.value = newBalance
             userSession.updateUser(updatedUser)
             updateLocalAssets(type, assetId, quantity)
             recalcPortfolioValue()
@@ -198,26 +201,21 @@ class TradeViewModel @Inject constructor(
             )
 
             try {
-                db.collection("users")
-                    .document(uid)
-                    .collection("trades")
-                    .add(tradeRecord)
-            } catch (e: Exception) {
-                Log.e("TRADE_ERROR", "Failed to save trade history: ${e.message}")
-            }
+                val batch = db.batch()
+                val userRef = db.collection("users").document(uid)
+                val tradeRef = userRef.collection("trades").document()
 
-            try {
-                db.collection("users")
-                    .document(uid)
-                    .set(updatedUser)
+                batch.set(userRef, updatedUser)
+                batch.set(tradeRef, tradeRecord)
+
+                batch.commit().await()
             } catch (e: Exception) {
-                Log.e("TRADE_ERROR", "Failed to update user data: ${e.message}")
+                Log.e("TRADE_ERROR", "Failed to batch write: ${e.message}")
             }
 
             _tradeError.value = null
         }
     }
-
     // endregion
 
     // region === Helpers ===
