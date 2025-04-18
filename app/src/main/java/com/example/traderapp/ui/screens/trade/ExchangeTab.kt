@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.traderapp.R
-import com.example.traderapp.ui.screens.components.PortfolioBalanceSection
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
@@ -113,6 +112,7 @@ fun ExchangeTab(
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(stringResource(R.string.enter_the_amount_of_crypto))
+
         OutlinedTextField(
             value = cryptoInput,
             onValueChange = {
@@ -123,29 +123,42 @@ fun ExchangeTab(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.small.copy(all = CornerSize(12.dp)),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            isError = cryptoInput.toDoubleOrNull() == null,
+            isError = cryptoInput.isNotEmpty() && cryptoInput.toDoubleOrNull() == null,
             supportingText = {
-                if (cryptoInput.toDoubleOrNull() == null) {
+                if (cryptoInput.isNotEmpty() && cryptoInput.toDoubleOrNull() == null) {
                     Text(stringResource(R.string.enter_a_valid_number))
                 }
-            }
+            },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                errorBorderColor = MaterialTheme.colorScheme.error,
+                focusedLabelColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                errorLabelColor = MaterialTheme.colorScheme.error,
+                cursorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = cryptoInput,
-            onValueChange = { cryptoInput = it },
-            label = { Text(stringResource(R.string.the_amount_in_usd))},
+            value = fiatInput,
+            onValueChange = {
+                fiatInput = it
+                lastChanged = "fiat"
+            },
+            label = { Text(stringResource(R.string.the_amount_in_usd)) },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.small.copy(all = CornerSize(12.dp)),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.primary,
-                disabledBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedLabelColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                cursorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
             )
-
         )
 
         Spacer(modifier = Modifier.height(32.dp))

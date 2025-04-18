@@ -15,7 +15,7 @@ import androidx.navigation.NavController
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.TradeType
 import com.example.traderapp.data.network.UserSession
-import com.example.traderapp.ui.screens.components.PortfolioItem
+import com.example.traderapp.ui.screens.portfolio.PortfolioItem
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel

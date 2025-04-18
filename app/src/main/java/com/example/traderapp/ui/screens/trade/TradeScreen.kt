@@ -1,10 +1,12 @@
 package com.example.traderapp.ui.screens.trade
 
+import SetStatusBarColor
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.traderapp.data.network.UserSession
@@ -12,9 +14,9 @@ import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.screens.components.bars.RightIconType
-import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun TradeScreen(
@@ -23,16 +25,17 @@ fun TradeScreen(
     tradeViewModel: TradeViewModel,
     userSession: UserSession,
 ) {
-    TransparentStatusBar()
+    SetStatusBarColor()
+
     var selectedOption by remember { mutableStateOf("Buy") }
 
     Scaffold(
         topBar = {
             AppTopBarHome(
                 navigationIconType = NavigationIconType.BACK,
-                rightIconType = RightIconType.UNION,
+                rightIconType = RightIconType.SETTINGS,
                 onBackClick = { navController.popBackStack() },
-                onRightClick = { /* action */ },
+                onRightClick = { navController.navigate("settings") },
                 title = selectedOption
             )
         },
@@ -46,7 +49,6 @@ fun TradeScreen(
                 .padding(paddingValues)
                 .padding(8.dp)
         ) {
-            // 🔁 Используем наш красивый компонент табов
             TradeTabSelector(
                 selectedOption = selectedOption,
                 onOptionSelected = { selectedOption = it }
