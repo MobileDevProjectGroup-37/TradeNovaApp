@@ -66,6 +66,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-functions-ktx")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
+
     // 🔑 **Google Sign-In**
     implementation(libs.googleid)
 

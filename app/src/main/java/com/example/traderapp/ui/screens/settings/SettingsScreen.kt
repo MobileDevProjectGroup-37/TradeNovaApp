@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -31,29 +32,32 @@ import com.example.traderapp.viewmodel.AuthViewModel
 fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
     TransparentStatusBar()
 
-    // Отслеживаем isLoggedIn
+    // check isLoggedIn
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
-    // Добавляем LaunchedEffect для навигации
+    // add LaunchedEffect for nav
     LaunchedEffect(key1 = isLoggedIn) {
         if (!isLoggedIn) {
-            navController.navigate(Constants.LOGIN_SCREEN_ROUTE) // Используем константу
+            navController.navigate(Constants.LOGIN_SCREEN_ROUTE)
+        } else {
+            authViewModel.loadCurrentEmail()
         }
     }
 
+    val email by authViewModel.email
+
     val userProfile = UserProfile(
         profileImageRes = R.drawable.profile_icon,
-        userName = "John Doe",
-        userEmail = "johndoe@example.com",
-        userId = "12345",
-        isVerified = true
+        userName = " ${email.substringBefore("@")}",
+        userEmail = email,
+        userId = "${email.hashCode()}",
+        isVerified = authViewModel.isUserVerified()
     )
 
     Scaffold(
         topBar = {
             AppTopBarHome(
                 navigationIconType = NavigationIconType.BACK,
-                rightIconType = RightIconType.SEARCH,
                 onBackClick = { navController.popBackStack() },
                 onRightClick = { /* action */ },
                 title = "Settings"
@@ -194,7 +198,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                 CustomButton(
                     text = "Logout",
                     onClick = {
-                        authViewModel.logout() // Вызываем authViewModel.logout()
+                        authViewModel.logout()
                     },
                     backgroundColor = Color.White,
                     textColor = MaterialTheme.colorScheme.primary
