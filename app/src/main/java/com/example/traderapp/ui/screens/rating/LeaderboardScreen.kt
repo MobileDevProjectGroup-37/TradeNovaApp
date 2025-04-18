@@ -1,6 +1,7 @@
 package com.example.traderapp.ui.screens.rating
 
 import LeaderboardItem
+import SetStatusBarColor
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -8,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
@@ -15,6 +17,7 @@ import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.LeaderboardViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -51,7 +54,7 @@ fun LeaderboardScreen(
     viewModel: LeaderboardViewModel
 ) {
     val leaderboard by viewModel.leaderboard.collectAsState()
-    TransparentStatusBar()
+    SetStatusBarColor()
     Scaffold(
         topBar = {
             AppTopBarHome(

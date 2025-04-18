@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.screens
 
+import SetStatusBarColor
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,6 +37,8 @@ fun HomeScreen(
     val priceUpdates by cryptoViewModel.priceUpdates.collectAsState()
     val marketMovers by cryptoViewModel.marketMovers.collectAsState()
     val cryptoList by cryptoViewModel.cryptoList.collectAsState()
+
+    SetStatusBarColor()
 
     LaunchedEffect(Unit) {
         tradeViewModel.loadInitialData(cryptoViewModel)
