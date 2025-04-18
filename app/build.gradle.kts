@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.accompanist.systemuicontroller)
     implementation (libs.ui)
+    implementation ("com.google.zxing:core:3.5.2")
+
     // 🔥 **Firebase (Firestore + Auth + Storage)**
     implementation(platform("com.google.firebase:firebase-bom:32.7.2")) // 📌 Обнови BOM
     implementation("com.google.firebase:firebase-firestore-ktx")

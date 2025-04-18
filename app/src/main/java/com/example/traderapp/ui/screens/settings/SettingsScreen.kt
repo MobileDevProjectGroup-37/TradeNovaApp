@@ -3,12 +3,8 @@ package com.example.traderapp.ui.screens.settings
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -21,6 +17,7 @@ import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.ui.screens.components.cards.UserProfileCard
 import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.AuthViewModel
+
 
 @Composable
 fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
@@ -43,6 +40,8 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
         isVerified = authViewModel.isUserVerified()
     )
 
+    var showQrDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             AppTopBarHome(
@@ -56,6 +55,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
             BottomNavigationBar(navController)
         }
     ) { paddingValues ->
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -63,7 +63,6 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                 .padding(24.dp)
         ) {
             item {
-
                 UserProfileCard(userProfile = userProfile)
                 Spacer(modifier = Modifier.height(12.dp))
             }
@@ -87,7 +86,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                 )
             }
 
-            // 🎨 Account Section
+            // 👤 Account Section
             item {
                 SettingsGroupCard(
                     title = "Account",
@@ -106,7 +105,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                 )
             }
 
-            // ❓ More Section
+            // 📦 More Section
             item {
                 SettingsGroupCard(
                     title = "More",
@@ -114,7 +113,9 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                         SettingsItemData(
                             iconRes = R.drawable.share_icon,
                             text = "Share with friends",
-                            onClick = { /* TODO */ }
+                            onClick = {
+                                showQrDialog = true
+                            }
                         ),
                         SettingsItemData(
                             iconRes = R.drawable.question_icon,
@@ -136,6 +137,14 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
+        }
+
+        // 🔳 QR Code Dialog
+        if (showQrDialog) {
+            ShareQrDialog(
+                onDismiss = { showQrDialog = false },
+                qrText = "https://tradenova.app"
+            )
         }
     }
 }
