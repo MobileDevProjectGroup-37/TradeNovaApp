@@ -1,13 +1,10 @@
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-// --- For alignment, arrangement, spacing
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-// --- Colors (you can place them in a separate Theme file if you prefer)
 import androidx.compose.ui.graphics.Color
-// --- Our custom ViewModel & Data
+import androidx.compose.ui.unit.dp
 import com.example.traderapp.data.model.UserData
 
 @Composable
@@ -15,47 +12,56 @@ fun LeaderboardItem(
     rank: Int,
     userData: UserData
 ) {
-    // Comments in English as requested.
+    val rankColor = if (rank <= 3) Color.Yellow else MaterialTheme.colorScheme.primary
+
+    val profitDisplay = if (userData.profit >= 0.0)
+        "+%.2f".format(userData.profit)
+    else
+        "%.2f".format(userData.profit)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp),
+            .height(IntrinsicSize.Min),
         shape = MaterialTheme.shapes.medium,
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.outline)
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+            verticalArrangement = Arrangement.Center
         ) {
-            // 1) Rank number
-            Text(
-                text = "#$rank",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.width(40.dp)
-            )
 
-            // 2) User main info
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = userData.email, // or userData.username if you have it
+                    text = "#$rank",
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black
+                    color = rankColor
                 )
-                // You could show something else here, e.g. "trade volume" or "balance"
+
+                Text(
+                    text = "$profitDisplay%",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = if (userData.profit >= 0.0)
+                        MaterialTheme.colorScheme.primary
+                    else
+                        MaterialTheme.colorScheme.error
+                )
             }
 
-            // 3) Profit / ROI
+            Spacer(modifier = Modifier.height(6.dp))
+
             Text(
-                text = "${userData.profit}%",
-                style = MaterialTheme.typography.titleLarge,
-                color = if (userData.profit >= 0.0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                text = userData.email,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
 }
+

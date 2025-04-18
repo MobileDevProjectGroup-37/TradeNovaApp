@@ -57,7 +57,8 @@ private val LightColors = lightColorScheme(
     onSurface = LightText,
     error = LightError,
     onError = Color.White,
-    outline = Outline
+    outline = Outline,
+
 )
 
 private val DarkColors = darkColorScheme(

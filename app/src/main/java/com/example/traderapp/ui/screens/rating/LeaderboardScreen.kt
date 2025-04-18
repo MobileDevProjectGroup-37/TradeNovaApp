@@ -11,28 +11,59 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
+import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
-import com.example.traderapp.ui.screens.components.bars.RightIconType
+import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.LeaderboardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
+
+@Composable
+fun LeaderboardHeader() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = "Rank",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = "Email",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = "ROI",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+
 @Composable
 fun LeaderboardScreen(
     navController: NavController,
     viewModel: LeaderboardViewModel
 ) {
     val leaderboard by viewModel.leaderboard.collectAsState()
-
+    TransparentStatusBar()
     Scaffold(
         topBar = {
             AppTopBarHome(
                 navigationIconType = NavigationIconType.BACK,
-                rightIconType = RightIconType.UNION,
                 onBackClick = { navController.popBackStack() },
                 onRightClick = { /* TODO */ },
-                title = "Market"
+                title = "Leaderboard"
             )
         },
+        bottomBar = {
+            BottomNavigationBar(navController)
+        }
     ) { paddingValues ->
         Box(
             modifier = Modifier
@@ -45,17 +76,18 @@ fun LeaderboardScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
             } else {
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .padding(horizontal = 24.dp, vertical = 16.dp)
                 ) {
                     itemsIndexed(leaderboard) { index, user ->
                         LeaderboardItem(
                             rank = index + 1,
                             userData = user
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
                     }
                 }
             }

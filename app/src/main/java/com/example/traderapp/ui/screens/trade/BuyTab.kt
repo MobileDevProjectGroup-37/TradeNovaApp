@@ -58,7 +58,7 @@ fun BuyTab(
         priceUpdates[it.id] ?: it.priceUsd.toDoubleOrNull()
     } ?: 1.0
 
-    // 💱 Перерасчёты
+
     LaunchedEffect(fiatInput, selectedCrypto) {
         selectedCrypto?.let {
             fiatInput.toDoubleOrNull()?.let { amount ->
@@ -116,7 +116,7 @@ fun BuyTab(
                         selected = selectedCrypto?.id == crypto.id,
                         showHint = true,
                         hintText = "Tap to buy",
-                        compact = false // ⬅️ подробный стиль карточки
+                        compact = false
                     )
                 }
             }
