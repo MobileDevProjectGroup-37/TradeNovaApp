@@ -21,7 +21,7 @@ fun MarketHeader() {
             text = "Pair\nUSDT",
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .weight(2.6f)
+                .weight(1.4f)
                 .align(Alignment.CenterVertically)
         )
 
@@ -29,7 +29,7 @@ fun MarketHeader() {
             text = "Last Price",
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .weight(1.8f)
+                .weight(1.5f)
                 .align(Alignment.Bottom)
         )
 
@@ -37,7 +37,7 @@ fun MarketHeader() {
             text = "24H\nChange",
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .weight(1f)
+                .weight(0.6f)
                 .align(Alignment.Bottom)
         )
     }

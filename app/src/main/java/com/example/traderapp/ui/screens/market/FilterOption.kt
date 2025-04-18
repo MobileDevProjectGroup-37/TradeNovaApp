@@ -8,16 +8,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun FilterOption(label: String, isSelected: Boolean, onClick: () -> Unit) {
+    val parts = label.split(" ")
+    val baseText = parts.dropLast(1).joinToString(" ")
+    val arrow = parts.last()
+
     Button(
         onClick = onClick,
         modifier = Modifier
-            .fillMaxWidth(0.65f)
-            .height(56.dp),
+            .fillMaxWidth(0.7f)
+            .height(60.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isSelected)
                 MaterialTheme.colorScheme.primary
@@ -30,7 +37,12 @@ fun FilterOption(label: String, isSelected: Boolean, onClick: () -> Unit) {
         )
     ) {
         Text(
-            text = label,
+            text = buildAnnotatedString {
+                append("$baseText ")
+                withStyle(SpanStyle(fontSize = 30.sp)) {
+                    append(arrow)
+                }
+            },
             fontSize = 18.sp
         )
     }
