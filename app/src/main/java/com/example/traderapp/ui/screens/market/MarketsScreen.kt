@@ -13,7 +13,7 @@ import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.screens.components.bars.RightIconType
-import com.example.traderapp.ui.screens.components.bars.SearchBar // ← вот он!
+import com.example.traderapp.ui.screens.components.bars.SearchBar
 import com.example.traderapp.ui.theme.TransparentStatusBar
 import com.example.traderapp.viewmodel.CryptoViewModel
 
@@ -46,7 +46,7 @@ fun MarketScreen(navController: NavController, viewModel: CryptoViewModel) {
                 .padding(paddingValues)
                 .padding(12.dp)
         ) {
-            // 👇 Переиспользуемый SearchBar
+
             SearchBar(
                 searchQuery = searchQuery,
                 onSearchQueryChanged = { query -> searchQuery = query }

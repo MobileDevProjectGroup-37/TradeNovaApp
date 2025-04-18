@@ -1,9 +1,13 @@
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.traderapp.data.model.UserData
 
@@ -19,6 +23,13 @@ fun LeaderboardItem(
     else
         "%.2f".format(userData.profit)
 
+    val initials = userData.email
+        .takeWhile { it != '@' }      // всё до @
+        .split('.','_','-')           // делим на части
+        .mapNotNull { it.firstOrNull()?.uppercaseChar() }
+        .take(2)
+        .joinToString("")
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -32,7 +43,7 @@ fun LeaderboardItem(
                 .padding(horizontal = 16.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.Center
         ) {
-
+            // Верхняя строка: Rank + ROI
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -56,12 +67,36 @@ fun LeaderboardItem(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            Text(
-                text = userData.email,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            // Нижняя строка: аватар + email
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Аватар-инициалы
+                Box(
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = initials,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // Email
+                Text(
+                    text = userData.email,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
     }
 }
-

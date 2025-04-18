@@ -26,7 +26,6 @@ fun PortfolioItem(
     compact: Boolean = false
 ) {
     if (compact) {
-        // 🔹 КОМПАКТНЫЙ ВАРИАНТ (например, для маленьких карточек)
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,15 +80,12 @@ fun PortfolioItem(
             }
         }
     } else {
-        // 🔸 ПОДРОБНЫЙ ВАРИАНТ (например, для вкладок Buy/Sell)
         Box(
             modifier = Modifier
-                .padding(8.dp)
+                .padding(horizontal = 4.dp, vertical = 8.dp)
                 .fillMaxWidth()
                 .clickable { onClick() }
         ) {
-
-
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -114,7 +110,6 @@ fun PortfolioItem(
                     usdValue?.let {
                         Text("Total value: \$$it")
                     }
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,

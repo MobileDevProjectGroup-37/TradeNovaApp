@@ -35,7 +35,7 @@ fun SearchBar(
             .padding(bottom = 16.dp)
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colorScheme.outline,
                 shape = RoundedCornerShape(16.dp)
             ),
         colors = TextFieldDefaults.textFieldColors(
