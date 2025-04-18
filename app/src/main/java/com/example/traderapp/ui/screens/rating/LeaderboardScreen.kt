@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens
+package com.example.traderapp.ui.screens.rating
 
 import LeaderboardItem
 import androidx.compose.foundation.layout.*

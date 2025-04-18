@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components.onboarding
+package com.example.traderapp.ui.screens.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height

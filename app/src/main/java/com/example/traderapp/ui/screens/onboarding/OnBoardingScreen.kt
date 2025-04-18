@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens
+package com.example.traderapp.ui.screens.onboarding
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.rememberPagerState
@@ -18,8 +18,6 @@ import androidx.navigation.NavController
 import com.example.traderapp.R
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
-import com.example.traderapp.ui.screens.components.onboarding.OnBoardingDots
-import com.example.traderapp.ui.screens.components.onboarding.OnBoardingPager
 import com.example.traderapp.viewmodel.OnBoardingViewModel
 import kotlinx.coroutines.flow.collectLatest
 import androidx.compose.ui.res.stringResource

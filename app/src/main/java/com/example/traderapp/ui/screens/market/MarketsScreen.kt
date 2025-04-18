@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens
+package com.example.traderapp.ui.screens.market
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,7 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.traderapp.ui.screens.components.CryptoItem
+import com.example.traderapp.ui.screens.components.cards.CryptoItem
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType

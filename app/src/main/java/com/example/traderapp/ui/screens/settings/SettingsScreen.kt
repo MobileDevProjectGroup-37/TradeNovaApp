@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens
+package com.example.traderapp.ui.screens.settings
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.traderapp.R
-import com.example.traderapp.ui.screens.components.SettingsCard
-import com.example.traderapp.ui.screens.components.SettingsItemData
-import com.example.traderapp.ui.screens.components.UserProfile
-import com.example.traderapp.ui.screens.components.UserProfileCard
+import com.example.traderapp.ui.screens.components.cards.SettingsCard
+import com.example.traderapp.ui.screens.components.cards.SettingsItemData
+import com.example.traderapp.data.model.UserProfile
+import com.example.traderapp.ui.screens.components.cards.UserProfileCard
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType

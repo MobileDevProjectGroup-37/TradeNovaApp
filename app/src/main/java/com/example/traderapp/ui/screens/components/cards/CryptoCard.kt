@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components
+package com.example.traderapp.ui.screens.components.cards
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

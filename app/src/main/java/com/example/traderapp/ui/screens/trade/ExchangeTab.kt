@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.traderapp.R
-import com.example.traderapp.ui.screens.components.PortfolioBalanceSection
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel

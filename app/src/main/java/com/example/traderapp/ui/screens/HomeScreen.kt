@@ -11,8 +11,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.traderapp.R
 import com.example.traderapp.data.network.UserSession
-import com.example.traderapp.ui.screens.components.*
 import com.example.traderapp.ui.screens.components.bars.*
+import com.example.traderapp.ui.screens.market.MarketMoversSection
+import com.example.traderapp.ui.screens.portfolio.PortfolioBalanceSection
+import com.example.traderapp.ui.screens.portfolio.PortfolioCompactData
+import com.example.traderapp.ui.screens.portfolio.PortfolioCompactSection
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
 

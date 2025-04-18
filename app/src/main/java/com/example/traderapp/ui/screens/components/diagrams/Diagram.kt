@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components
+package com.example.traderapp.ui.screens.components.diagrams
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

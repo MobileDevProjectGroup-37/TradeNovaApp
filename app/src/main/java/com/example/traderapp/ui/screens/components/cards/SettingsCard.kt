@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components
+package com.example.traderapp.ui.screens.components.cards
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-
+import com.example.traderapp.ui.screens.portfolio.SettingsItem
 
 
 @Composable

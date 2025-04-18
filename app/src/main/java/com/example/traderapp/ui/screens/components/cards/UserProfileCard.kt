@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components
+package com.example.traderapp.ui.screens.components.cards
 
 
 import androidx.compose.foundation.Image
@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import com.example.traderapp.data.model.UserProfile
 
 @Composable
 fun UserProfileCard(userProfile: UserProfile) {

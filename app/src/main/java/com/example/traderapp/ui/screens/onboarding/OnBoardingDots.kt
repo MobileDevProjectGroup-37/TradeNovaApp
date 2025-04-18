@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components.onboarding
+package com.example.traderapp.ui.screens.onboarding
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

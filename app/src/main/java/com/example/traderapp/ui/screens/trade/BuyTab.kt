@@ -26,7 +26,7 @@ import com.example.traderapp.R
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.TradeType
 import com.example.traderapp.data.network.UserSession
-import com.example.traderapp.ui.screens.components.PortfolioItem
+import com.example.traderapp.ui.screens.portfolio.PortfolioItem
 import com.example.traderapp.ui.screens.components.bars.SearchBar
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.viewmodel.CryptoViewModel

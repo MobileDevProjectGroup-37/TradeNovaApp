@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components
+package com.example.traderapp.ui.screens.market
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow

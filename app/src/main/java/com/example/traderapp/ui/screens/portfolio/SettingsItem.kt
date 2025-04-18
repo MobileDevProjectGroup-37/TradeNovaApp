@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components
+package com.example.traderapp.ui.screens.portfolio
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
