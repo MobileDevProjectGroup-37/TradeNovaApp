@@ -46,6 +46,7 @@ fun SettingsScreen(
 
     var showQrDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showSupportDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -71,7 +72,6 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(12.dp))
             }
 
-            // Security Section
             item {
                 SettingsGroupCard(
                     title = "Security Settings",
@@ -89,7 +89,7 @@ fun SettingsScreen(
                     )
                 )
             }
-            // Account Section
+
             item {
                 SettingsGroupCard(
                     title = "Account",
@@ -107,7 +107,7 @@ fun SettingsScreen(
                     )
                 )
             }
-            // More Section
+
             item {
                 SettingsGroupCard(
                     title = "More",
@@ -120,13 +120,12 @@ fun SettingsScreen(
                         SettingsItemData(
                             iconRes = R.drawable.question_icon,
                             text = "Support",
-                            onClick = { /* TODO */ }
+                            onClick = { showSupportDialog = true }
                         )
                     )
                 )
             }
 
-            // Logout
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 CustomButton(
@@ -139,7 +138,6 @@ fun SettingsScreen(
             }
         }
 
-        // QR Dialog
         if (showQrDialog) {
             ShareQrDialog(
                 onDismiss = { showQrDialog = false },
@@ -147,7 +145,6 @@ fun SettingsScreen(
             )
         }
 
-        // Theme Dialog
         if (showThemeDialog) {
             ThemeChooserDialog(
                 currentTheme = themeViewModel.theme.collectAsState().value,
@@ -155,6 +152,25 @@ fun SettingsScreen(
                     themeViewModel.setTheme(it)
                 },
                 onDismiss = { showThemeDialog = false }
+            )
+        }
+
+        if (showSupportDialog) {
+            AlertDialog(
+                onDismissRequest = { showSupportDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showSupportDialog = false }) {
+                        Text("OK")
+                    }
+                },
+                title = { Text("Support") },
+                text = {
+                    Column {
+                        Text("✉️ Email: support@tradenova.app")
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("🕐 Hours: Mon–Fri, 9:00–18:00")
+                    }
+                }
             )
         }
     }
