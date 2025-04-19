@@ -78,6 +78,7 @@ dependencies {
 
     // 📌 **Hilt + DI**
     implementation("com.google.dagger:hilt-android:2.50")
+    implementation(libs.rendering)
     //implementation(libs.firebase.functions)
     kapt(libs.hilt.compiler) // 📌 Обязательно!
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")

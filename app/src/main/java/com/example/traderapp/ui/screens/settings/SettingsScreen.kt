@@ -17,13 +17,17 @@ import com.example.traderapp.ui.screens.components.buttons.CustomButton
 import com.example.traderapp.ui.screens.components.cards.UserProfileCard
 import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.AuthViewModel
-
+import com.example.traderapp.viewmodel.ThemeViewModel
 
 @Composable
-fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
+fun SettingsScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel = viewModel(),
+    themeViewModel: ThemeViewModel
+) {
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
-    LaunchedEffect(key1 = isLoggedIn) {
+    LaunchedEffect(isLoggedIn) {
         if (!isLoggedIn) {
             navController.navigate(Constants.LOGIN_SCREEN_ROUTE)
         } else {
@@ -41,6 +45,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
     )
 
     var showQrDialog by remember { mutableStateOf(false) }
+    var showThemeDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -55,7 +60,6 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
             BottomNavigationBar(navController)
         }
     ) { paddingValues ->
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -67,7 +71,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                 Spacer(modifier = Modifier.height(12.dp))
             }
 
-            // 🔐 Security Section
+            // Security Section
             item {
                 SettingsGroupCard(
                     title = "Security Settings",
@@ -85,8 +89,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                     )
                 )
             }
-
-            // 👤 Account Section
+            // Account Section
             item {
                 SettingsGroupCard(
                     title = "Account",
@@ -94,7 +97,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                         SettingsItemData(
                             iconRes = R.drawable.theme_icon,
                             text = "Theme",
-                            onClick = { /* TODO */ }
+                            onClick = { showThemeDialog = true }
                         ),
                         SettingsItemData(
                             iconRes = R.drawable.notification,
@@ -104,8 +107,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                     )
                 )
             }
-
-            // 📦 More Section
+            // More Section
             item {
                 SettingsGroupCard(
                     title = "More",
@@ -113,9 +115,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                         SettingsItemData(
                             iconRes = R.drawable.share_icon,
                             text = "Share with friends",
-                            onClick = {
-                                showQrDialog = true
-                            }
+                            onClick = { showQrDialog = true }
                         ),
                         SettingsItemData(
                             iconRes = R.drawable.question_icon,
@@ -126,7 +126,7 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
                 )
             }
 
-            // 🚪 Logout
+            // Logout
             item {
                 Spacer(modifier = Modifier.height(16.dp))
                 CustomButton(
@@ -139,11 +139,22 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
             }
         }
 
-        // 🔳 QR Code Dialog
+        // QR Dialog
         if (showQrDialog) {
             ShareQrDialog(
                 onDismiss = { showQrDialog = false },
                 qrText = "https://tradenova.app"
+            )
+        }
+
+        // Theme Dialog
+        if (showThemeDialog) {
+            ThemeChooserDialog(
+                currentTheme = themeViewModel.theme.collectAsState().value,
+                onThemeSelected = {
+                    themeViewModel.setTheme(it)
+                },
+                onDismiss = { showThemeDialog = false }
             )
         }
     }

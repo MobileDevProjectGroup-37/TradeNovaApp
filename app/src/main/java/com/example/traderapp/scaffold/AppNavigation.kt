@@ -24,6 +24,7 @@ import com.example.traderapp.viewmodel.AuthViewModel
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.LeaderboardViewModel
 import com.example.traderapp.viewmodel.OnBoardingViewModel
+import com.example.traderapp.viewmodel.ThemeViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
 
 @Composable
@@ -37,6 +38,8 @@ fun AppNavigation() {
     val userSession = userSessionViewModel.userSession
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
     val leaderboardViewModel: LeaderboardViewModel = hiltViewModel()
+    val themeViewModel: ThemeViewModel = hiltViewModel()
+
     Scaffold(
         topBar = {
             val currentRoute = navController.currentDestination?.route
@@ -104,7 +107,11 @@ fun AppNavigation() {
                 RegisterScreen(navController, authViewModel)
             }
             composable(Constants.SETTINGS_SCREEN_ROUTE) {
-                SettingsScreen(navController, authViewModel)
+                SettingsScreen(
+                    navController = navController,
+                    authViewModel = authViewModel,
+                    themeViewModel = themeViewModel
+                )
             }
             composable(Constants.LEADERBOARD_SCREEN_ROUTE) {
                 LeaderboardScreen(navController, leaderboardViewModel)
