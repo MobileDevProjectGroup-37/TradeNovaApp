@@ -9,6 +9,7 @@ import com.example.traderapp.data.network.WebSocketClient
 import com.example.traderapp.utils.AuthPreferences
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.functions.functions
 import com.google.firebase.functions.ktx.functions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -171,5 +172,16 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
+    fun loadCurrentEmail() {
+        val currentEmail = FirebaseAuth.getInstance().currentUser?.email
+        if (!currentEmail.isNullOrBlank()) {
+            email.value = currentEmail
+        }
+    }
+    fun isUserVerified(): Boolean {
+        return FirebaseAuth.getInstance().currentUser?.isEmailVerified ?: false
+    }
+
+
 
 }

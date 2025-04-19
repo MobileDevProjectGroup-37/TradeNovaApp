@@ -3,59 +3,57 @@ package com.example.traderapp.ui.screens.settings
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.traderapp.R
-import com.example.traderapp.ui.screens.components.cards.SettingsCard
-import com.example.traderapp.ui.screens.components.cards.SettingsItemData
 import com.example.traderapp.data.model.UserProfile
-import com.example.traderapp.ui.screens.components.cards.UserProfileCard
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
-import com.example.traderapp.ui.screens.components.bars.RightIconType
 import com.example.traderapp.ui.screens.components.buttons.CustomButton
-import com.example.traderapp.ui.theme.TransparentStatusBar
-import com.example.traderapp.utils.Constants // Импортируем Constants
+import com.example.traderapp.ui.screens.components.cards.UserProfileCard
+import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.AuthViewModel
+import com.example.traderapp.viewmodel.ThemeViewModel
 
 @Composable
-fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = viewModel()) {
-    TransparentStatusBar()
-
-    // Отслеживаем isLoggedIn
+fun SettingsScreen(
+    navController: NavController,
+    authViewModel: AuthViewModel = viewModel(),
+    themeViewModel: ThemeViewModel
+) {
     val isLoggedIn by authViewModel.isLoggedIn.collectAsState()
 
-    // Добавляем LaunchedEffect для навигации
-    LaunchedEffect(key1 = isLoggedIn) {
+    LaunchedEffect(isLoggedIn) {
         if (!isLoggedIn) {
-            navController.navigate(Constants.LOGIN_SCREEN_ROUTE) // Используем константу
+            navController.navigate(Constants.LOGIN_SCREEN_ROUTE)
+        } else {
+            authViewModel.loadCurrentEmail()
         }
     }
 
+    val email by authViewModel.email
     val userProfile = UserProfile(
         profileImageRes = R.drawable.profile_icon,
-        userName = "John Doe",
-        userEmail = "johndoe@example.com",
-        userId = "12345",
-        isVerified = true
+        userName = " ${email.substringBefore("@")}",
+        userEmail = email,
+        userId = "${email.hashCode()}",
+        isVerified = authViewModel.isUserVerified()
     )
+
+    var showQrDialog by remember { mutableStateOf(false) }
+    var showThemeDialog by remember { mutableStateOf(false) }
+    var showSupportDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             AppTopBarHome(
                 navigationIconType = NavigationIconType.BACK,
-                rightIconType = RightIconType.SEARCH,
                 onBackClick = { navController.popBackStack() },
-                onRightClick = { /* action */ },
+                onRightClick = {},
                 title = "Settings"
             )
         },
@@ -67,141 +65,113 @@ fun SettingsScreen(navController: NavController, authViewModel: AuthViewModel = 
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp)
+                .padding(24.dp)
         ) {
-
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
             item {
                 UserProfileCard(userProfile = userProfile)
-            }
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(12.dp))
             }
 
             item {
-                Text(text = "Security Settings", fontSize = 20.sp, color = Color.Black)
-            }
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            item {
-                SettingsCard(
+                SettingsGroupCard(
+                    title = "Security Settings",
                     items = listOf(
-                        SettingsItemData(
-                            iconRes = R.drawable.profile_icon,
-                            text = "Profile",
-                            onClick = { /* Handle click for Privacy */ }
-                        ),
                         SettingsItemData(
                             iconRes = R.drawable.security_icon,
-                            text = "Security",
-                            onClick = { /* Handle click for Security */ }
-                        )
-                    )
-                )
-            }
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            item {
-                Text(text = "Finance", fontSize = 20.sp, color = Color.Black)
-            }
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            item {
-                SettingsCard(
-                    items = listOf(
-                        SettingsItemData(
-                            iconRes = R.drawable.history_icon,
-                            text = "History",
-                            onClick = { /* Handle click for Privacy */ }
+                            text = "Change Password",
+                            onClick = { /* TODO */ }
                         ),
                         SettingsItemData(
-                            iconRes = R.drawable.limits_icon,
-                            text = "Limits",
-                            onClick = { /* Handle click for Security */ }
+                            iconRes = R.drawable.history_icon,
+                            text = "Login History",
+                            onClick = { /* TODO */ }
                         )
                     )
                 )
             }
 
             item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            item {
-                Text(text = "Account", fontSize = 20.sp, color = Color.Black)
-            }
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            item {
-                SettingsCard(
+                SettingsGroupCard(
+                    title = "Account",
                     items = listOf(
                         SettingsItemData(
                             iconRes = R.drawable.theme_icon,
                             text = "Theme",
-                            onClick = { /* Handle click for Privacy */ }
+                            onClick = { showThemeDialog = true }
                         ),
                         SettingsItemData(
                             iconRes = R.drawable.notification,
                             text = "Notification",
-                            onClick = { /* Handle click for Security */ }
+                            onClick = { /* TODO */ }
                         )
                     )
                 )
             }
 
             item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            item {
-                Text(text = "More", fontSize = 20.sp, color = Color.Black)
-            }
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-            item {
-                SettingsCard(
+                SettingsGroupCard(
+                    title = "More",
                     items = listOf(
-                        SettingsItemData(
-                            iconRes = R.drawable.bonus_icon,
-                            text = "My bonus",
-                            onClick = { /* Handle click for Privacy */ }
-                        ),
                         SettingsItemData(
                             iconRes = R.drawable.share_icon,
                             text = "Share with friends",
-                            onClick = { /* Handle click for Security */ }
+                            onClick = { showQrDialog = true }
                         ),
                         SettingsItemData(
                             iconRes = R.drawable.question_icon,
                             text = "Support",
-                            onClick = { /* Handle click for Security */ }
+                            onClick = { showSupportDialog = true }
                         )
                     )
                 )
             }
+
             item {
                 Spacer(modifier = Modifier.height(16.dp))
-            }
-            item {
                 CustomButton(
                     text = "Logout",
-                    onClick = {
-                        authViewModel.logout() // Вызываем authViewModel.logout()
-                    },
-                    backgroundColor = Color.White,
-                    textColor = MaterialTheme.colorScheme.primary
+                    onClick = { authViewModel.logout() },
+                    backgroundColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.colorScheme.outline
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
 
+        if (showQrDialog) {
+            ShareQrDialog(
+                onDismiss = { showQrDialog = false },
+                qrText = "https://tradenova.app"
+            )
+        }
+
+        if (showThemeDialog) {
+            ThemeChooserDialog(
+                currentTheme = themeViewModel.theme.collectAsState().value,
+                onThemeSelected = {
+                    themeViewModel.setTheme(it)
+                },
+                onDismiss = { showThemeDialog = false }
+            )
+        }
+
+        if (showSupportDialog) {
+            AlertDialog(
+                onDismissRequest = { showSupportDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showSupportDialog = false }) {
+                        Text("OK")
+                    }
+                },
+                title = { Text("Support") },
+                text = {
+                    Column {
+                        Text("✉️ Email: support@tradenova.app")
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("🕐 Hours: Mon–Fri, 9:00–18:00")
+                    }
+                }
+            )
+        }
     }
 }

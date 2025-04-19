@@ -37,6 +37,7 @@ ui = "1.7.8"
 firebaseFunctions = "21.2.0"
 firebaseFunctionsKtx = "21.2.0"
 firebaseAppcheckDebug = "18.0.0"
+rendering = "1.17.1"
 
 [libraries]
 
@@ -86,6 +87,7 @@ ui = { module = "androidx.compose.ui:ui", version.ref = "ui" }
 firebase-functions = { group = "com.google.firebase", name = "firebase-functions", version.ref = "firebaseFunctions" }
 firebase-functions-ktx = { group = "com.google.firebase", name = "firebase-functions-ktx", version.ref = "firebaseFunctionsKtx" }
 firebase-appcheck-debug = { group = "com.google.firebase", name = "firebase-appcheck-debug", version.ref = "firebaseAppcheckDebug" }
+rendering = { group = "com.google.ar.sceneform", name = "rendering", version.ref = "rendering" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

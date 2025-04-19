@@ -1,4 +1,4 @@
-package com.example.traderapp.ui.screens.components.cards
+package com.example.traderapp.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,12 +22,12 @@ fun SettingsCard(items: List<SettingsItemData>) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            // Проходим по всем элементам и создаем их
+        Column(modifier = Modifier.padding(12.dp)) {
+
             items.forEachIndexed { index, item ->
                 SettingsItem(iconRes = item.iconRes, text = item.text, onClick = item.onClick)
                 if (index < items.size - 1) {
-                    Divider()  // Разделитель между элементами, но не в конце
+                    Divider()
                 }
             }
         }

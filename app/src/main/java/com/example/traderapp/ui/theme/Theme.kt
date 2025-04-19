@@ -1,7 +1,6 @@
 package com.example.traderapp.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
@@ -16,7 +15,6 @@ import androidx.compose.ui.unit.sp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 /********************************
- *  Цветовые константы (Light)
  ********************************/
 val LightBackground = Color(0xFFF8F9FC)  // #F8F9FC
 val LightSurface    = Color(0xFFFFFFFF) // #FFFFFF
@@ -30,7 +28,6 @@ val LightError      = Color(0xFFCD0000)
 val Outline         = Color(0xFFD7D9E4)
 
 /********************************
- *  Цветовые константы (Dark)
  ********************************/
 val DarkBackground = Color(0xFF090D16)  // #0D0D16
 val DarkSurface    = Color(0xFF22283A) // #22283A
@@ -44,7 +41,7 @@ val DarkError      = Color(0xFFFF6666)
 val DarkOutline    = Color(0xFF3D455C)
 
 /********************************
- *   Light / Dark палитры
+ *   Light / Dark
  ********************************/
 private val LightColors = lightColorScheme(
     primary = LightPrimary,
@@ -76,7 +73,7 @@ private val DarkColors = darkColorScheme(
 )
 
 /********************************
- *   Типографика (пример)
+Typography
  ********************************/
 val TradeNovaTypography = Typography(
     displayLarge = TextStyle(
@@ -98,24 +95,31 @@ val TradeNovaTypography = Typography(
         fontSize = 14.sp,
         fontFamily = FontFamily.SansSerif
     )
-    // При необходимости добавьте другие стили
+
 )
 
 /********************************
- *   Тема (Composable)
+ *   Theme (Composable)
  ********************************/
 @Composable
 fun TraderAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    appTheme: AppTheme = AppTheme.SystemDefault,
     content: @Composable () -> Unit
 ) {
-    val colors: ColorScheme = if (darkTheme) DarkColors else LightColors
+    val isDarkTheme = when (appTheme) {
+        AppTheme.Light -> false
+        AppTheme.Dark -> true
+        AppTheme.SystemDefault -> isSystemInDarkTheme()
+    }
+
+    val colorScheme = if (isDarkTheme) DarkColors else LightColors
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = colorScheme,
         typography = TradeNovaTypography,
         content = content
     )
+
 }
 
 @Composable

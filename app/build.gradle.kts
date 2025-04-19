@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.accompanist.systemuicontroller)
     implementation (libs.ui)
+    implementation ("com.google.zxing:core:3.5.2")
+
     // 🔥 **Firebase (Firestore + Auth + Storage)**
     implementation(platform("com.google.firebase:firebase-bom:32.7.2")) // 📌 Обнови BOM
     implementation("com.google.firebase:firebase-firestore-ktx")
@@ -66,6 +68,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx")
     implementation("com.google.firebase:firebase-functions-ktx")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
+
     // 🔑 **Google Sign-In**
     implementation(libs.googleid)
 
@@ -75,6 +78,7 @@ dependencies {
 
     // 📌 **Hilt + DI**
     implementation("com.google.dagger:hilt-android:2.50")
+    implementation(libs.rendering)
     //implementation(libs.firebase.functions)
     kapt(libs.hilt.compiler) // 📌 Обязательно!
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
