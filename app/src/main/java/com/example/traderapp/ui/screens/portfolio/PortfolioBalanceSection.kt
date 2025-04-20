@@ -1,7 +1,7 @@
 package com.example.traderapp.ui.screens.portfolio
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
+import android.graphics.Color
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -11,7 +11,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.traderapp.ui.screens.components.texts.SubTitle
+import com.example.traderapp.viewmodel.BalancePoint
+import com.example.traderapp.viewmodel.PortfolioViewModel
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
+import java.text.SimpleDateFormat
+import java.util.*
 
 @SuppressLint("DefaultLocale")
 @Composable
@@ -20,6 +32,9 @@ fun PortfolioBalanceSection(
     percentageChange: Double,
     isLoading: Boolean
 ) {
+    val portfolioViewModel: PortfolioViewModel = viewModel()
+    portfolioViewModel.trackBalance(balance)
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,14 +67,71 @@ fun PortfolioBalanceSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .background(MaterialTheme.colorScheme.surfaceVariant),
-            contentAlignment = Alignment.Center
-        ) {
-            Text("Graph Placeholder", color = MaterialTheme.colorScheme.onSurface)
-        }
+        BalanceLineChart(balanceHistory = portfolioViewModel.balanceHistory)
     }
+}
+
+@Composable
+fun BalanceLineChart(balanceHistory: List<BalancePoint>) {
+    AndroidView(factory = { context ->
+        LineChart(context).apply {
+            val entries = balanceHistory.mapIndexed { index, point ->
+                Entry(index.toFloat(), point.balance.toFloat())
+            }
+
+            val dataSet = LineDataSet(entries, "Balance History").apply {
+                color = Color.GREEN
+                setDrawValues(false)
+                setDrawCircles(false)
+                lineWidth = 3f // ⬆ толщина линии
+            }
+
+            data = LineData(dataSet)
+
+            description.isEnabled = false
+            axisRight.isEnabled = false
+            legend.isEnabled = false
+
+            // Ось Y
+            val minY = entries.minOfOrNull { it.y } ?: 0f
+            val maxY = entries.maxOfOrNull { it.y } ?: 0f
+            axisLeft.textColor = Color.WHITE
+            axisLeft.textSize = 14f // ⬆ увеличенный шрифт
+            axisLeft.axisMinimum = minY - 2f
+            axisLeft.axisMaximum = maxY + 2f
+
+            // Ось X
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawLabels(true)
+                granularity = 1f
+                textColor = Color.WHITE
+                textSize = 14f // ⬆ увеличенный шрифт
+                setLabelRotationAngle(0f)
+
+                valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        val index = value.toInt()
+                        return if (index in balanceHistory.indices) {
+                            val time = balanceHistory[index].timestamp
+                            val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+                            formatter.format(Date(time))
+                        } else ""
+                    }
+                }
+            }
+
+            // Прокрутка
+            isDragEnabled = true
+            setScaleEnabled(false)
+            setVisibleXRangeMaximum(6f)
+            moveViewToX(entries.size.toFloat())
+
+            invalidate()
+        }
+    },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(280.dp) // ⬆ увеличена высота графика
+    )
 }
