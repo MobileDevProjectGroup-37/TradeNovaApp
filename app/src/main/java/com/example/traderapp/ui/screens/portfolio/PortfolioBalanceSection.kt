@@ -116,12 +116,15 @@ fun BalanceLineChart(
                 textSize = 14f
                 setLabelRotationAngle(0f)
 
+                // Показываем только каждую N-ую метку
+                val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
+                val step = maxOf(1, balanceHistory.size / 6)
+
                 valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         val index = value.toInt()
-                        return if (index in balanceHistory.indices) {
+                        return if (index in balanceHistory.indices && index % step == 0) {
                             val time = balanceHistory[index].timestamp
-                            val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
                             formatter.format(Date(time))
                         } else ""
                     }
