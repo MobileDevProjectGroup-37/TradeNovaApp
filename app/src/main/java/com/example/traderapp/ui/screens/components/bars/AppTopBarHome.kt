@@ -51,7 +51,8 @@ fun AppTopBarHome(
                         Icon(
                             painter = painterResource(id = R.drawable.custom_arrow_back),
                             contentDescription = "Back",
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -60,7 +61,8 @@ fun AppTopBarHome(
                         Icon(
                             painter = painterResource(id = R.drawable.profile_icon),
                             contentDescription = "Profile",
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -69,7 +71,8 @@ fun AppTopBarHome(
                         Icon(
                             painter = painterResource(id = R.drawable.setting_icon),
                             contentDescription = "Settings",
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -83,7 +86,8 @@ fun AppTopBarHome(
                         Icon(
                             painter = painterResource(id = R.drawable.setting_icon),
                             contentDescription = "Settings",
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -92,7 +96,8 @@ fun AppTopBarHome(
                         Icon(
                             painter = painterResource(id = R.drawable.trade_icon),
                             contentDescription = "Trade",
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -101,7 +106,8 @@ fun AppTopBarHome(
                         Icon(
                             painter = painterResource(id = R.drawable.mail_icon),
                             contentDescription = "Notifications",
-                            modifier = Modifier.size(28.dp)
+                            modifier = Modifier.size(28.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -110,7 +116,8 @@ fun AppTopBarHome(
                         Icon(
                             painter = painterResource(id = R.drawable.union_icon),
                             contentDescription = "Union",
-                            modifier = Modifier.size(26.dp)
+                            modifier = Modifier.size(26.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -119,18 +126,16 @@ fun AppTopBarHome(
                         Icon(
                             painter = painterResource(id = R.drawable.search_icon),
                             contentDescription = "Search",
-                            modifier = Modifier.size(26.dp)
+                            modifier = Modifier.size(26.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
-
-
             }
         },
         modifier = Modifier.height(64.dp)
     )
 }
-
 
 enum class NavigationIconType {
     BACK,
@@ -138,11 +143,10 @@ enum class NavigationIconType {
     PROFILE
 }
 
-
 enum class RightIconType {
     NONE,
     SETTINGS,
-   TRADE,
+    TRADE,
     NOTIFICATIONS,
     UNION,
     SEARCH

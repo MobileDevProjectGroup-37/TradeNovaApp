@@ -11,12 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.traderapp.R
+import com.example.traderapp.data.model.UserProfileHolder
+import com.example.traderapp.data.model.toUserProfile
 import com.example.traderapp.data.network.UserSession
 import com.example.traderapp.ui.screens.components.bars.*
 import com.example.traderapp.ui.screens.market.MarketMoversSection
 import com.example.traderapp.ui.screens.portfolio.PortfolioBalanceSection
 import com.example.traderapp.ui.screens.portfolio.PortfolioCompactData
 import com.example.traderapp.ui.screens.portfolio.PortfolioCompactSection
+import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.CryptoViewModel
 import com.example.traderapp.viewmodel.TradeViewModel
 
@@ -38,6 +41,12 @@ fun HomeScreen(
     val marketMovers by cryptoViewModel.marketMovers.collectAsState()
     val cryptoList by cryptoViewModel.cryptoList.collectAsState()
 
+    val userData by userSession.userData.collectAsState()
+    val repository = cryptoViewModel.repository
+
+    val userProfile = userData?.toUserProfile()
+
+
     SetStatusBarColor()
 
     LaunchedEffect(Unit) {
@@ -49,8 +58,16 @@ fun HomeScreen(
             AppTopBarHome(
                 navigationIconType = NavigationIconType.PROFILE,
                 rightIconType = RightIconType.SETTINGS,
-                onBackClick = { /* back */ },
-                onRightClick = { navController.navigate("settings") },
+                onBackClick = {
+                    userProfile?.let {
+                        UserProfileHolder.profile = it
+                        navController.navigate(Constants.PROFILE_SCREEN_ROUTE)
+
+                    }
+                },
+                onRightClick = {
+                    navController.navigate(Constants.SETTINGS_SCREEN_ROUTE)
+                },
                 logoResId = R.drawable.logo_topbar,
                 logoSize = 200.dp
             )
@@ -87,7 +104,8 @@ fun HomeScreen(
                 item {
                     MarketMoversSection(
                         marketMovers = marketMovers,
-                        priceUpdates = priceUpdates
+                        priceUpdates = priceUpdates,
+                        repository = repository
                     )
                 }
 

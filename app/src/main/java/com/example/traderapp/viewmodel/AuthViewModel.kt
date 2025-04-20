@@ -34,6 +34,8 @@ class AuthViewModel @Inject constructor(
     var validationError = mutableStateOf<String?>(null)
     var touchIdEnabled = mutableStateOf(false)
     var confirmPassword = mutableStateOf("")
+    val userData = userSession.userData
+
 
     // State to track if the user is logged in
     private val _isLoggedIn = MutableStateFlow(authRepository.getIsAuthenticatedFlow().value)

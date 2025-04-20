@@ -6,6 +6,8 @@ object Constants {
     const val LOGIN_SCREEN_ROUTE = "login"
     const val ONBOARDING_SCREEN_ROUTE = "onboarding"
     const val SETTINGS_SCREEN_ROUTE = "settings"
+    const val PROFILE_SCREEN_ROUTE = "profile"
+
 
     // Routes for registration and authentication
     const val REGISTER_SCREEN_ROUTE = "register"

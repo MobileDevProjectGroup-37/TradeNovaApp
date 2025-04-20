@@ -9,7 +9,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.traderapp.R
-import com.example.traderapp.data.model.UserProfile
+import com.example.traderapp.data.model.SettingsItemData
+import com.example.traderapp.data.model.toUserProfile
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
@@ -35,18 +36,15 @@ fun SettingsScreen(
         }
     }
 
-    val email by authViewModel.email
-    val userProfile = UserProfile(
-        profileImageRes = R.drawable.profile_icon,
-        userName = " ${email.substringBefore("@")}",
-        userEmail = email,
-        userId = "${email.hashCode()}",
-        isVerified = authViewModel.isUserVerified()
-    )
-
     var showQrDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var showSupportDialog by remember { mutableStateOf(false) }
+    var showPasswordDialog by remember { mutableStateOf(false) }
+    var showLoginDialog by remember { mutableStateOf(false) }
+    var showNotificationDialog by remember { mutableStateOf(false) }
+
+    val userData by authViewModel.userData.collectAsState()
+    val userProfile = userData?.toUserProfile()
 
     Scaffold(
         topBar = {
@@ -68,8 +66,10 @@ fun SettingsScreen(
                 .padding(24.dp)
         ) {
             item {
-                UserProfileCard(userProfile = userProfile)
-                Spacer(modifier = Modifier.height(12.dp))
+                userProfile?.let {
+                    UserProfileCard(userProfile = it)
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
 
             item {
@@ -79,12 +79,12 @@ fun SettingsScreen(
                         SettingsItemData(
                             iconRes = R.drawable.security_icon,
                             text = "Change Password",
-                            onClick = { /* TODO */ }
+                            onClick = { showPasswordDialog = true }
                         ),
                         SettingsItemData(
                             iconRes = R.drawable.history_icon,
                             text = "Login History",
-                            onClick = { /* TODO */ }
+                            onClick = { showLoginDialog = true }
                         )
                     )
                 )
@@ -102,7 +102,7 @@ fun SettingsScreen(
                         SettingsItemData(
                             iconRes = R.drawable.notification,
                             text = "Notification",
-                            onClick = { /* TODO */ }
+                            onClick = { showNotificationDialog = true }
                         )
                     )
                 )
@@ -136,6 +136,45 @@ fun SettingsScreen(
                 )
                 Spacer(modifier = Modifier.height(16.dp))
             }
+        }
+
+        if (showPasswordDialog) {
+            AlertDialog(
+                onDismissRequest = { showPasswordDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showPasswordDialog = false }) {
+                        Text("OK")
+                    }
+                },
+                title = { Text("Coming Soon!") },
+                text = { Text("Password change is under development.") }
+            )
+        }
+
+        if (showLoginDialog) {
+            AlertDialog(
+                onDismissRequest = { showLoginDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showLoginDialog = false }) {
+                        Text("OK")
+                    }
+                },
+                title = { Text("Coming Soon!") },
+                text = { Text("Login history will be available soon.") }
+            )
+        }
+
+        if (showNotificationDialog) {
+            AlertDialog(
+                onDismissRequest = { showNotificationDialog = false },
+                confirmButton = {
+                    TextButton(onClick = { showNotificationDialog = false }) {
+                        Text("OK")
+                    }
+                },
+                title = { Text("Coming Soon!") },
+                text = { Text("Notification settings are coming soon.") }
+            )
         }
 
         if (showQrDialog) {

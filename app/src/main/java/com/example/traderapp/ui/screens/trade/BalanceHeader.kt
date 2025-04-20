@@ -1,5 +1,6 @@
 package com.example.traderapp.ui.screens.trade
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -8,8 +9,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun BalanceHeader(balance: Double) {
     Column(
@@ -20,7 +23,9 @@ fun BalanceHeader(balance: Double) {
     ) {
         Text(
             text = "Your Balance",
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = 20.sp
+            ),
             modifier = Modifier.padding(bottom = 4.dp)
         )
         Text(

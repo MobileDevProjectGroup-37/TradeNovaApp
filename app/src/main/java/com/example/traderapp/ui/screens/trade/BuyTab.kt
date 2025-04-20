@@ -189,17 +189,16 @@ fun BuyTab(
                 onDismissRequest = { showConfirmation = false },
                 confirmButton = {
                     TextButton(onClick = {
-                        val price = conversionRate
                         val quantity = cryptoInput.toDoubleOrNull() ?: 0.0
                         val id = confirmedCrypto?.id.orEmpty()
                         val name = confirmedCrypto?.name.orEmpty()
 
-                        if (id.isNotEmpty() && name.isNotEmpty() && price > 0 && quantity > 0) {
+                        if (id.isNotEmpty() && name.isNotEmpty() && conversionRate > 0 && quantity > 0) {
                             tradeViewModel.executeTrade(
                                 type = TradeType.BUY,
                                 assetId = id,
                                 assetName = name,
-                                currentPrice = price,
+                                currentPrice = conversionRate,
                                 quantity = quantity
                             )
                             showConfirmation = false

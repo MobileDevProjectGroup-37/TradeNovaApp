@@ -9,44 +9,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
-import com.example.traderapp.ui.theme.TransparentStatusBar
+import com.example.traderapp.ui.screens.components.bars.RightIconType
 import com.example.traderapp.viewmodel.LeaderboardViewModel
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-
-@OptIn(ExperimentalMaterial3Api::class)
-
-@Composable
-fun LeaderboardHeader() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = "Rank",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Text(
-            text = "Email",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Text(
-            text = "ROI",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
 
 @Composable
 fun LeaderboardScreen(
@@ -59,8 +28,8 @@ fun LeaderboardScreen(
         topBar = {
             AppTopBarHome(
                 navigationIconType = NavigationIconType.BACK,
+                rightIconType = RightIconType.SETTINGS,
                 onBackClick = { navController.popBackStack() },
-                onRightClick = { /* TODO */ },
                 title = "Leaderboard"
             )
         },
@@ -90,7 +59,7 @@ fun LeaderboardScreen(
                             rank = index + 1,
                             userData = user
                         )
-                        Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
                 }
             }

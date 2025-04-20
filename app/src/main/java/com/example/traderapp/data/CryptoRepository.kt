@@ -44,12 +44,15 @@ class CryptoRepository @Inject constructor(
 
             val priceMap = allPrices.associateBy { it.symbol }
             val tickerMap = ticker24hList.associateBy { it.symbol }
+
             Log.d("DEBUG_REPO", "allPrices size = ${allPrices.size}")
             Log.d("DEBUG_REPO", "allPrices symbols = ${allPrices.map { it.symbol }}")
-            
+
             val usdtSymbols = exchangeInfo.symbols
                 .filter { it.quoteAsset == "USDT" && it.status == "TRADING" }
+
             Log.d("DEBUG_REPO", "usdtSymbols = ${usdtSymbols.map { it.symbol }}")
+
             val data = usdtSymbols.map { symbolInfo ->
                 val symbol = symbolInfo.symbol
                 val price = priceMap[symbol]?.price ?: ""
@@ -103,6 +106,19 @@ class CryptoRepository @Inject constructor(
             file.writeText(json)
         } catch (e: Exception) {
             Log.e("CryptoRepository", "Error writing cache: ${e.message}")
+        }
+    }
+
+    // метод для мини-графика
+    suspend fun getMiniChart(symbol: String): List<Double> {
+        return try {
+            val klines = api.getKlines(symbol = symbol, interval = "1h", limit = 10)
+            klines.mapNotNull {
+                (it[4] as? String)?.toDoubleOrNull() // close price
+            }
+        } catch (e: Exception) {
+            Log.e("CryptoRepository", "Failed to load chart for $symbol: ${e.message}")
+            emptyList()
         }
     }
 }
