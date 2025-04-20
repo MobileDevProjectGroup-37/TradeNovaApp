@@ -42,4 +42,3 @@ fun SettingsItem(iconRes: Int, text: String, onClick: () -> Unit) {
         )
     }
 }
-// i write some code

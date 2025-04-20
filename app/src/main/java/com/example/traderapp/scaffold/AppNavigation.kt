@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.traderapp.data.model.UserProfileHolder
 import com.example.traderapp.data.network.UserSessionViewModel
 import com.example.traderapp.ui.screens.HomeScreen
 import com.example.traderapp.ui.screens.rating.LeaderboardScreen
@@ -18,6 +19,7 @@ import com.example.traderapp.ui.screens.onboarding.OnBoardingScreen
 import com.example.traderapp.ui.screens.settings.SettingsScreen
 import com.example.traderapp.ui.screens.authentication.*
 import com.example.traderapp.ui.screens.components.bars.AppTopBar
+import com.example.traderapp.ui.screens.portfolio.ProfileScreen
 import com.example.traderapp.ui.screens.trade.TradeScreen
 import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.AuthViewModel
@@ -116,6 +118,16 @@ fun AppNavigation() {
             composable(Constants.LEADERBOARD_SCREEN_ROUTE) {
                 LeaderboardScreen(navController, leaderboardViewModel)
             }
+            composable("profile") { backStackEntry ->
+                val profile = UserProfileHolder.profile
+                if (profile != null) {
+                    ProfileScreen(
+                        userProfile = profile,
+                        navController = navController
+                    )
+                }
+            }
+
         }
     }
 }

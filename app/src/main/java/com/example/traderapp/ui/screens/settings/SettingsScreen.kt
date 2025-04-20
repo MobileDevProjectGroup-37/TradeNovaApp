@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.traderapp.R
 import com.example.traderapp.data.model.UserProfile
+import com.example.traderapp.data.model.toUserProfile
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
@@ -35,18 +36,13 @@ fun SettingsScreen(
         }
     }
 
-    val email by authViewModel.email
-    val userProfile = UserProfile(
-        profileImageRes = R.drawable.profile_icon,
-        userName = " ${email.substringBefore("@")}",
-        userEmail = email,
-        userId = "${email.hashCode()}",
-        isVerified = authViewModel.isUserVerified()
-    )
-
     var showQrDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var showSupportDialog by remember { mutableStateOf(false) }
+
+    val userData by authViewModel.userData.collectAsState()
+    val userProfile = userData?.toUserProfile()
+
 
     Scaffold(
         topBar = {
@@ -68,8 +64,10 @@ fun SettingsScreen(
                 .padding(24.dp)
         ) {
             item {
-                UserProfileCard(userProfile = userProfile)
-                Spacer(modifier = Modifier.height(12.dp))
+                userProfile?.let {
+                    UserProfileCard(userProfile = it)
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
 
             item {
