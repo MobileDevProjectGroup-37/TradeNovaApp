@@ -15,7 +15,7 @@ import kotlin.random.Random
 
 @HiltViewModel
 class CryptoViewModel @Inject constructor(
-    private val repository: CryptoRepository,
+    val repository: CryptoRepository,
     private val webSocketClient: WebSocketClient
 ) : ViewModel() {
 

@@ -12,6 +12,14 @@ interface CryptoApi {
 
     @GET("api/v3/ticker/24hr")
     suspend fun getAllTicker24hr(): List<Ticker24hrResponse>
+
+    @GET("api/v3/klines")
+    suspend fun getKlines(
+        @retrofit2.http.Query("symbol") symbol: String,
+        @retrofit2.http.Query("interval") interval: String = "1h",
+        @retrofit2.http.Query("limit") limit: Int = 10
+    ): List<List<Any>>
+
 }
 
 data class ExchangeInfoResponse(

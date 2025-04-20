@@ -38,6 +38,8 @@ fun HomeScreen(
     val marketMovers by cryptoViewModel.marketMovers.collectAsState()
     val cryptoList by cryptoViewModel.cryptoList.collectAsState()
 
+    val repository = cryptoViewModel.repository
+
     SetStatusBarColor()
 
     LaunchedEffect(Unit) {
@@ -87,7 +89,8 @@ fun HomeScreen(
                 item {
                     MarketMoversSection(
                         marketMovers = marketMovers,
-                        priceUpdates = priceUpdates
+                        priceUpdates = priceUpdates,
+                        repository = repository
                     )
                 }
 
