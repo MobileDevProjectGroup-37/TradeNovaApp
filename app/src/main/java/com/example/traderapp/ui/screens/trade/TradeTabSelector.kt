@@ -28,7 +28,7 @@ fun TradeTabSelector(
     ) {
         Row(
             modifier = Modifier
-                .height(48.dp)
+                .height(50.dp)
                 .padding(horizontal = 6.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -56,7 +56,7 @@ fun TradeTabSelector(
                         else
                             MaterialTheme.colorScheme.onSurfaceVariant,
                         style = MaterialTheme.typography.labelLarge,
-                        fontSize = 14.sp
+                        fontSize = 18.sp
                     )
                 }
 

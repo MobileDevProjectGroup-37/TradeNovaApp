@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.traderapp.data.CryptoRepository
 import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.ui.screens.components.texts.ClickableText
@@ -19,6 +20,8 @@ fun MarketMoversSection(
     priceUpdates: Map<String, Double>,
     repository: CryptoRepository
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,7 +39,7 @@ fun MarketMoversSection(
             )
             ClickableText(
                 text = "More",
-                onClick = { /* TODO */ },
+                onClick = { showDialog = true },
                 textColor = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
             )
@@ -61,5 +64,19 @@ fun MarketMoversSection(
                 )
             }
         }
+    }
+
+    // AlertDialog at the end of Composable
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("OK")
+                }
+            },
+            title = { Text("Coming Soon!") },
+            text = { Text("This feature is currently under development.") }
+        )
     }
 }
