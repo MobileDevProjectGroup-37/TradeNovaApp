@@ -25,7 +25,7 @@ val LightPrimary    = Color(0xFF5DDC71) // #5DDC71
 val LightUp         = Color(0xFF098C26)
 val LightFall       = Color(0xFFF7931A)
 val LightError      = Color(0xFFCD0000)
-val Outline         = Color(0xFFF0F5EB)
+val Outline         = Color(0xFFEAEAEA)
 
 /********************************
  ********************************/

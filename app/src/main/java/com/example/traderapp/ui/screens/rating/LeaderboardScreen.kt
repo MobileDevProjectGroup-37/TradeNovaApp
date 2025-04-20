@@ -15,6 +15,7 @@ import com.example.traderapp.ui.screens.components.bars.AppTopBarHome
 import com.example.traderapp.ui.screens.components.bars.BottomNavigationBar
 import com.example.traderapp.ui.screens.components.bars.NavigationIconType
 import com.example.traderapp.ui.screens.components.bars.RightIconType
+import com.example.traderapp.utils.Constants
 import com.example.traderapp.viewmodel.LeaderboardViewModel
 
 @Composable
@@ -29,10 +30,14 @@ fun LeaderboardScreen(
             AppTopBarHome(
                 navigationIconType = NavigationIconType.BACK,
                 rightIconType = RightIconType.SETTINGS,
+                onRightClick = {
+                    navController.navigate(Constants.SETTINGS_SCREEN_ROUTE)
+                },
                 onBackClick = { navController.popBackStack() },
                 title = "Leaderboard"
             )
         },
+
         bottomBar = {
             BottomNavigationBar(navController)
         }
