@@ -118,7 +118,7 @@ fun AppNavigation() {
             composable(Constants.LEADERBOARD_SCREEN_ROUTE) {
                 LeaderboardScreen(navController, leaderboardViewModel)
             }
-            composable("profile") { backStackEntry ->
+            composable(Constants.PROFILE_SCREEN_ROUTE) {
                 val profile = UserProfileHolder.profile
                 if (profile != null) {
                     ProfileScreen(
@@ -127,7 +127,6 @@ fun AppNavigation() {
                     )
                 }
             }
-
         }
     }
 }
