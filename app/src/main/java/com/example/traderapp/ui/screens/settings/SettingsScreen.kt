@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.traderapp.R
+import com.example.traderapp.data.model.SettingsItemData
 import com.example.traderapp.data.model.UserProfile
 import com.example.traderapp.data.model.toUserProfile
 import com.example.traderapp.ui.screens.components.bars.AppTopBarHome

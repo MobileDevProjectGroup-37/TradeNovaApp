@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -67,12 +68,19 @@ fun PortfolioBalanceSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        BalanceLineChart(balanceHistory = portfolioViewModel.balanceHistory)
+        val axisTextColor = MaterialTheme.colorScheme.onSurface.toArgb()
+        BalanceLineChart(
+            balanceHistory = portfolioViewModel.balanceHistory,
+            axisTextColor = axisTextColor
+        )
     }
 }
 
 @Composable
-fun BalanceLineChart(balanceHistory: List<BalancePoint>) {
+fun BalanceLineChart(
+    balanceHistory: List<BalancePoint>,
+    axisTextColor: Int
+) {
     AndroidView(factory = { context ->
         LineChart(context).apply {
             val entries = balanceHistory.mapIndexed { index, point ->
@@ -83,7 +91,7 @@ fun BalanceLineChart(balanceHistory: List<BalancePoint>) {
                 color = Color.GREEN
                 setDrawValues(false)
                 setDrawCircles(false)
-                lineWidth = 3f // ⬆ толщина линии
+                lineWidth = 3f
             }
 
             data = LineData(dataSet)
@@ -92,21 +100,20 @@ fun BalanceLineChart(balanceHistory: List<BalancePoint>) {
             axisRight.isEnabled = false
             legend.isEnabled = false
 
-            // Ось Y
             val minY = entries.minOfOrNull { it.y } ?: 0f
             val maxY = entries.maxOfOrNull { it.y } ?: 0f
-            axisLeft.textColor = Color.WHITE
-            axisLeft.textSize = 14f // ⬆ увеличенный шрифт
+
+            axisLeft.textColor = axisTextColor
+            axisLeft.textSize = 14f
             axisLeft.axisMinimum = minY - 2f
             axisLeft.axisMaximum = maxY + 2f
 
-            // Ось X
             xAxis.apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 setDrawLabels(true)
                 granularity = 1f
-                textColor = Color.WHITE
-                textSize = 14f // ⬆ увеличенный шрифт
+                textColor = axisTextColor
+                textSize = 14f
                 setLabelRotationAngle(0f)
 
                 valueFormatter = object : ValueFormatter() {
@@ -121,7 +128,6 @@ fun BalanceLineChart(balanceHistory: List<BalancePoint>) {
                 }
             }
 
-            // Прокрутка
             isDragEnabled = true
             setScaleEnabled(false)
             setVisibleXRangeMaximum(6f)
@@ -132,6 +138,6 @@ fun BalanceLineChart(balanceHistory: List<BalancePoint>) {
     },
         modifier = Modifier
             .fillMaxWidth()
-            .height(280.dp) // ⬆ увеличена высота графика
+            .height(260.dp)
     )
 }
