@@ -109,7 +109,7 @@ class CryptoRepository @Inject constructor(
         }
     }
 
-    // метод для мини-графика
+    // Method for mini graph
     suspend fun getMiniChart(symbol: String): List<Double> {
         return try {
             val klines = api.getKlines(symbol = symbol, interval = "1h", limit = 10)

@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.take
+
 @HiltViewModel
 class TradeViewModel @Inject constructor(
     private val auth: FirebaseAuth,

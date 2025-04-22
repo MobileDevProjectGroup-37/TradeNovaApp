@@ -17,9 +17,9 @@ fun QuantityCard(quantity: Double, currency: String, label: String) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp) // Добавляем внешний отступ
+            .padding(8.dp)
     ) {
-        // Фон с легким смещением для визуального эффекта
+
         Box(
             modifier = Modifier
                 .matchParentSize()
@@ -27,18 +27,18 @@ fun QuantityCard(quantity: Double, currency: String, label: String) {
                 .background(Color(4287085311).copy(alpha = 0.2f), shape = MaterialTheme.shapes.medium) // Наложенный фон
         )
 
-        // Основная карточка с данными
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(4.dp, shape = MaterialTheme.shapes.medium), // Добавляем тень
+                .shadow(4.dp, shape = MaterialTheme.shapes.medium),
             shape = MaterialTheme.shapes.medium,
             colors = CardDefaults.cardColors(containerColor = Color.White),
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp) // Внутренний отступ
+                    .padding(16.dp)
             ) {
                 Text(
                     text = label,

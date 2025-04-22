@@ -27,25 +27,25 @@ class MyFirebaseInstrumentedTest {
 
     @Before
     fun setUp() {
-        // Получаем контекст приложения для AuthPreferences
+        // Get content of the app
         val appContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
-        // Создаем экземпляры зависимостей
+
         val authPreferences = AuthPreferences(appContext)
         val userSession = UserSession()
         val webSocketClient = WebSocketClient()
         val auth = FirebaseAuth.getInstance()
         val db = FirebaseFirestore.getInstance()
-        val authRepository = FirebaseAuthRepository(auth, db) // Создаем AuthRepository
+        val authRepository = FirebaseAuthRepository(auth, db) // create AuthRepository
 
-        // Создаем AuthViewModel, передавая ему все зависимости
+        // Create AuthViewModel
         authViewModel = AuthViewModel(authRepository, authPreferences, userSession, webSocketClient)
         firestore = FirebaseFirestore.getInstance()
     }
 
     @Test
     fun testFirebaseAuthenticationAndFirestore() = runBlocking {
-        // Устанавливаем тестовые данные
+        // Set test data
         authViewModel.onEmailChange("testuser@example.com")
         authViewModel.onPasswordChange("Abcd1234!")
         authViewModel.onConfirmPasswordChange("Abcd1234!")

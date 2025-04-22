@@ -24,8 +24,8 @@ fun LeaderboardItem(
         "%.2f".format(userData.profit)
 
     val initials = userData.email
-        .takeWhile { it != '@' }      // всё до @
-        .split('.','_','-')           // делим на части
+        .takeWhile { it != '@' }
+        .split('.','_','-')
         .mapNotNull { it.firstOrNull()?.uppercaseChar() }
         .take(2)
         .joinToString("")
@@ -43,7 +43,7 @@ fun LeaderboardItem(
                 .padding(horizontal = 16.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            // Верхняя строка: Rank + ROI
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -67,11 +67,11 @@ fun LeaderboardItem(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            // Нижняя строка: аватар + email
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Аватар-инициалы
+
                 Box(
                     modifier = Modifier
                         .size(36.dp)
@@ -90,7 +90,7 @@ fun LeaderboardItem(
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                // Email
+
                 Text(
                     text = userData.email,
                     style = MaterialTheme.typography.bodyMedium,

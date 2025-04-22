@@ -13,14 +13,14 @@ fun ClickableText(
     text: String,
     onClick: () -> Unit,
     textColor: Color = MaterialTheme.colorScheme.primary,
-    fontWeight: FontWeight = FontWeight.Normal // Добавим параметр для жирности
+    fontWeight: FontWeight = FontWeight.Normal
 ) {
     TextButton(onClick = onClick, modifier = Modifier) {
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = textColor,
-                fontWeight = fontWeight // Применяем жирный шрифт
+                fontWeight = fontWeight
             )
         )
     }

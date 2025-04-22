@@ -2,7 +2,6 @@ package com.example.traderapp.ui.screens.settings
 
 
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

@@ -18,7 +18,7 @@ import com.example.traderapp.ui.theme.LightOffline
 
 @Composable
 fun CodeInputField(
-    onCodeChange: (String) -> Unit  // колбэк для отправки кода наверх
+    onCodeChange: (String) -> Unit
 ) {
     var codeList by remember { mutableStateOf(List(6) { "" }) }
 
@@ -33,15 +33,15 @@ fun CodeInputField(
                 value = digit,
                 onValueChange = { newValue ->
                     if (newValue.length <= 1 && newValue.all { it.isDigit() }) {
-                        // Обновляем локальный state
+                        // Update local state
                         val updatedList = codeList.toMutableList().apply {
                             this[index] = newValue
                         }
                         codeList = updatedList
 
-                        // Формируем общую строку
+
                         val joinedCode = updatedList.joinToString("")
-                        // Передаём эту строку вверх
+
                         onCodeChange(joinedCode)
                     }
                 },

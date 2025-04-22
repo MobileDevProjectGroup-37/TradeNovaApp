@@ -32,7 +32,6 @@ fun ConfirmMail(
             AppTopBar(
                 showBackButton = true,
                 onBackClick = {
-                    // Снова — не обнуляем email
                     navController.popBackStack()
                 },
                 logoResId = R.drawable.sl_bar2,

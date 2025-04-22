@@ -1,6 +1,5 @@
 package com.example.traderapp.data
 
-import com.example.traderapp.data.model.CryptoDto
 import com.example.traderapp.data.model.UserData
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth

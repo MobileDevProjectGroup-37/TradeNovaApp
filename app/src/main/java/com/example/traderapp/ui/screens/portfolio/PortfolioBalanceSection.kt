@@ -116,7 +116,7 @@ fun BalanceLineChart(
                 textSize = 14f
                 setLabelRotationAngle(0f)
 
-                // Показываем только каждую N-ую метку
+
                 val formatter = SimpleDateFormat("HH:mm", Locale.getDefault())
                 val step = maxOf(1, balanceHistory.size / 6)
 
