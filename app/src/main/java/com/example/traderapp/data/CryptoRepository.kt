@@ -15,44 +15,45 @@ data class CryptoCacheData(
     val timestamp: Long,
     val data: List<CryptoDto>
 )
+//  This is a simple wrapper class for our cache. It saves both the timestamp and the actual list of cryptos.
 
 class CryptoRepository @Inject constructor(
     private val api: CryptoApi,
     @ApplicationContext private val context: Context
 ) {
+    // initialize basic tools: Gson for JSON conversion, the cache file name, and the cache expiration time (15 minutes).
     private val gson = Gson()
     private val fileName = "crypto_list.json"
+    private val cacheValidityMillis = 15 * 60 * 1000 // 15 min
 
-    // Cache validity period in milliseconds (e.g., 15 minutes)
-    private val cacheValidityMillis = 15 * 60 * 1000
 
     suspend fun getCryptoList(): List<CryptoDto> {
+        //read the cache and get the current time.
         val cached = readFromCache()
-
         val now = System.currentTimeMillis()
 
-        // Return cache if valid
+
         if (cached != null && (now - cached.timestamp) < cacheValidityMillis) {
             Log.d("CryptoRepository", "Loaded from cache (still valid)")
             return cached.data
+            // If the cache exists and is still fresh, we use it and return immediately.
         }
 
         return try {
+            // If the cache is missing or outdated, we load fresh data from Binance API.
             val exchangeInfo = api.getExchangeInfo()
             val allPrices = api.getAllPrices()
             val ticker24hList = api.getAllTicker24hr()
 
+            // organize the API data into maps for quick lookup by symbol.
             val priceMap = allPrices.associateBy { it.symbol }
             val tickerMap = ticker24hList.associateBy { it.symbol }
 
-            Log.d("DEBUG_REPO", "allPrices size = ${allPrices.size}")
-            Log.d("DEBUG_REPO", "allPrices symbols = ${allPrices.map { it.symbol }}")
-
+            //filter only USDT trading pairs because we focus on stablecoin markets.
             val usdtSymbols = exchangeInfo.symbols
                 .filter { it.quoteAsset == "USDT" && it.status == "TRADING" }
 
-            Log.d("DEBUG_REPO", "usdtSymbols = ${usdtSymbols.map { it.symbol }}")
-
+            //We build a clean list of CryptoDto objects, extracting prices, volumes, and changes.
             val data = usdtSymbols.map { symbolInfo ->
                 val symbol = symbolInfo.symbol
                 val price = priceMap[symbol]?.price ?: ""
@@ -74,12 +75,15 @@ class CryptoRepository @Inject constructor(
                 )
             }
 
+
             saveToCache(data)
             Log.d("CryptoRepository", "Loaded from network and saved to cache")
-            data
+            return data
+            //After fetching, we save the new data to cache for next time.
         } catch (e: Exception) {
             Log.e("CryptoRepository", "Failed to load from network: ${e.message}")
-            cached?.data ?: emptyList() // fallback to cache even if stale
+            cached?.data ?: emptyList()
+            //If API call fails, we fall back to cache if we have one, or return an empty list.
         }
     }
 
@@ -89,9 +93,11 @@ class CryptoRepository @Inject constructor(
             if (!file.exists()) return null
             val json = file.readText()
             gson.fromJson(json, CryptoCacheData::class.java)
+            //This method tries to read the cache file and deserialize it back to CryptoCacheData.
         } catch (e: Exception) {
             Log.e("CryptoRepository", "Error reading cache: ${e.message}")
             null
+            //If reading or parsing fails, we just return null.
         }
     }
 
@@ -104,21 +110,25 @@ class CryptoRepository @Inject constructor(
             )
             val json = gson.toJson(cacheData)
             file.writeText(json)
+            // This method takes the list of crypto data, wraps it with a timestamp, converts to JSON, and saves it into the file.
         } catch (e: Exception) {
             Log.e("CryptoRepository", "Error writing cache: ${e.message}")
+            // If saving fails, we log the error but the app keeps running.
         }
     }
 
-    // Method for mini graph
+    
     suspend fun getMiniChart(symbol: String): List<Double> {
         return try {
             val klines = api.getKlines(symbol = symbol, interval = "1h", limit = 10)
             klines.mapNotNull {
-                (it[4] as? String)?.toDoubleOrNull() // close price
+                (it[4] as? String)?.toDoubleOrNull()
             }
+            // Bonus method — fetches last 10 hourly closing prices for a crypto to draw a mini-chart.
         } catch (e: Exception) {
             Log.e("CryptoRepository", "Failed to load chart for $symbol: ${e.message}")
             emptyList()
+            // If fetching mini-chart fails, return an empty list.
         }
     }
 }

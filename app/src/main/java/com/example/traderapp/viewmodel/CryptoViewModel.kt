@@ -10,61 +10,50 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
-
 
 @HiltViewModel
 class CryptoViewModel @Inject constructor(
-    val repository: CryptoRepository,
-    private val webSocketClient: WebSocketClient
+    val repository: CryptoRepository, // Injected repository to fetch crypto data via REST API.
+    private val webSocketClient: WebSocketClient // Injected WebSocket client to receive live price updates.
 ) : ViewModel() {
 
-    private val _cryptoList = MutableStateFlow<List<CryptoDto>>(emptyList())
-    val cryptoList: StateFlow<List<CryptoDto>> = _cryptoList.asStateFlow()
 
-    private val _userBalance = MutableStateFlow<Map<String, Double>>(emptyMap())  // Баланс пользователя
-    val userBalance: StateFlow<Map<String, Double>> = _userBalance.asStateFlow()
+    private val _cryptoList = MutableStateFlow<List<CryptoDto>>(emptyList()) // Internal StateFlow holding the list of available cryptos.
+    val cryptoList: StateFlow<List<CryptoDto>> = _cryptoList.asStateFlow() // Public read-only StateFlow exposed to the UI.
 
-    // We do NOT mutate cryptoList directly to avoid breaking Compose reactivity.
-    // priceUpdates holds live prices separately, ensuring clean separation of static data (cryptoList) and dynamic state.
-    // This avoids costly list rebuilding and ensures UI updates correctly.
+    // priceUpdates holds live price changes separately to keep static cryptoList immutable and stable for Compose.
 
-    val priceUpdates = webSocketClient.priceUpdates
+    val priceUpdates = webSocketClient.priceUpdates // Live prices directly streamed from WebSocketClient.
 
-    private val _percentageChange = MutableStateFlow(2.60)
-    val percentageChange: StateFlow<Double> = _percentageChange.asStateFlow()
-
-    private val _marketMovers = MutableStateFlow<List<CryptoDto>>(emptyList())
-    val marketMovers: StateFlow<List<CryptoDto>> = _marketMovers.asStateFlow()
+    private val _marketMovers = MutableStateFlow<List<CryptoDto>>(emptyList()) // Internal StateFlow for tracking top movers (by 24h % change).
+    val marketMovers: StateFlow<List<CryptoDto>> = _marketMovers.asStateFlow() // Public read-only flow for UI to observe top movers.
 
     init {
-        Log.d("CryptoViewModel", "INIT CALLED")
-        loadCryptoList()
+        Log.d("CryptoViewModel", "INIT CALLED") // Log to check when the ViewModel is initialized.
+        loadCryptoList() // Immediately start loading crypto data on ViewModel creation.
     }
 
     private fun loadCryptoList() {
-        viewModelScope.launch {
+        viewModelScope.launch { // Launch a coroutine tied to ViewModel lifecycle.
             try {
-                val cryptoData = repository.getCryptoList()
+                val cryptoData = repository.getCryptoList() // Fetch the list of cryptos via REST API.
                 Log.d("CryptoViewModel", "Loaded crypto list: $cryptoData")
-                _cryptoList.value = cryptoData
+                _cryptoList.value = cryptoData // Update StateFlow with the static list of cryptos.
 
-                // getting real % from API
                 _marketMovers.value = cryptoData
-                    .sortedByDescending { it.changePercent24Hr }
-                    .take(5)
+                    .sortedByDescending { it.changePercent24Hr } // Sort cryptos by 24h price change descending.
+                    .take(5) // Take the top 5 movers.
 
-                val symbols = cryptoData.map { it.id.lowercase() }
-                webSocketClient.connect(symbols)
+                val symbols = cryptoData.map { it.id.lowercase() } // Extract and lowercase all symbol IDs.
+                webSocketClient.connect(symbols) // Start WebSocket subscription for real-time price updates.
             } catch (e: Exception) {
-                Log.e("CryptoViewModel", "Error loading crypto list: ${e.message}")
+                Log.e("CryptoViewModel", "Error loading crypto list: ${e.message}") // Log any error that happens during loading.
             }
         }
     }
 
-
     override fun onCleared() {
         super.onCleared()
-        webSocketClient.disconnect()
+        webSocketClient.disconnect() // Properly disconnect the WebSocket when the ViewModel is destroyed.
     }
 }

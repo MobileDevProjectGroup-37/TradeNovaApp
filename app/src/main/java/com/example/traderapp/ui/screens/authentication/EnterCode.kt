@@ -19,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -39,7 +40,7 @@ fun EnterCode(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
-
+    val email by authViewModel.email
     Scaffold(
         topBar = {
             AppTopBar(
@@ -71,7 +72,7 @@ fun EnterCode(
                     textAlign = TextAlign.Center
                 )
                 OnBoardingDescription(
-                    description = stringResource(R.string.sent_email),
+                    description = stringResource(R.string.sent_email, email),
                 )
                 Image(
                     painter = painterResource(id = R.drawable.envelop),

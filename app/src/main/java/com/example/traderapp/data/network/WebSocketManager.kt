@@ -1,5 +1,4 @@
 package com.example.traderapp.data.network
-
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,79 +10,79 @@ import javax.inject.Singleton
 
 @Singleton
 class WebSocketClient @Inject constructor() {
-    private val client = OkHttpClient()
-    private var webSocket: WebSocket? = null
 
-    private val _priceUpdates = MutableStateFlow<Map<String, Double>>(emptyMap())
-    val priceUpdates: StateFlow<Map<String, Double>> = _priceUpdates.asStateFlow()
+    private val client = OkHttpClient() // Create an OkHttpClient instance for handling WebSocket connections.
+    private var webSocket: WebSocket? = null // This will hold the active WebSocket connection object.
 
+    private val _priceUpdates = MutableStateFlow<Map<String, Double>>(emptyMap()) // Internal MutableStateFlow to store live price updates.
+    val priceUpdates: StateFlow<Map<String, Double>> = _priceUpdates.asStateFlow() // Public read-only StateFlow exposed to ViewModel/UI.
 
     fun connect(symbols: List<String>) {
 
-        val limitedSymbols = symbols.take(10)
+        val limitedSymbols = symbols.take(10) // Limit the number of subscribed symbols to 10 to avoid overloading the connection.
+        val streamParts = limitedSymbols.map { "${it.lowercase()}@ticker" } // Format each symbol for Binance WebSocket subscription.
+        val streamsParam = streamParts.joinToString("/") // Join all formatted streams with slashes to build the URL.
 
-        val streamParts = limitedSymbols.map { "${it.lowercase()}@ticker" }
-        val streamsParam = streamParts.joinToString("/")
-
-        val url = "wss://stream.binance.com:9443/stream?streams=$streamsParam"
+        val url = "wss://stream.binance.com:9443/stream?streams=$streamsParam" // Create the full WebSocket URL.
         Log.d("WebSocketClient", "Connecting to $url")
 
         val request = Request.Builder()
-            .url(url)
+            .url(url) // Set the WebSocket request URL.
             .build()
 
         webSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
-               // Log.d("WebSocketClient", "✅ WebSocket opened")
+                Log.d("WebSocketClient", "WebSocket connection opened.")
+                // Called when the WebSocket connection is successfully opened.
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
-               // Log.d("WebSocketClient", "📩 Message received: $text")
-
+                Log.d("WebSocketClient", "Message received: $text")
+                // Called when a message is received from the WebSocket.
 
                 try {
-                    val json = JSONObject(text)
+                    val json = JSONObject(text) // Parse the incoming message text as a JSON object.
 
+                    if (json.has("stream") && json.has("data")) { // Check if the message contains expected fields.
+                        val dataObject = json.getJSONObject("data") // Extract the "data" JSON object.
 
-                    if (json.has("stream") && json.has("data")) {
-                        val dataObject = json.getJSONObject("data")
+                        val symbol = dataObject.optString("s", "") // Get the symbol string.
+                        val lastPriceStr = dataObject.optString("c", "") // Get the last traded price as a string.
 
-                        val symbol = dataObject.optString("s", "")
-                        val lastPriceStr = dataObject.optString("c", "")
-                        if (symbol.isNotEmpty() && lastPriceStr.isNotEmpty()) {
-                            val lastPrice = lastPriceStr.toDoubleOrNull()
+                        if (symbol.isNotEmpty() && lastPriceStr.isNotEmpty()) { // Ensure both symbol and price are not empty.
+                            val lastPrice = lastPriceStr.toDoubleOrNull() // Safely convert the price string to a Double.
 
                             lastPrice?.let {
-
                                 _priceUpdates.value = _priceUpdates.value.toMutableMap().apply {
-                                    put(symbol, it)
+                                    put(symbol, it) // Update the price for the symbol in the StateFlow map.
                                 }
                             }
                         }
                     } else {
-                        Log.w("WebSocketClient", "Unknown message format: $text")
+                        // Handle unknown message formats if necessary.
                     }
                 } catch (e: Exception) {
-                    Log.e("WebSocketClient", "❌ Failed to parse JSON message", e)
+                    // Handle JSON parsing errors.
                 }
             }
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                Log.e("WebSocketClient", "❌ WebSocket failure: ${t.message}", t)
+                // Called when the WebSocket connection fails due to an error.
+                // Reconnection logic can be implemented here if needed.
             }
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-                Log.w("WebSocketClient", "⚠️ WebSocket closing: $code / $reason")
+                // Called when the WebSocket is about to close.
             }
 
             override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                Log.i("WebSocketClient", "🔌 WebSocket closed: $code / $reason")
+                // Called when the WebSocket connection has been closed.
             }
         })
     }
 
     fun disconnect() {
-        Log.d("WebSocketClient", "🔌 Disconnecting WebSocket")
+        // Manually close the WebSocket connection with normal closure code 1000.
         webSocket?.close(1000, null)
     }
 }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +28,7 @@ fun ConfirmMail(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
+    val email by authViewModel.email
     Scaffold(
         topBar = {
             AppTopBar(
@@ -63,7 +65,7 @@ fun ConfirmMail(
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = stringResource(R.string.sent_email),
+                    text = stringResource(R.string.sent_email, email),
                     modifier = Modifier
                         .padding(top = 8.dp),
                     style = MaterialTheme.typography.bodyMedium,

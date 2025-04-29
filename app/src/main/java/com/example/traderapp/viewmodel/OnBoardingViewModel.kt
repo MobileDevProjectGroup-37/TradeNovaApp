@@ -10,7 +10,7 @@ class OnBoardingViewModel : ViewModel() {
     val onBoardingData = listOf(
         OnBoardingData(
             title = "Take hold of your finances",
-            description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eget mauris massa pharetra.",
+            description = "Master your money with real market logic.",
             backgroundRes = R.drawable.onboarding1,
             iconPositions = listOf(
                 Pair(10.dp, 110.dp),
@@ -20,7 +20,7 @@ class OnBoardingViewModel : ViewModel() {
         ),
         OnBoardingData(
             title = "Smart trading tools",
-            description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eget mauris massa pharetra.",
+            description = "Trade like a pro with simple and powerful tools.",
             backgroundRes = R.drawable.onboarding2,
             iconPositions = listOf(
                 Pair(74.dp, 40.dp),
@@ -30,7 +30,7 @@ class OnBoardingViewModel : ViewModel() {
         ),
         OnBoardingData(
             title = "Invest in the future",
-            description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eget mauris massa pharetra.",
+            description = "Grow your skills, your rank, and your capital.",
             backgroundRes = R.drawable.onboarding3,
             iconPositions = listOf(
                 Pair(284.dp, 64.dp),

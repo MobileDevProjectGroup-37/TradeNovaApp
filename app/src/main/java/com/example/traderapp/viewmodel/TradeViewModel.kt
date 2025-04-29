@@ -133,15 +133,6 @@ class TradeViewModel @Inject constructor(
         }
     }
 
-    fun observePriceUpdates(priceFlow: StateFlow<Map<String, Double>>) {
-        viewModelScope.launch {
-            priceFlow.collect { updates ->
-                priceUpdates = updates
-                recalcPortfolioValue()
-            }
-        }
-    }
-
     // Safe trafic version
     fun executeTrade(
         type: TradeType,
